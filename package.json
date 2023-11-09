@@ -1,0 +1,20 @@
+{
+  "name": "poetry-sharing-website",
+  "version": "1.0.0",
+  "description": "Site to share poetry",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bkreiser01/poetry-sharing-website.git"
+  },
+  "author": "Adrien Huet, Brandon Kreiser, Roger Shagawat, Joseph Vasallo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bkreiser01/poetry-sharing-website/issues"
+  },
+  "homepage": "https://github.com/bkreiser01/poetry-sharing-website#readme"
+}
