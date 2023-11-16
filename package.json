@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Site to share poetry",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "start": "node app.js",
     "test": "node test.js"
