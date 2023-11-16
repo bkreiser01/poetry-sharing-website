@@ -1,4 +1,5 @@
 // Amalgamate routes here!
+<<<<<<< HEAD
 import routes from './routing.js'
 import auth from './auth.js'
 
@@ -14,3 +15,10 @@ const constructorMethod = (app) => {
 };
   
 export default constructorMethod;
+=======
+import poemRoutes from "./poems.js"
+
+const constructorMethod = (app) => {
+   app.use('/poems',  poemRoutes);
+};
+>>>>>>> 73d3344 (preliminary data functions and routing for poems)
