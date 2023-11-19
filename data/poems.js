@@ -40,10 +40,12 @@ To watch his woods fill up with snow.",
 
 import { poems } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
+import validation from "../validation.js";
 
 const exportedMethods = {
    async getPoemById(id) {
-      // TODO validate id
+      id = validation.checkId(id, "id");
+
       const poemCollection = await poems();
       const poem = await poemCollection.findOne({ _id: ObjectId(id) });
 
@@ -63,11 +65,11 @@ const exportedMethods = {
       }
 
       const newPoem = {
-         timeSubmitted: timeSubmitted,
-         title: title,
+         timeSubmitted: timeSubmitted, // TODO validate time here
+         title: validation.checkString(title), // TODO validate string here
          body: body,
-         userId: userId,
-         liink: link,
+         userId: validation.checkId(userId),
+         link: link,
          submittedTags: [],
          totalTagCount: 0,
          favoriteCount: 0,
@@ -95,8 +97,6 @@ const exportedMethods = {
          throw [404, `Could not delete poem with id of ${id}`];
 
       // TODO remove poem from user poemIds, remove poem from all tags, and from user taggedPoemIds
-
-
 
       return { ...deletionInfo.value, deleted: true };
    },
@@ -135,9 +135,77 @@ const exportedMethods = {
 
    async updatePoemPatch(id, updatedPoem) {
       // TODO validate as checking if there is a field
+
+      const updatedPoemData = {};
+      if (updatedPoem.timeSubmitted) {
+         updatedPoemData.timeSubmitted = updatedPoem.timeSubmitted; // TODO replace with validation
+      }
+
+      if (updatedPoem.title) {
+         updatedPoemData.title = updatedPoem.title; // TODO replace with validation
+      }
+
+      if (updatedPoem.body) {
+         updatedPoemData.body = updatedPoem.body; // TODO replace with validation
+      }
+
+      if (updatedPoem.userId) {
+         updatedPoemData.userId = updatedPoem.userId; // TODO replace with validation
+      }
+
+      if (updatedPoem.link) {
+         updatedPoemData.link = updatedPoem.link; // TODO replace with validation
+      }
+
+      if (updatedPoem.submittedTags) {
+         updatedPoemData.submittedTags = updatedPoem.submittedTags; // TODO replace with validation
+      }
+
+      if (updatedPoem.totalTagCount) {
+         updatedPoemData.totalTagCount = updatedPoem.totalTagCount; // TODO replace with validation
+      }
+
+      if (updatedPoem.favoriteCount) {
+         updatedPoemData.favoriteCount = updatedPoem.favoriteCount; // TODO replace with validation
+      }
+
+      if (updatedPoem.comments) {
+         updatedPoemData.comments = updatedPoem.comments; // TODO replace with validation
+      }
+
+      if (updatedPoem.private) {
+         updatedPoemData.private = updatedPoem.private; // TODO replace with validation
+      }
+
+      const poemCollection = await poems();
+      let newPoem = await poemCollection.findOneAndUpdate(
+         { _id: ObjectId(id) },
+         { $set: updatedPoemData },
+         { returnDocument: "after" }
+      );
+      if (newPoem.lastErrorObject.n === 0)
+         throw [404, `Could not update the poem with id ${id}`];
+
+      return newPoem.value;
    },
 
-   async addSubmittedTag() {},
+   async addSubmittedTag(poemId, tagId) {
+      // TODO validate tagId
+      const poemCollection = await poems();
+      const poem = await poemCollection.findOne({ _id: ObjectId(poemId) });
+
+      // check if he in there, if he in there just add one to tagCount
+      // otherwise
+   },
+
+   async removeSubmittedTag(poemId, tagId) {
+      // TODO validate tagId
+      const poemCollection = await poems();
+      const poem = await poemCollection.findOne({ _id: ObjectId(poemId) });
+
+      // check if he in there, if he in there just add one to tagCount
+      // otherwise
+   },
 };
 
 export default exportedMethods;
