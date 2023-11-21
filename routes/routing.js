@@ -7,4 +7,20 @@ router.route('/').get(async (req, res) => {
     res.render('homepage', {title:"Poetry Sharing"});
 });
 
+router.route('/user').get(async (req, res) => {
+    res.render('user', {title:"User"});
+});
+
+router.route('/login').get(async (req, res) => {
+    res.render('login', {title:"Login"});
+});
+
+router.route('/poem').get(async (req, res) => {
+    res.render('poem', {title:"Poem"});
+});
+
+router.route('/editor').get(async (req, res) => {
+    res.render('editor', {title:"Editor"});
+});
+
 export default router;
