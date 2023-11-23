@@ -71,3 +71,43 @@ describe("getCommentById", () => {
     ).resolves.toEqual(seedPoemData[0].comments[0]);
   });
 });
+
+describe("getAllCommentsFromPoem", () => {
+  test("no_args", async () => {
+    await expect(comments.getAllCommentsFromPoem()).rejects.toThrow();
+  });
+
+  test("not_a_string", async () => {
+    await expect(comments.getAllCommentsFromPoem(1)).rejects.toThrow();
+  });
+
+  test("empty_string", async () => {
+    await expect(comments.getAllCommentsFromPoem("")).rejects.toThrow();
+  });
+
+  test("string_just_spaces", async () => {
+    await expect(comments.getAllCommentsFromPoem("     ")).rejects.toThrow();
+  });
+
+  test("poemId_invalid", async () => {
+    await expect(comments.getAllCommentsFromPoem("test")).rejects.toThrow();
+  });
+
+  test("poemId_no_poem_found", async () => {
+    await expect(
+      comments.getAllCommentsFromPoem("fefefefefefefefefefefefe")
+    ).rejects.toThrow();
+  });
+
+  test("poem_has_comments", async () => {
+    await expect(
+      comments.getAllCommentsFromPoem(seedPoemData[0]._id.toString())
+    ).resolves.toEqual(seedPoemData[0].comments);
+  });
+
+  test("poem_has_no_comment", async () => {
+    await expect(
+      comments.getAllCommentsFromPoem(seedPoemData[2]._id.toString())
+    ).resolves.toEqual([]);
+  });
+});
