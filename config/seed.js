@@ -11,6 +11,7 @@ const poemid0 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa0");
 const poemid1 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa1");
 const poemid2 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa2");
 const poemid3 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa3");
+const poemid4 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa4");
 
 const lol = new ObjectId("bbbbbbbbbbbbbbbbbbbbbbb0");
 const nice = new ObjectId("bbbbbbbbbbbbbbbbbbbbbbb1");
@@ -27,9 +28,9 @@ export const seedUserData = [
       "Mon Nov 13 2023 14:47:57 GMT-0500 (Eastern Standard Time)",
     private: false,
     bio: "I like to write poems!",
-    poemIds: [poemid0],
-    taggedPoems: [],
-    tagsUsed: [],
+    poemIds: [poemid0, poemid4],
+    taggedPoems: [poemid4],
+    tagsUsed: [lol],
     favorites: [poemid1],
     recentlyViewedPoemIds: [],
     followers: [alice, bob, charlie],
@@ -286,13 +287,50 @@ export const seedPoemData = [
     ],
     private: false,
   },
+  {
+    _id: poemid4,
+    timeSubmitted: "Mon Nov 17 2023 14:44:59 GMT-0500 (Eastern Standard Time)",
+    title: "No debate in the comments",
+    body: "This only has top-level comments",
+    userId: alice,
+    link: "",
+    submittedTags: [
+      {
+        _id: new ObjectId("ccccccccccccccccccccccc5"),
+        tagId: lol,
+        tagCount: 1, // John
+      },
+    ],
+    totalTagCount: 1,
+    favoriteCount: 0,
+    comments: [
+      {
+        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee50"),
+        tagId: lol,
+        userId: bob,
+        timeCommented:
+          "Mon Nov 18 2023 15:05:49 GMT-0500 (Eastern Standard Time)",
+        commentString: "Top-level 1",
+        repliesTo: null,
+      },
+      {
+        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee60"),
+        tagId: lol,
+        userId: charlie,
+        timeCommented:
+          "Mon Nov 18 2023 15:11:12 GMT-0500 (Eastern Standard Time)",
+        commentString: "Top-level 2",
+        repliesTo: null,
+      },
+    ],
+  },
 ];
 
 export const seedTagData = [
   {
     _id: lol,
     tagString: "LOL",
-    taggedPoemsId: [poemid0, poemid3],
+    taggedPoemsId: [poemid0, poemid3, poemid4],
   },
   {
     _id: nice,
@@ -324,5 +362,5 @@ export const seedDb = async () => {
   await tagCollection.insertMany(seedTagData);
 };
 
-// await seedDb();
-// await connections.closeConnection();
+await seedDb();
+await connections.closeConnection();
