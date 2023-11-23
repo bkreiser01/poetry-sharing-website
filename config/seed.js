@@ -157,27 +157,25 @@ export const seedPoemData = [
         timeCommented:
           "Mon Nov 13 2023 14:58:40 GMT-0500 (Eastern Standard Time)",
         commentString: "Wow this poem is laugh out loud funny!",
-        replies: [
-          {
-            _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee11"),
-            tagId: lol,
-            userId: john,
-            timeCommented:
-              "Mon Nov 13 2023 15:01:28 GMT-0500 (Eastern Standard Time)",
-            commentString: "Thanks, it is funny lol",
-            replies: [
-              {
-                _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee12"),
-                tagId: lol,
-                userId: alice,
-                timeCommented:
-                  "Mon Nov 13 2023 15:10:11 GMT-0500 (Eastern Standard Time)",
-                commentString: "Yeah that's why I commented lol!!!!!",
-                replies: [],
-              },
-            ],
-          },
-        ],
+        repliesTo: null,
+      },
+      {
+        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee11"),
+        tagId: lol,
+        userId: john,
+        timeCommented:
+          "Mon Nov 13 2023 15:01:28 GMT-0500 (Eastern Standard Time)",
+        commentString: "Thanks, it is funny lol",
+        repliesTo: new ObjectId("eeeeeeeeeeeeeeeeeeeeee10"),
+      },
+      {
+        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee12"),
+        tagId: lol,
+        userId: alice,
+        timeCommented:
+          "Mon Nov 13 2023 15:10:11 GMT-0500 (Eastern Standard Time)",
+        commentString: "Yeah that's why I commented lol!!!!!",
+        repliesTo: new ObjectId("eeeeeeeeeeeeeeeeeeeeee11"),
       },
       {
         _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee20"),
@@ -186,7 +184,7 @@ export const seedPoemData = [
         timeCommented:
           "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
         commentString: "Love this",
-        replies: [],
+        repliesTo: null,
       },
     ],
     private: false,
@@ -216,17 +214,16 @@ export const seedPoemData = [
         timeCommented:
           "Mon Nov 14 2023 15:05:49 GMT-0500 (Eastern Standard Time)",
         commentString: "It's a nice first!",
-        replies: [
-          {
-            _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee31"),
-            tagId: nice,
-            userId: alice,
-            timeCommented:
-              "Mon Nov 14 2023 15:11:12 GMT-0500 (Eastern Standard Time)",
-            commentString: "thx bob",
-            replies: [],
-          },
-        ],
+        repliesTo: null,
+      },
+      {
+        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee31"),
+        tagId: nice,
+        userId: alice,
+        timeCommented:
+          "Mon Nov 14 2023 15:11:12 GMT-0500 (Eastern Standard Time)",
+        commentString: "thx bob",
+        repliesTo: new ObjectId("eeeeeeeeeeeeeeeeeeeeee30"),
       },
     ],
     private: false,
@@ -275,17 +272,16 @@ export const seedPoemData = [
         timeCommented:
           "Mon Nov 14 2023 15:05:49 GMT-0500 (Eastern Standard Time)",
         commentString: "Let's go charlie :fire:",
-        replies: [
-          {
-            _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee41"),
-            tagId: fire,
-            userId: charlie,
-            timeCommented:
-              "Mon Nov 14 2023 15:11:12 GMT-0500 (Eastern Standard Time)",
-            commentString: "The first of many!",
-            replies: [],
-          },
-        ],
+        repliesTo: null,
+      },
+      {
+        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee41"),
+        tagId: fire,
+        userId: charlie,
+        timeCommented:
+          "Mon Nov 14 2023 15:11:12 GMT-0500 (Eastern Standard Time)",
+        commentString: "The first of many!",
+        repliesTo: new ObjectId("eeeeeeeeeeeeeeeeeeeeee40"),
       },
     ],
     private: false,
@@ -326,8 +322,7 @@ export const seedDb = async () => {
   await poemCollection.insertMany(seedPoemData);
   await userCollection.insertMany(seedUserData);
   await tagCollection.insertMany(seedTagData);
-
-  await connections.closeConnection();
 };
 
-await seedDb();
+// await seedDb();
+// await connections.closeConnection();
