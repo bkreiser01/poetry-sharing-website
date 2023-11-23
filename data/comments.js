@@ -23,6 +23,7 @@ const exportedMethods = {
     // https://www.mongodb.com/community/forums/t/how-to-query-multi-level-nested-sub-document-objects-when-the-sub-document-id-is-known/172978
   },
 
+
   async getAllCommentsFromPoem(poemId) {
     poemId = validation.checkId(poemId);
 
@@ -32,14 +33,20 @@ const exportedMethods = {
       _id: new ObjectId(poemId),
     });
     if (poemById === null)
-      throw new Error(
-        `getAllCommentsFromPoem: no poem found with id ${poemId}`
-      );
-    return poemById.comments;
-  },
+    throw new Error(
+  `getAllCommentsFromPoem: no poem found with id ${poemId}`
+  );
+  return poemById.comments;
+},
+
+  async getTopLevelCommentsFromPoem(poemId) {},
+  async getRepliesToComment(commentId, depth) {},
+
   async addCommentToPoem() {},
-  async addCommentToComment() {},
+  async addReplyToComment() {},
+
   async removeCommentFromPoem() {},
+
   async updateCommentPut() {},
   async updateCommentPatch() {},
 };
