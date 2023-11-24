@@ -93,7 +93,64 @@ const exportedMethods = {
      */
   },
 
-  async addCommentToPoem() {},
+  async addCommentToPoem(userId, tagId, timeCommented, commentString, poemId) {
+    userId = validation.checkId(userId, "userId");
+    tagId = validation.checkId(tagId, "tagId");
+    poemId = validation.checkId(poemId, "poemId");
+
+    timeCommented = validation.checkDateString(timeCommented, "timeCommented");
+
+    // TODO discuss and implement other restrictions for comments
+    commentString = validation.checkString(commentString);
+
+    const userCollection = await users();
+    const userById = await userCollection.findOne({
+      _id: new ObjectId(userId),
+    });
+    if (!userById)
+      throw new Error(`addCommentToPoem: no user found with userId ${userId}`);
+
+    const poemCollection = await poems();
+    const poemById = await poemCollection.findOne({
+      _id: new ObjectId(poemId),
+    });
+    if (!poemById)
+      throw new Error(`addCommentToPoem: no poem found with poemId ${poemId}`);
+
+    // TODO discuss whether adding a comment also automatically adds tag
+    // FIXME behaviour when tag is found but tagCount is 0
+    let tagFound = false;
+    for (let tag of poemById.submittedTags) {
+      if (tag.tagId.toString() === tagId) tagFound = true;
+    }
+
+    if (!tagFound)
+      throw new Error(
+        `addCommentToPoem: could not find tag with id ${tagId} for poem ${poemId}`
+      );
+
+    const updatedPoem = await poemCollection.findOneAndUpdate(
+      { _id: new ObjectId(poemId) },
+      {
+        $push: {
+          comments: {
+            _id: new ObjectId(),
+            tagId: new ObjectId(tagId),
+            userId: new ObjectId(userId),
+            timeCommented: timeCommented,
+            commentString: commentString,
+            repliesTo: null,
+          },
+        },
+      },
+      { returnDocument: "after" }
+    );
+
+    if (updatedPoem === null)
+      throw new Error("addCommentToPoem: could not add the comment");
+    return updatedPoem;
+  },
+
   async addReplyToComment() {},
 
   async removeCommentFromPoem() {},
