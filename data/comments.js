@@ -69,7 +69,29 @@ const exportedMethods = {
     return poemOnlyTopLevelComments[0].comments;
   },
 
-  async getRepliesToComment(commentId, depth) {},
+  async getRepliesToComment(commentId, depth) {
+    /**
+     * The goal would be to get a recursive object describing comments in the same fashion described in the first db design:
+     * comment: {
+     * _id: commentId,
+     * tagId: tagId,
+     * userId: userId,
+     * timeCommented: some date,
+     * commentString: "",
+     * replies: [
+     *    <array_of_comments>, with each having a "replies" field itself
+     *    another array
+     *    ]
+     * }
+     *
+     * Some insights:
+     *  - build an aggragation pipeline to get comments as root of the projection
+     *  - use graphLookup to build the tree structure
+     * Check out:
+     * https://stackoverflow.com/questions/65139097/make-node-tree-with-recursive-table-with-express-and-mongo
+     * https://stackoverflow.com/questions/64515836/how-to-replace-root-with-an-array-field-during-mongodb-aggregation-pipeline
+     */
+  },
 
   async addCommentToPoem() {},
   async addReplyToComment() {},
