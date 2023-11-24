@@ -47,6 +47,13 @@ const exportedMethods = {
 
     return arr;
   },
+
+  checkDateString(date, varName) {
+    date = this.checkString(date, varName);
+    if (isNaN(new Date(date)))
+      throw new Error(`Error: ${varName} is not a valid Date`);
+    return date;
+  },
 };
 
 export default exportedMethods;

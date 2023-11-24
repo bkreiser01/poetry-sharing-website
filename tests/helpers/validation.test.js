@@ -185,3 +185,72 @@ describe("checkStringArray", () => {
     }).toThrow();
   });
 });
+
+describe("checkDateString", () => {
+  test("no_args", () => {
+    expect(() => {
+      validation.checkDateString();
+    }).toThrow();
+  });
+
+  test("date_is_undefined", () => {
+    expect(() => {
+      validation.checkDateString(undefined, "string_arg");
+    }).toThrow("Error: You must supply a string_arg");
+  });
+
+  test("date_not_a_string", () => {
+    expect(() => validation.checkDateString(1, "string_arg")).toThrow(
+      "Error: string_arg must be a string"
+    );
+  });
+
+  test("date_empty_string", () => {
+    expect(() => {
+      validation.checkDateString("", "string_arg");
+    }).toThrow();
+  });
+
+  test("date_just_spaces", () => {
+    expect(() => {
+      validation.checkDateString("     ", "string_arg");
+    }).toThrow(
+      "Error: string_arg cannot be an empty string or string with just spaces"
+    );
+  });
+
+  test("date_invalid1", () => {
+    expect(() => {
+      validation.checkDateString("test");
+    }).toThrow();
+  });
+
+  test("date_invalid2", () => {
+    expect(() => {
+      validation.checkDateString("21/02/2020"); // not MM/DD/YYYY format
+    }).toThrow();
+  });
+
+  test("date_invalid3", () => {
+    expect(() => {
+      validation.checkDateString("5//2000");
+    }).toThrow();
+  });
+
+  test("date_valid", () => {
+    expect(validation.checkDateString("01/01/2020")).toEqual("01/01/2020");
+  });
+
+  test("date_valid_trimmed", () => {
+    expect(validation.checkDateString("    01/01/2020")).toEqual("01/01/2020");
+  });
+
+  test("date_valid2", () => {
+    expect(
+      validation.checkDateString(
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "date"
+      )
+    ).toEqual("Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)");
+  });
+});
