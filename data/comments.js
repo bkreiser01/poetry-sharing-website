@@ -24,7 +24,7 @@ const exportedMethods = {
   },
 
   async getAllCommentsFromPoem(poemId) {
-    poemId = validation.checkId(poemId);
+    poemId = validation.checkId(poemId, "poemId");
 
     const poemCollection = await poems();
 
@@ -39,7 +39,7 @@ const exportedMethods = {
   },
 
   async getTopLevelCommentsFromPoem(poemId) {
-    poemId = validation.checkId(poemId);
+    poemId = validation.checkId(poemId, "poemId");
 
     const poemCollection = await poems();
     const poemOnlyTopLevelComments = await poemCollection
