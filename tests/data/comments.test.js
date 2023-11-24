@@ -111,3 +111,55 @@ describe("getAllCommentsFromPoem", () => {
     ).resolves.toEqual([]);
   });
 });
+
+describe("getTopLevelCommentsFromPoem", () => {
+  test("no_args", async () => {
+    await expect(comments.getTopLevelCommentsFromPoem()).rejects.toThrow();
+  });
+
+  test("not_a_string", async () => {
+    await expect(comments.getTopLevelCommentsFromPoem(1)).rejects.toThrow();
+  });
+
+  test("empty_string", async () => {
+    await expect(comments.getTopLevelCommentsFromPoem("")).rejects.toThrow();
+  });
+
+  test("string_just_spaces", async () => {
+    await expect(
+      comments.getTopLevelCommentsFromPoem("     ")
+    ).rejects.toThrow();
+  });
+
+  test("poemId_invalid", async () => {
+    await expect(
+      comments.getTopLevelCommentsFromPoem("test")
+    ).rejects.toThrow();
+  });
+
+  test("poemId_no_poem_found", async () => {
+    await expect(
+      comments.getTopLevelCommentsFromPoem("fefefefefefefefefefefefe")
+    ).rejects.toThrow();
+  });
+
+  test("poem_has_no_comment", async () => {
+    await expect(
+      comments.getTopLevelCommentsFromPoem(seedPoemData[2]._id.toString())
+    ).resolves.toEqual([]);
+  });
+  test("poem_has_only_top_level_comments", async () => {
+    await expect(
+      comments.getTopLevelCommentsFromPoem(seedPoemData[4]._id.toString())
+    ).resolves.toEqual(seedPoemData[4].comments);
+  });
+
+  test("poem_also_has_replies_to_comments", async () => {
+    const poem0TopLevelComments = seedPoemData[0].comments.filter(
+      (comment) => comment.repliesTo == null
+    );
+    await expect(
+      comments.getTopLevelCommentsFromPoem(seedPoemData[0]._id.toString())
+    ).resolves.toEqual(poem0TopLevelComments);
+  });
+});

@@ -23,7 +23,6 @@ const exportedMethods = {
     // https://www.mongodb.com/community/forums/t/how-to-query-multi-level-nested-sub-document-objects-when-the-sub-document-id-is-known/172978
   },
 
-
   async getAllCommentsFromPoem(poemId) {
     poemId = validation.checkId(poemId);
 
@@ -33,13 +32,43 @@ const exportedMethods = {
       _id: new ObjectId(poemId),
     });
     if (poemById === null)
-    throw new Error(
-  `getAllCommentsFromPoem: no poem found with id ${poemId}`
-  );
-  return poemById.comments;
-},
+      throw new Error(
+        `getAllCommentsFromPoem: no poem found with id ${poemId}`
+      );
+    return poemById.comments;
+  },
 
-  async getTopLevelCommentsFromPoem(poemId) {},
+  async getTopLevelCommentsFromPoem(poemId) {
+    poemId = validation.checkId(poemId);
+
+    const poemCollection = await poems();
+    const poemOnlyTopLevelComments = await poemCollection
+      .aggregate([
+        {
+          $match: { _id: new ObjectId(poemId) },
+        },
+        {
+          $project: {
+            comments: {
+              $filter: {
+                input: "$comments",
+                as: "comment",
+                cond: { $eq: ["$$comment.repliesTo", null] },
+              },
+            },
+          },
+        },
+      ])
+      .toArray();
+
+    if (poemOnlyTopLevelComments.length === 0)
+      throw new Error(
+        `getTopLevelCommentsFromPoem: no poem found with id ${poemId}`
+      );
+
+    return poemOnlyTopLevelComments[0].comments;
+  },
+
   async getRepliesToComment(commentId, depth) {},
 
   async addCommentToPoem() {},

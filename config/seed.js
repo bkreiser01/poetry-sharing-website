@@ -362,5 +362,5 @@ export const seedDb = async () => {
   await tagCollection.insertMany(seedTagData);
 };
 
-await seedDb();
-await connections.closeConnection();
+// await seedDb();
+// await connections.closeConnection();
