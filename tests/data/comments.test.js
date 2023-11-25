@@ -531,7 +531,7 @@ describe("addReplyToComment", () => {
       )
     ).rejects.toThrow();
   });
-  test("tagId_not_a_string", async () => {
+  test("commentId_not_a_string", async () => {
     await expect(
       comments.addReplyToComment(
         seedUserData[0]._id.toString(),
@@ -543,7 +543,7 @@ describe("addReplyToComment", () => {
     ).rejects.toThrow();
   });
 
-  test("tagId_empty", async () => {
+  test("commentId_empty", async () => {
     await expect(
       comments.addReplyToComment(
         seedUserData[0]._id.toString(),
@@ -555,7 +555,7 @@ describe("addReplyToComment", () => {
     ).rejects.toThrow();
   });
 
-  test("tagId_just_spaces", async () => {
+  test("commentId_just_spaces", async () => {
     await expect(
       comments.addReplyToComment(
         seedUserData[0]._id.toString(),
@@ -567,7 +567,7 @@ describe("addReplyToComment", () => {
     ).rejects.toThrow();
   });
 
-  test("tagId_not_a_valid_ObjectId", async () => {
+  test("commentId_not_a_valid_ObjectId", async () => {
     await expect(
       comments.addReplyToComment(
         seedUserData[0]._id.toString(),
