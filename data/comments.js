@@ -151,7 +151,65 @@ const exportedMethods = {
     return updatedPoem;
   },
 
-  async addReplyToComment() {},
+  async addReplyToComment(
+    userId,
+    commentId,
+    timeCommented,
+    commentString,
+    poemId
+  ) {
+    userId = validation.checkId(userId, "userId");
+    commentId = validation.checkId(commentId, "commentId");
+    poemId = validation.checkId(poemId, "poemId");
+
+    timeCommented = validation.checkDateString(timeCommented, "timeCommented");
+
+    // TODO discuss and implement other restrictions for comments
+    commentString = validation.checkString(commentString);
+
+    const userCollection = await users();
+    const userById = await userCollection.findOne({
+      _id: new ObjectId(userId),
+    });
+    if (!userById)
+      throw new Error(`addReplyToComment: no user found with userId ${userId}`);
+
+    const poemCollection = await poems();
+    const poemById = await poemCollection.findOne({
+      _id: new ObjectId(poemId),
+    });
+    if (!poemById)
+      throw new Error(`addReplyToComment: no poem found with poemId ${poemId}`);
+
+    const foundComment = poemById.comments.find(
+      (comment) => comment._id.toString() === commentId
+    );
+    if (!foundComment)
+      throw new Error(
+        `addReplyToComment: no comment with commentId ${commentId} found in poem ${poemId}`
+      );
+
+    const updatedPoem = await poemCollection.findOneAndUpdate(
+      { _id: new ObjectId(poemId) },
+      {
+        $push: {
+          comments: {
+            _id: new ObjectId(),
+            tagId: foundComment.tagId,
+            userId: new ObjectId(userId),
+            timeCommented: timeCommented,
+            commentString: commentString,
+            repliesTo: foundComment._id,
+          },
+        },
+      },
+      { returnDocument: "after" }
+    );
+
+    if (updatedPoem === null)
+      throw new Error("addCommentToPoem: could not add the comment");
+    return updatedPoem;
+  },
 
   async removeCommentFromPoem() {},
 
