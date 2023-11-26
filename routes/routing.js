@@ -23,4 +23,8 @@ router.route('/editor').get(async (req, res) => {
     res.render('editor', {title:"Editor"});
 });
 
+router.route('/tagTest').get(async (req, res) => {
+    res.render('tagTest', {title:"Testing Tags"});
+});
+
 export default router;
