@@ -1,4 +1,11 @@
 {{!-- Testing page for manipulating tags --}}
 <body>
-    <h2>Tags Testing</h2>
+    <h2>Tags Testing</h2><p>Create new tag:</p>
+    <form action="/tagTest" method="post">
+        <label for="newTagString">Tag string:</label>
+        <input type="text" id="newTagString" name="newTagString">
+        <label for="newTaggedPoem">Tagged poem:</label>
+        <input type="text" id="newTaggedPoem" name="newTaggedPoem">
+        <input type="submit" value="Submit">
+    </form>
 </body>

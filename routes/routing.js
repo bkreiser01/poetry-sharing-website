@@ -1,5 +1,6 @@
 //import express and express router as shown in lecture code and worked in previous labs.  Import your data functions from /data/characters.js that you will call in your routes below
 import {Router} from 'express';
+//import {CreateNewTag} from '../data/index.js';
 const router = Router();
 
 router.route('/').get(async (req, res) => {
@@ -26,5 +27,19 @@ router.route('/editor').get(async (req, res) => {
 router.route('/tagTest').get(async (req, res) => {
     res.render('tagTest', {title:"Testing Tags"});
 });
+
+/*
+router.route('/tagTest').post(async (req, res) => {
+    //Validate here
+
+    //Add to database
+    let TagString = req.body.newTagString;
+    let PoemID = req.body.newTaggedPoem;
+    await CreateNewTag(TagString, PoemID);
+
+    //Render again
+    res.render('tagTest', {title:"Testing Tags"});
+});
+*/
 
 export default router;

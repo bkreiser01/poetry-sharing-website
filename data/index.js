@@ -12,12 +12,12 @@ export const CreateNewTag = async (tagString, taggedPoemsId) => {
     const tagCollection = await tags();
 
     //Create Tag
-    const NewID = new ObjectId("bbbbbbbbbbbbbbbbbbbbbbb0");
+    const NewID = new ObjectId("bbbbbbbbbbbbbbbbbbbbbbb5");
     const seedTagData = 
     {
         _id: NewID,
         tagString: tagString,
-        taggedPoemsId: taggedPoemsId,
+        taggedPoemsId: [taggedPoemsId],
     }
 
     //Insert tag and close
