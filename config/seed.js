@@ -327,7 +327,7 @@ export const seedDb = async () => {
   await userCollection.insertMany(seedUserData);
   await tagCollection.insertMany(seedTagData);
 
-  await connections.closeConnection();
+  //await connections.closeConnection();
 };
 
 await seedDb();

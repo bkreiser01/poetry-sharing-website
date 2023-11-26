@@ -1,6 +1,7 @@
 //import express and express router as shown in lecture code and worked in previous labs.  Import your data functions from /data/characters.js that you will call in your routes below
 import {Router} from 'express';
-//import {CreateNewTag} from '../data/index.js';
+import {CreateNewTag} from '../data/index.js';
+import {seedDb} from '../config/seed.js';
 const router = Router();
 
 router.route('/').get(async (req, res) => {
@@ -28,8 +29,7 @@ router.route('/tagTest').get(async (req, res) => {
     res.render('tagTest', {title:"Testing Tags"});
 });
 
-/*
-router.route('/tagTest').post(async (req, res) => {
+router.route('/CreateNewTag').post(async (req, res) => {
     //Validate here
 
     //Add to database
@@ -38,8 +38,7 @@ router.route('/tagTest').post(async (req, res) => {
     await CreateNewTag(TagString, PoemID);
 
     //Render again
-    res.render('tagTest', {title:"Testing Tags"});
+    return res.redirect('/tagTest');
 });
-*/
 
 export default router;
