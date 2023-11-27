@@ -3,6 +3,8 @@ import * as connections from "../config/mongoConnection.js";
 import { tags } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 
+
+
 //Create new tag in Tags database
 export const CreateNewTag = async (tagString, taggedPoemsId) => {
     //Validate here
@@ -20,8 +22,21 @@ export const CreateNewTag = async (tagString, taggedPoemsId) => {
         taggedPoemsId: [taggedPoemsId],
     };
 
-    //Insert tag and close
+    //Insert tag
     await tagCollection.insertOne(seedTagData);
-    //await connections.closeConnection();
     return;
+}
+
+
+
+//Search for tag in Tags database
+export const SearchForTag = async (tagString) => {
+    //Validate here
+
+    //Connect
+    const db = await connections.dbConnection();
+    const tagCollection = await tags();
+
+    //Return tag
+    return tagString;
 }
