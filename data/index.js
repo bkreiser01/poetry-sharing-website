@@ -30,13 +30,14 @@ export const CreateNewTag = async (tagString, taggedPoemsId) => {
 
 
 //Search for tag in Tags database
-export const SearchForTag = async (tagString) => {
+export const SearchForTag = async (inputTagString) => {
     //Validate here
 
     //Connect
     const db = await connections.dbConnection();
     const tagCollection = await tags();
 
-    //Return tag
-    return tagString;
+    //Search for tag and return
+    let FoundTag = await tagCollection.findOne({tagString: inputTagString});
+    return FoundTag;
 }
