@@ -273,7 +273,96 @@ const exportedMethods = {
     return updatedPoem;
   },
 
-  async updateCommentPut() {},
+  /**
+   * FIXME
+   * - add check if new timeCommented is before the comment replies
+   * - add check where repliesTo points to no comment
+   * - add whether to delete replies or not
+   * - maybe get rid of poemId and only allow modification in the same poem
+   * - in that case maybe a function to move a comment from poem to poem?
+   */
+  async updateCommentPut(
+    commentId,
+    tagId,
+    userId,
+    timeCommented,
+    commentString,
+    repliesTo,
+    poemId
+  ) {
+    commentId = validation.checkId(commentId, "commentId");
+    tagId = validation.checkId(tagId, "tagId");
+    userId = validation.checkId(userId, "userId");
+    timeCommented = validation.checkDateString(timeCommented, "timeCommented");
+    commentString = validation.checkString(commentString, "commentString");
+    if (typeof repliesTo === "string") validation.checkId(repliesTo, repliesTo);
+    else if (repliesTo !== null)
+      throw new Error(
+        `updateCommentPut: repliesTo should be either a valid ObjectId or null`
+      );
+    poemId = validation.checkId(poemId, "poemId");
+
+    const userCollection = await users();
+    const userById = await userCollection.findOne({
+      _id: new ObjectId(userId),
+    });
+    if (!userById)
+      throw new Error(`updateCommentPut: no user found with userId ${userId}`);
+
+    const poemCollection = await poems();
+    const poemById = await poemCollection.findOne({
+      _id: new ObjectId(poemId),
+    });
+    if (!poemById)
+      throw new Error(`updateCommentPut: no poem found with poemId ${poemId}`);
+
+    let tagFound = false;
+    for (let tag of poemById.submittedTags) {
+      if (tag.tagId.toString() === tagId) tagFound = true;
+    }
+
+    if (!tagFound)
+      throw new Error(
+        `updateCommentPut: could not find tag with id ${tagId} for poem ${poemId}`
+      );
+
+    const timeToPut = new Date(timeCommented);
+    const currentTime = new Date(poemById.timeSubmitted);
+    if (timeToPut < currentTime)
+      throw new Error(
+        `updateCommentPut: trying to set timeCommented to before the poem publication (${timeCommented} < ${poemById.timeSubmitted})`
+      );
+
+    let foundComment = undefined;
+    try {
+      foundComment = await this.getCommentById(commentId);
+    } catch (e) {
+      throw new Error(
+        `updateCommentPut: no comment found with commentId ${commentId}`
+      );
+    }
+
+    const updatedPoem = await poemCollection.findOneAndUpdate(
+      { "comments._id": new ObjectId(commentId) },
+      {
+        // The "$" here means that we take the first element matched, here the comment with the corresponding id
+        $set: {
+          "comments.$.tagId": new ObjectId(tagId),
+          "comments.$.userId": new ObjectId(userId),
+          "comments.$.timeCommented": timeCommented,
+          "comments.$.commentString": commentString,
+          "comments.$.repliesTo": repliesTo
+            ? new ObjectId(repliesTo)
+            : repliesTo,
+        },
+      },
+      { returnDocument: "after" }
+    );
+    if (!updatedPoem)
+      throw new Error(`updateCommentPut: could not update the poem`);
+
+    return updatedPoem;
+  },
   async updateCommentPatch() {},
 };
 

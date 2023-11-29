@@ -949,7 +949,8 @@ describe("removeCommentFromPoem", () => {
     expect(result).toEqual(current);
     expect(current.comments.length).toEqual(previous.comments.length - 1);
     const found = current.comments.find(
-      (comment) => comment._id === seedPoemData[0].comments[0]._id
+      (comment) =>
+        comment._id.toString() === seedPoemData[0].comments[0]._id.toString()
     );
     expect(found).toBeFalsy();
   });
@@ -978,7 +979,8 @@ describe("removeCommentFromPoem", () => {
     expect(current.comments.length).toEqual(previous.comments.length - 3);
     // Comment is removed
     let found = current.comments.find(
-      (comment) => comment._id === seedPoemData[0].comments[0]._id
+      (comment) =>
+        comment._id.toString() === seedPoemData[0].comments[0]._id.toString()
     );
     expect(found).toBeFalsy();
 
@@ -1017,12 +1019,564 @@ describe("removeCommentFromPoem", () => {
     expect(current.comments.length).toEqual(previous.comments.length - 3);
     // Comment is removed
     let found = current.comments.find(
-      (comment) => comment._id === seedPoemData[0].comments[0]._id
+      (comment) =>
+        comment._id.toString() === seedPoemData[0].comments[0]._id.toString()
     );
     expect(found).toBeFalsy();
 
     // In this case, only one top-level comment remains
     found = current.comments.find((comment) => comment.repliesTo != null);
     expect(found).toBeFalsy();
+  });
+});
+
+describe("updateCommentPut", () => {
+  test("no_args", async () => {
+    expect(comments.updateCommentPut()).rejects.toThrow();
+  });
+
+  test("commentId_not_a_string", async () => {
+    await expect(
+      comments.updateCommentPut(
+        1,
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("commentId_empty", async () => {
+    await expect(
+      comments.updateCommentPut(
+        "",
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("commentId_just_spaces", async () => {
+    await expect(
+      comments.updateCommentPut(
+        "        ",
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("commentId_not_a_valid_ObjectId", async () => {
+    await expect(
+      comments.updateCommentPut(
+        "not_valid",
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("userId_not_a_string", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        1,
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("userId_empty", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        "",
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("userId_just_spaces", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        "        ",
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("userId_not_a_valid_ObjectId", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        "not_valid",
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+  test("tagId_not_a_string", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        1,
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("tagId_empty", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        "",
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("tagId_just_spaces", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        "        ",
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("tagId_not_a_valid_ObjectId", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        "not_valid",
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("repliesTo_not_a_string_nor_null", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        1,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("repliesTo_empty", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        "",
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("repliesTo_just_spaces", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        "         ",
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("repliesTo_not_a_valid_ObjectId", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        "not_valid",
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("repliesTo_null_is_valid", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        1
+      )
+    ).rejects.toThrow("Error: poemId must be a string");
+  });
+
+  test("poemId_not_a_string", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        1
+      )
+    ).rejects.toThrow();
+  });
+
+  test("poemId_empty", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        ""
+      )
+    ).rejects.toThrow();
+  });
+
+  test("poemId_just_spaces", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        "         "
+      )
+    ).rejects.toThrow();
+  });
+
+  test("poemId_not_a_valid_ObjectId", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        "not_valid"
+      )
+    ).rejects.toThrow();
+  });
+
+  test("commentString_not_a_string", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        1,
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("commentString_empty", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("commentString_just_spaces", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "         ",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("timeCommented_not_a_string", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        1,
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("timeCommented_empty", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("timeCommented_just_spaces", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "       ",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("no_comment_with_commentId", async () => {
+    await expect(
+      comments.updateCommentPut(
+        "fefefefefefefefefefefefe",
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow(
+      "updateCommentPut: no comment found with commentId fefefefefefefefefefefefe"
+    );
+  });
+
+  test("no_user_with_userId", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        "fefefefefefefefefefefefe",
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow(
+      "updateCommentPut: no user found with userId fefefefefefefefefefefefe"
+    );
+  });
+
+  test("no_poem_with_poemId", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        "fefefefefefefefefefefefe"
+      )
+    ).rejects.toThrow();
+  });
+
+  // The two following test are virtually the same
+  test("no_tag_with_tagId", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        "fefefefefefefefefefefefe",
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("poem_does_not_include_tag", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[0]._id.toString(),
+        seedUserData[0]._id.toString(),
+        "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
+        "test",
+        null,
+        seedPoemData[1]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("change_tagId_but_tag_not_in_poem", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[1]._id.toString(),
+        seedPoemData[0].comments[0].userId.toString(),
+        seedPoemData[0].comments[0].timeCommented,
+        seedPoemData[0].comments[0].commentString,
+        seedPoemData[0].comments[0].repliesTo,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("timeCommented_is_before_poem_publication_same_poem", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedPoemData[0].comments[0].tagId.toString(),
+        seedPoemData[0].comments[0].userId.toString(),
+        "Mon Nov 12 2023 14:44:59 GMT-0500 (Eastern Standard Time)",
+        seedPoemData[0].comments[0].commentString,
+        seedPoemData[0].comments[0].repliesTo,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("timeCommented_is_before_poem_publication_other_poem", async () => {
+    await expect(
+      comments.updateCommentPut(
+        seedPoemData[3].comments[0]._id.toString(),
+        seedPoemData[0].comments[0].tagId.toString(),
+        seedPoemData[0].comments[0].userId.toString(),
+        "Mon Nov 12 2023 14:44:59 GMT-0500 (Eastern Standard Time)",
+        seedPoemData[0].comments[0].commentString,
+        seedPoemData[0].comments[0].repliesTo,
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  beforeEach(async () => {
+    await _db.dropDatabase();
+    await seedDb();
+  });
+
+  afterAll(async () => {
+    await _db.dropDatabase();
+    await seedDb();
+  });
+
+  test("valid_same_poem", async () => {
+    const previous = await _poemCollection.findOne({
+      _id: seedPoemData[0]._id,
+    });
+
+    let result = undefined;
+    try {
+      result = await comments.updateCommentPut(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedTagData[2]._id.toString(),
+        seedUserData[2]._id.toString(),
+        "Mon Nov 13 2023 15:00:06 GMT-0500 (Eastern Standard Time)",
+        "This is a modified comment",
+        null,
+        seedPoemData[0]._id.toString()
+      );
+    } catch (e) {
+      throw new Error(`Test failed with error: ${e.toString()}`);
+    }
+
+    const current = await _poemCollection.findOne({ _id: seedPoemData[0]._id });
+    expect(result).toBeTruthy();
+    expect(result).toEqual(current);
+
+    const foundComment = current.comments.find(
+      (comment) =>
+        comment._id.toString() === seedPoemData[0].comments[0]._id.toString()
+    );
+
+    expect(foundComment).toBeTruthy();
+    expect(foundComment).toEqual({
+      _id: seedPoemData[0].comments[0]._id,
+      tagId: seedTagData[2]._id,
+      userId: seedUserData[2]._id,
+      timeCommented:
+        "Mon Nov 13 2023 15:00:06 GMT-0500 (Eastern Standard Time)",
+      commentString: "This is a modified comment",
+      repliesTo: null,
+    });
   });
 });
