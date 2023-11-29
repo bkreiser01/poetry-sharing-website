@@ -211,7 +211,67 @@ const exportedMethods = {
     return updatedPoem;
   },
 
-  async removeCommentFromPoem() {},
+  async removeCommentFromPoem(commentId, poemId, deleteReplies = false) {
+    commentId = validation.checkString(commentId, "commentId");
+    poemId = validation.checkString(poemId, "poemId");
+
+    const poemCollection = await poems();
+    const poemById = await poemCollection.findOne({
+      _id: new ObjectId(poemId),
+    });
+    if (!poemById)
+      throw new Error(
+        `removeCommentFromPoem: no poem found with poemId ${poemId}`
+      );
+
+    const foundComment = poemById.comments.find(
+      (comment) => comment._id.toString() === commentId
+    );
+    if (!foundComment)
+      throw new Error(
+        `removeCommentFromPoem: no comment with commentId ${commentId} found in poem ${poemId}`
+      );
+
+    let commentsToRemove = [foundComment._id.toString()];
+
+    // FIXME Tree traversal algo is O(n^2) because parent reference is used(instead of child ref). Need to do better
+    if (deleteReplies) {
+      const replies = [];
+      const stack = [foundComment];
+
+      while (stack.length > 0) {
+        let current = stack.pop();
+        for (let potentialReply of poemById.comments) {
+          if (
+            !!potentialReply.repliesTo &&
+            potentialReply.repliesTo.toString() === current._id.toString()
+          ) {
+            replies.push(potentialReply);
+            stack.push(potentialReply);
+          }
+        }
+      }
+
+      commentsToRemove.push(
+        ...replies.map((comment) => comment._id.toString())
+      );
+    }
+    commentsToRemove = commentsToRemove.map(
+      (idString) => new ObjectId(idString)
+    );
+
+    const updatedPoem = await poemCollection.findOneAndUpdate(
+      { _id: new ObjectId(poemId) },
+      {
+        $pull: { comments: { _id: { $in: commentsToRemove } } },
+      },
+      { returnDocument: "after" }
+    );
+
+    if (updatedPoem === null)
+      throw new Error(`removeCommentFromPoem: could not remove the poem`);
+    return updatedPoem;
+  },
 
   async updateCommentPut() {},
   async updateCommentPatch() {},

@@ -830,3 +830,199 @@ describe("addReplyToComment", () => {
     expect(found).toBeTruthy();
   });
 });
+
+describe("removeCommentFromPoem", () => {
+  beforeEach(async () => {
+    await _db.dropDatabase();
+    await seedDb();
+  });
+
+  afterAll(async () => {
+    await _db.dropDatabase();
+    await seedDb();
+  });
+
+  test("no_args", async () => {
+    await expect(comments.removeCommentFromPoem()).rejects.toThrow();
+  });
+
+  test("commentId_not_a_string", async () => {
+    await expect(
+      comments.removeCommentFromPoem(1, seedPoemData[0]._id.toString())
+    ).rejects.toThrow();
+  });
+
+  test("commentId_empty", async () => {
+    await expect(
+      comments.removeCommentFromPoem("", seedPoemData[0]._id.toString())
+    ).rejects.toThrow();
+  });
+
+  test("commentId_just_spaces", async () => {
+    await expect(
+      comments.removeCommentFromPoem(
+        "           ",
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("commentId_not_a_valid_ObjectId", async () => {
+    await expect(
+      comments.removeCommentFromPoem("test", seedPoemData[0]._id.toString())
+    ).rejects.toThrow();
+  });
+
+  test("poemId_not_a_string", async () => {
+    await expect(
+      comments.removeCommentFromPoem(
+        seedPoemData[0].comments[0]._id.toString(),
+        1
+      )
+    ).rejects.toThrow();
+  });
+
+  test("poemId_empty", async () => {
+    await expect(
+      comments.removeCommentFromPoem(
+        seedPoemData[0].comments[0]._id.toString(),
+        ""
+      )
+    ).rejects.toThrow();
+  });
+
+  test("poemId_just_spaces", async () => {
+    await expect(
+      comments.removeCommentFromPoem(
+        seedPoemData[0].comments[0]._id.toString(),
+        "           "
+      )
+    ).rejects.toThrow();
+  });
+
+  test("poemId_not_a_valid_ObjectId", async () => {
+    await expect(
+      comments.removeCommentFromPoem(
+        seedPoemData[0].comments[0]._id.toString(),
+        "test"
+      )
+    ).rejects.toThrow();
+  });
+
+  test("no_poem_found", async () => {
+    await expect(
+      comments.removeCommentFromPoem(
+        seedPoemData[0].comments[0]._id.toString(),
+        "fefefefefefefefefefefefe"
+      )
+    ).rejects.toThrow();
+  });
+
+  test("comment_not_found", async () => {
+    await expect(
+      comments.removeCommentFromPoem(
+        "fefefefefefefefefefefefe",
+        seedPoemData[0]._id.toString()
+      )
+    ).rejects.toThrow();
+  });
+
+  test("valid_remove_top_level", async () => {
+    const previous = await _poemCollection.findOne({
+      _id: seedPoemData[0]._id,
+    });
+
+    let result = undefined;
+    try {
+      result = await comments.removeCommentFromPoem(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedPoemData[0]._id.toString(),
+        false
+      );
+    } catch (e) {
+      throw new Error(`Test failed with error: ${e.toString()}`);
+    }
+    const current = await _poemCollection.findOne({
+      _id: seedPoemData[0]._id,
+    });
+    expect(result).toBeTruthy();
+    expect(result).toEqual(current);
+    expect(current.comments.length).toEqual(previous.comments.length - 1);
+    const found = current.comments.find(
+      (comment) => comment._id === seedPoemData[0].comments[0]._id
+    );
+    expect(found).toBeFalsy();
+  });
+
+  test("valid_also_remove_replies", async () => {
+    const previous = await _poemCollection.findOne({
+      _id: seedPoemData[0]._id,
+    });
+
+    let result = undefined;
+    try {
+      result = await comments.removeCommentFromPoem(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedPoemData[0]._id.toString(),
+        true
+      );
+    } catch (e) {
+      throw new Error(`Test failed with error: ${e.toString()}`);
+    }
+
+    const current = await _poemCollection.findOne({
+      _id: seedPoemData[0]._id,
+    });
+    expect(result).toBeTruthy();
+    expect(result).toEqual(current);
+    expect(current.comments.length).toEqual(previous.comments.length - 3);
+    // Comment is removed
+    let found = current.comments.find(
+      (comment) => comment._id === seedPoemData[0].comments[0]._id
+    );
+    expect(found).toBeFalsy();
+
+    // In this case, only one top-level comment remains
+    found = current.comments.find((comment) => comment.repliesTo != null);
+    expect(found).toBeFalsy();
+  });
+
+  test("valid_replies_are_shuffled", async () => {
+    const previous = await _poemCollection.findOne({
+      _id: seedPoemData[0]._id,
+    });
+
+    // Simply reverse to mess up the ordering
+    let reverseComments = previous.comments.reverse();
+    await _poemCollection.findOneAndUpdate(
+      { _id: seedPoemData[0]._id },
+      { $set: { comments: reverseComments } }
+    );
+
+    let result = undefined;
+    try {
+      result = await comments.removeCommentFromPoem(
+        seedPoemData[0].comments[0]._id.toString(),
+        seedPoemData[0]._id.toString(),
+        true
+      );
+    } catch (e) {
+      throw new Error(`Test failed with error: ${e.toString()}`);
+    }
+    const current = await _poemCollection.findOne({
+      _id: seedPoemData[0]._id,
+    });
+    expect(result).toBeTruthy();
+    expect(result).toEqual(current);
+    expect(current.comments.length).toEqual(previous.comments.length - 3);
+    // Comment is removed
+    let found = current.comments.find(
+      (comment) => comment._id === seedPoemData[0].comments[0]._id
+    );
+    expect(found).toBeFalsy();
+
+    // In this case, only one top-level comment remains
+    found = current.comments.find((comment) => comment.repliesTo != null);
+    expect(found).toBeFalsy();
+  });
+});
