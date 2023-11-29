@@ -11,6 +11,7 @@ const poemid0 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa0");
 const poemid1 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa1");
 const poemid2 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa2");
 const poemid3 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa3");
+const poemid4 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa4");
 
 const lol = new ObjectId("bbbbbbbbbbbbbbbbbbbbbbb0");
 const nice = new ObjectId("bbbbbbbbbbbbbbbbbbbbbbb1");
@@ -27,9 +28,9 @@ export const seedUserData = [
       "Mon Nov 13 2023 14:47:57 GMT-0500 (Eastern Standard Time)",
     private: false,
     bio: "I like to write poems!",
-    poemIds: [poemid0],
-    taggedPoems: [],
-    tagsUsed: [],
+    poemIds: [poemid0, poemid4],
+    taggedPoems: [poemid4],
+    tagsUsed: [lol],
     favorites: [poemid1],
     recentlyViewedPoemIds: [],
     followers: [alice, bob, charlie],
@@ -157,27 +158,25 @@ export const seedPoemData = [
         timeCommented:
           "Mon Nov 13 2023 14:58:40 GMT-0500 (Eastern Standard Time)",
         commentString: "Wow this poem is laugh out loud funny!",
-        replies: [
-          {
-            _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee11"),
-            tagId: lol,
-            userId: john,
-            timeCommented:
-              "Mon Nov 13 2023 15:01:28 GMT-0500 (Eastern Standard Time)",
-            commentString: "Thanks, it is funny lol",
-            replies: [
-              {
-                _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee12"),
-                tagId: lol,
-                userId: alice,
-                timeCommented:
-                  "Mon Nov 13 2023 15:10:11 GMT-0500 (Eastern Standard Time)",
-                commentString: "Yeah that's why I commented lol!!!!!",
-                replies: [],
-              },
-            ],
-          },
-        ],
+        repliesTo: null,
+      },
+      {
+        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee11"),
+        tagId: lol,
+        userId: john,
+        timeCommented:
+          "Mon Nov 13 2023 15:01:28 GMT-0500 (Eastern Standard Time)",
+        commentString: "Thanks, it is funny lol",
+        repliesTo: new ObjectId("eeeeeeeeeeeeeeeeeeeeee10"),
+      },
+      {
+        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee12"),
+        tagId: lol,
+        userId: alice,
+        timeCommented:
+          "Mon Nov 13 2023 15:10:11 GMT-0500 (Eastern Standard Time)",
+        commentString: "Yeah that's why I commented lol!!!!!",
+        repliesTo: new ObjectId("eeeeeeeeeeeeeeeeeeeeee11"),
       },
       {
         _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee20"),
@@ -186,7 +185,7 @@ export const seedPoemData = [
         timeCommented:
           "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
         commentString: "Love this",
-        replies: [],
+        repliesTo: null,
       },
     ],
     private: false,
@@ -216,17 +215,16 @@ export const seedPoemData = [
         timeCommented:
           "Mon Nov 14 2023 15:05:49 GMT-0500 (Eastern Standard Time)",
         commentString: "It's a nice first!",
-        replies: [
-          {
-            _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee31"),
-            tagId: nice,
-            userId: alice,
-            timeCommented:
-              "Mon Nov 14 2023 15:11:12 GMT-0500 (Eastern Standard Time)",
-            commentString: "thx bob",
-            replies: [],
-          },
-        ],
+        repliesTo: null,
+      },
+      {
+        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee31"),
+        tagId: nice,
+        userId: alice,
+        timeCommented:
+          "Mon Nov 14 2023 15:11:12 GMT-0500 (Eastern Standard Time)",
+        commentString: "thx bob",
+        repliesTo: new ObjectId("eeeeeeeeeeeeeeeeeeeeee30"),
       },
     ],
     private: false,
@@ -275,20 +273,56 @@ export const seedPoemData = [
         timeCommented:
           "Mon Nov 14 2023 15:05:49 GMT-0500 (Eastern Standard Time)",
         commentString: "Let's go charlie :fire:",
-        replies: [
-          {
-            _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee41"),
-            tagId: fire,
-            userId: charlie,
-            timeCommented:
-              "Mon Nov 14 2023 15:11:12 GMT-0500 (Eastern Standard Time)",
-            commentString: "The first of many!",
-            replies: [],
-          },
-        ],
+        repliesTo: null,
+      },
+      {
+        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee41"),
+        tagId: fire,
+        userId: charlie,
+        timeCommented:
+          "Mon Nov 14 2023 15:11:12 GMT-0500 (Eastern Standard Time)",
+        commentString: "The first of many!",
+        repliesTo: new ObjectId("eeeeeeeeeeeeeeeeeeeeee40"),
       },
     ],
     private: false,
+  },
+  {
+    _id: poemid4,
+    timeSubmitted: "Mon Nov 17 2023 14:44:59 GMT-0500 (Eastern Standard Time)",
+    title: "No debate in the comments",
+    body: "This only has top-level comments",
+    userId: alice,
+    link: "",
+    submittedTags: [
+      {
+        _id: new ObjectId("ccccccccccccccccccccccc5"),
+        tagId: lol,
+        tagCount: 1, // John
+      },
+    ],
+    totalTagCount: 1,
+    favoriteCount: 0,
+    comments: [
+      {
+        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee50"),
+        tagId: lol,
+        userId: bob,
+        timeCommented:
+          "Mon Nov 18 2023 15:05:49 GMT-0500 (Eastern Standard Time)",
+        commentString: "Top-level 1",
+        repliesTo: null,
+      },
+      {
+        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee60"),
+        tagId: lol,
+        userId: charlie,
+        timeCommented:
+          "Mon Nov 18 2023 15:11:12 GMT-0500 (Eastern Standard Time)",
+        commentString: "Top-level 2",
+        repliesTo: null,
+      },
+    ],
   },
 ];
 
@@ -296,7 +330,7 @@ export const seedTagData = [
   {
     _id: lol,
     tagString: "LOL",
-    taggedPoemsId: [poemid0, poemid3],
+    taggedPoemsId: [poemid0, poemid3, poemid4],
   },
   {
     _id: nice,
@@ -326,8 +360,7 @@ export const seedDb = async () => {
   await poemCollection.insertMany(seedPoemData);
   await userCollection.insertMany(seedUserData);
   await tagCollection.insertMany(seedTagData);
-
-  await connections.closeConnection();
 };
 
-await seedDb();
+// await seedDb();
+// await connections.closeConnection();
