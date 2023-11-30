@@ -4,10 +4,21 @@ import { Router } from "express";
 const router = Router();
 import { poemData } from "../data/index.js";
 
-router.route("/new").get(async (req, res) => {
-   const users = await userData.getAllUsers();
-   res.render("newpoem", { users: users });
+router.route("/").get(async (req, res) => {
+   // Can change to redirect somewhere else
+   res.redirect("/poems/new");
 });
+
+router
+   .route("/new")
+   .get(async (req, res) => {
+      res.render("poems/new", {
+         poem: { title: "pwned", body: "you have been trolled poser" },
+      });
+   })
+   .post(async (req, res) => {
+      res.json(req.body);
+   });
 
 // For this we probably want to use middle ware
 // to check if the user is who they say they are
@@ -21,7 +32,6 @@ router
          // TODO Validate id
          req.params.id = req.params.id; // Validation standin replace
       } catch (e) {
-         // Make this an error html page
          return res.status(400).render("error", { error: e });
       }
       try {
@@ -85,7 +95,7 @@ router
       try {
          let deletedPoem = await poemData.removePoem(req.params.id);
 
-         res.status(200).json(deletedPoem); // TODO change to redner need poem delete handlebar
+         res.status(200).json(deletedPoem); // TODO change to render need poem delete handlebar
       } catch (e) {
          let status = e[0];
          let message = e[1];
