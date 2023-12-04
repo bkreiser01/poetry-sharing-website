@@ -55,6 +55,24 @@ const exportedMethods = {
     return date;
   },
 
+  /**
+   * Validate keys in an object
+   * 
+   * @param {Object} obj 
+   * @param {Array} keys 
+   * @returns an array of all the keys from 'keys' that are not in 'obj'
+   */
+  checkObjKeys(obj, keys) {
+    const objKeys = Object.keys(obj);
+    const missingKeys = keys.filter(key => !objKeys.includes(key));
+    return missingKeys;
+  },
+  /**
+   * Validate the username
+   * 
+   * @param {string} username
+   * @returns the valid username string
+   */
   checkUsername(username) {
     username = this.checkString(username)
 
@@ -65,6 +83,12 @@ const exportedMethods = {
     return username
   },
 
+  /**
+   * Validate the email address
+   * 
+   * @param {string} email 
+   * @returns the valid email address string
+   */
   checkEmail(email) {
     email = this.checkString(email)
 
@@ -75,6 +99,12 @@ const exportedMethods = {
     return email
   },
 
+  /**
+   * Validate the password
+   * 
+   * @param {string} password 
+   * @returns the valid password string
+   */
   checkPassword(password) {
     password = this.checkString(password)
 
@@ -92,6 +122,12 @@ const exportedMethods = {
     return password
   },
 
+  /**
+   * Validate the privacy
+   * 
+   * @param {string} privacy 
+   * @returns the valid privacy string
+   */
   checkPrivacy(privacy) {
     privacy = this.checkString(privacy)
 
@@ -101,6 +137,30 @@ const exportedMethods = {
     }
     return privacy
   },
+
+  /**
+   * Validate the taggedPoem object
+   * 
+   * @param {Object} tp 
+   */
+  checkTaggedPoem(obj) {
+    // tagged poems must have 2 keys
+    if (Object.keys(obj).length != 2) {
+      throw new Error('A taggedPoem object must have 2 keys')
+    }
+
+    // tagged poems must have the following keys
+    //    poemId, tagIds
+    let missingKeys = this.checkObjKeys(obj, ["poemId", "tagIds"])
+    if (missingKeys.length != 0) {
+      throw new Error(`The taggedPoem object is missing the key(s) ${missingKeys}`)
+    }
+
+    // TODO: the object ID's inside the tagged poems should all be validated
+    return obj
+  }
 };
 
 export default exportedMethods;
+
+console.log(exportedMethods.checkTaggedPoem({poemId: "", tagIds: ""}))
