@@ -29,27 +29,32 @@ router.route('/tagTest').get(async (req, res) => {
     res.render('tagTest', {title:"Testing Tags"});
 });
 
+//Route to add new tag to the database
 router.route('/CreateNewTag').post(async (req, res) => {
-    //Route to add new tag to the database
-    //Validate here
-
     //Add to database
     let TagString = req.body.newTagString;
     let PoemID = req.body.newTaggedPoem;
-    await CreateNewTag(TagString, PoemID);
+    try {
+        await CreateNewTag(TagString, PoemID);
+    } catch (e) {
+        console.log(e);
+    }
 
     //Refresh page
     return res.redirect('/tagTest');
 });
 
+//Route to search for tags in the database
 router.route('/SearchForTag').post(async (req, res) => {
-    //Route to search for tags in the database
-    //Validate here
-
     //Search for tag
     let TagString = req.body.SearchTagString;
-    let FoundTag = await SearchForTag(TagString);
-    console.log(FoundTag);
+    let FoundTag;
+    try {
+        FoundTag = await SearchForTag(TagString);
+        console.log(FoundTag);
+    } catch (e) {
+        console.log(e);
+    }
 
     //Refresh page
     return res.redirect('/tagTest');
