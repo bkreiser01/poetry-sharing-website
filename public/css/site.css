@@ -1,1 +1,15 @@
 /* Main cite css probably want to have different css files for different pages */
+
+header {
+   display: flex;
+}
+
+.navbar {
+   margin: 10px;
+   display: flex;
+}
+
+.navelem {
+   list-style-type: none;
+   margin-left: 15px;
+}

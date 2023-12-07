@@ -3,6 +3,9 @@
 import { Router } from "express";
 const router = Router();
 import { poemData } from "../data/index.js";
+import validation from "../helpers/validation.js";
+import { ObjectId } from "mongodb";
+import markdown, { getCodeString } from "@wcj/markdown-to-html";
 
 router.route("/").get(async (req, res) => {
    // Can change to redirect somewhere else
@@ -13,11 +16,76 @@ router
    .route("/new")
    .get(async (req, res) => {
       res.render("poems/new", {
-         poem: { title: "pwned", body: "you have been trolled poser" },
+         title: "New Poem",
       });
    })
    .post(async (req, res) => {
-      res.json(req.body);
+      const inputData = req.body;
+      let errors = [];
+
+      if (!req.body) {
+         return res.render("poems/new", { error: "No input provided" });
+      }
+
+      try {
+         inputData.title = validation.checkString(
+            inputData.title.trim(),
+            "Title"
+         );
+      } catch (e) {
+         errors.push(e);
+      }
+
+      try {
+         inputData.body = validation.checkString(inputData.body.trim(), "Body");
+      } catch (e) {
+         errors.push(e);
+      }
+
+      if (inputData.link) {
+         try {
+            inputData.link = validation.checkString(
+               inputData.link.trim(),
+               "Link"
+            );
+         } catch (e) {
+            errors.push(e);
+         }
+      }
+
+      if (inputData.private === "true") {
+         inputData.private = true;
+      } else {
+         inputData.private = false;
+      }
+
+      const timeSubmitted = new Date();
+      const userId = new ObjectId(); // TODO get from cookie
+
+      if (errors.length > 0) {
+         return res.render("poems/view", {
+            poem: {
+               title: inputData.title,
+               body: inputData.body,
+               link: inputData.link,
+            },
+            errors: errors,
+         });
+      }
+
+      try {
+         const newPoem = await poemData.addPoem(
+            timeSubmitted,
+            inputData.title,
+            inputData.body,
+            userId.toString(),
+            inputData.link,
+            inputData.private
+         );
+         res.redirect(`/poems/${newPoem._id}`);
+      } catch (e) {
+         res.render("poems/view", { error: e });
+      }
    });
 
 // For this we probably want to use middle ware
@@ -29,48 +97,53 @@ router
       let poem;
       let user;
       try {
-         // TODO Validate id
-         req.params.id = req.params.id; // Validation standin replace
+         req.params.id = validation.checkId(req.params.id); // Validation standin replace
       } catch (e) {
          return res.status(400).render("error", { error: e });
       }
+
       try {
          poem = await poemData.getPoemById(req.params.id);
       } catch (e) {
          res.status(404).json({ error: e });
       }
+
       try {
-         user = await userData.getUserById(poem.userId);
+         poem.body = markdown(poem.body);
       } catch (e) {
-         res.status(404).json({ error: e });
+         // TODO IDK handle the error when markdown don't work
+         return res.redirect("error");
       }
-      // res.render("poems/view", )
-   })
-   .put(async (req, res) => {
-      // TODO add with updatePoemPut
+
+      // try {
+      //    user = await userData.getUserById(poem.userId);
+      // } catch (e) {
+      //    res.status(404).json({ error: e });
+      // }
+
+      res.render("poems/view", { title: poem.title, poem: poem });
    })
    .patch(async (req, res) => {
-      const requestBody = req.body;
+      const inputData = req.body;
       // TODO validate body not undefined
       try {
          req.params.id = req.params.id; // TODO validate id
-         if (requestBody.timeSubmitted) {
-            requestBody.timeSubmitted = requestBody.timeSubmitted; // TODO validate timeSubmitted
+         if (inputData.timeSubmitted !== undefined) {
+            inputData.timeSubmitted = validation.checkString(
+               inputData.timeSubmitted
+            ); // TODO validate timeSubmitted
          }
-         if (requestBody.title) {
-            requestBody.title = requestBody.title; // TODO validate title
+         if (inputData.title !== undefined) {
+            inputData.title = validation.checkString(inputData.title); // TODO validate title
          }
-         if (requestBody.body) {
-            requestBody.body = requestBody.body; // TODO validate body
+         if (inputData.body !== undefined) {
+            inputData.body = validation.checkString(inputData.body); // TODO validate body
          }
-         if (requestBody.userId) {
-            requestBody.userId = requestBody.userId; // TODO validate userId
+         if (inputData.link !== undefined) {
+            inputData.link = validation.checkUrl(inputData.link); // TODO validate link
          }
-         if (requestBody.link) {
-            requestBody.link = requestBody.link; // TODO validate link
-         }
-         if (requestBody.private) {
-            requestBody.private = requestBody.private; // TODO validate private
+         if (inputData.private !== undefined) {
+            inputData.private = inputData.private; // TODO validate private
          }
       } catch (e) {
          return res.status(400).render("error", { error: e });
@@ -79,7 +152,7 @@ router
       try {
          const updatedPoem = await poemData.updatePoemPatch(
             req.params.id,
-            requestBody
+            inputData
          );
 
          res.json(updatedPoem); // TODO change to poem render
@@ -92,14 +165,14 @@ router
    .delete(async (req, res) => {
       // TODO Validate id
 
+      req.params.id = validation.checkId(req.params.id);
+
       try {
          let deletedPoem = await poemData.removePoem(req.params.id);
 
          res.status(200).json(deletedPoem); // TODO change to render need poem delete handlebar
       } catch (e) {
-         let status = e[0];
-         let message = e[1];
-         res.status(status).json({ error: message });
+         res.status(404).json({ error: e.toString() });
       }
    });
 

@@ -1,4 +1,19 @@
 <body>
    <h1>{{poem.title}}</h1>
-   <a>By {{username}}</a>
+   <p>
+      By:
+      <a href="/user/{{poem.userId}}">{{username}}</a>
+   </p>
+   {{{poem.body}}}
+   <a href="{{poem.link}}">Link to Reading</a>
+
+   {{!-- TODO fix errors --}}
+   <p class="error">{{error}}</p>
+
+   {{#if isAuthor}}
+   <a href="/"></a>
+   {{/if}}
+
+   {{!-- TODO add comments --}}
+   {{!-- TODO add tags --}}
 </body>
