@@ -18,7 +18,7 @@ const exportedMethods = {
 
         return insertedData;
     },
-
+  
     /**
      *  Delete data from a collection
      * 
@@ -36,7 +36,7 @@ const exportedMethods = {
 
         return deletedData
     },
-
+  
     /**
      * Update data in a collection
      * 

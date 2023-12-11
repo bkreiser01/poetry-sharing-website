@@ -1,0 +1,19 @@
+{{!-- Testing page for manipulating tags --}}
+<body>
+    <h2>Tags Testing</h2>
+    <p>Create new tag:</p>
+    <form action="/CreateNewTag" method="post">
+        <label for="newTagString">Tag string:</label>
+        <input type="text" id="newTagString" name="newTagString">
+        <label for="newTaggedPoem">Tagged poem:</label>
+        <input type="text" id="newTaggedPoem" name="newTaggedPoem">
+        <input type="submit" value="Submit">
+    </form>
+
+    <p>Search for tag with string:</p>
+    <form action="/SearchForTag" method="post">
+        <label for="SearchTagString">Tag string:</label>
+        <input type="text" id="SearchTagString" name="SearchTagString">
+        <input type="submit" value="Submit">
+    </form>
+</body>

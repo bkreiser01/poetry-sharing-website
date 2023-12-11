@@ -303,7 +303,6 @@ const exportedMethods = {
         user.taggedPoems.push(taggedPoem)
 
         return await updateUser(user._id, user)
-        
     },
 
     /**
