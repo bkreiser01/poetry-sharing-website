@@ -57,7 +57,7 @@ let checkId = (id) => {
  * 
  * @param {*} userId - The ObjectId of the user to update 
  * @param {*} updatedUserInfo - The updated user info
- * @returns 
+ * @returns the updated user object
  */
 let updateUser = async (userId, updatedUserInfo) => {
     return await mongo.findOneAndUpdate(userCollection, userId, updatedUserInfo)
@@ -66,7 +66,7 @@ let updateUser = async (userId, updatedUserInfo) => {
  * Local helper function to get a user by id
  * 
  * @param {string|ObjectId} id - An ObjectId as either a string or the ObjectId itself
- * @returns The user object
+ * @returns the requested user object
  */
 let getById = async (id) => {
     id = checkId(id)
@@ -146,6 +146,7 @@ const exportedMethods = {
      * 
      * @param {string|ObjectId} id - The ObjectId of the user to update
      * @param {string} newUsername - The new username
+     * @returns the updated user object
      */
     async updateUsername(id, newUsername) {
         // Validate the new username
@@ -166,6 +167,7 @@ const exportedMethods = {
      * 
      * @param {string|ObjectId} id - The ObjectId of the user to update
      * @param {*} newEmail - The new email
+     * @returns the updated user object
      */
     async updateEmail(id, newEmail) {
         // Validate the new email
@@ -186,6 +188,7 @@ const exportedMethods = {
      * 
      * @param {string|ObjectId} id - The ObjectId of the user to update 
      * @param {*} newPassword - The new password
+     * @returns the updated user object
      */
     async updatePassword(id, newPassword) {
         // Validate the new password
@@ -206,7 +209,7 @@ const exportedMethods = {
      * 
      * @param {string} id - The ObjectId of the user to update
      * @param {string} newPrivacy - The new privacy setting
-     * @returns 
+     * @returns the updated user object
      */
     async updatePrivacy(id, newPrivacy) {
         // Validate the new privacy
@@ -227,7 +230,7 @@ const exportedMethods = {
      * 
      * @param {string|ObjectId} id - The ObjectId of the user to update
      * @param {string} newBio - The new bio
-     * @returns 
+     * @returns the updated user object
      */
     async updateBio(id, newBio) {
         // Validate the new bio
@@ -244,10 +247,48 @@ const exportedMethods = {
     },
 
     /**
+     *  Adds a poem to the user with the given ObjectId
+     * 
+     * @param {string|ObjectId} userId - The ObjectId of the user to update
+     * @param {string|ObjectId} poemId - The ObjectId of the poem to add 
+     * @returns the updated user object
+     */
+    async addPoem(userId, poemId) {
+        // Check the Id and convert it to a string
+        userId = checkId(userId)
+        poemId = checkId(poemId)
+
+        // Get the user by id and add the poem to it
+        let user = await getById(userId)
+        user.poemIds.push(poemId)
+
+        return await updateUser(user._id, user)
+    },
+
+    /**
+     *  Delete a poem from the user with the given ObjectId
+     * 
+     * @param {string|ObjectId} userId - The ObjectId of the user to update 
+     * @param {string|ObjectId} poemId - The ObjectId of the poem to delete
+     * @returns the updated user object
+     */
+    async deletePoem(userId, poemId) {
+        // Check the Id and convert it to a string
+        userId = checkId(userId)
+        poemId = checkId(poemId)
+
+        // Get the user by id and remove the poem from it
+        let user = await getById(userId)
+        user.poemIds = user.poemIds.filter((poem) => poem != poemId)
+
+        return await updateUser(user._id, user)
+    },
+
+    /**
      * 
      * @param {string|ObjectId} id - The ObjectId of the user to update 
      * @param {Object} taggedPoem - The tagged poem object
-     * @returns The tagged poem ObjectId
+     * @returns the updated user object
      */
     async addTaggedPoem(id, taggedPoem) {
         // Validate the tagged poem
@@ -270,7 +311,7 @@ const exportedMethods = {
      * 
      * @param {string|ObjectId} id - The ObjectId of the user to update
      * @param {string|Object} taggedPoemId - The Object Id of the tagged poem to remove
-     * @returns 
+     * @returns the updated user object
      */
     async deleteTaggedPoem(id, taggedPoemId) {
         // Check the Id and convert it to a string
@@ -280,6 +321,196 @@ const exportedMethods = {
         // Get the user by id and remove the tagged poem from it
         let user = await getById(id)
         user.taggedPoems = user.taggedPoems.filter((taggedPoem) => taggedPoem._id != taggedPoemId)
+
+        return await updateUser(user._id, user)
+    },
+
+    /**
+     *  Adds a tag to the user with the given ObjectId
+     * 
+     * @param {string|ObjectId} id - The ObjectId of the user to update
+     * @param {string|ObjectId} tagId - The ObjectId of the tag to add
+     * @returns the updated user object
+     */
+    async addTagUsed(id, tagId) {
+        // Check the Id and convert it to a string
+        id = checkId(id)
+        tagId = checkId(tagId)
+
+        // Get the user by id and add the tag to it
+        let user = await getById(id)
+        user.tagsUsed.push(tagId)
+
+        return await updateUser(user._id, user)
+    },
+
+    /**
+     *  Deletes a tag from the user with the given ObjectId
+     * 
+     * @param {string|ObjectId} id - The ObjectId of the user to update
+     * @param {string|ObjectId} tagId - The ObjectId of the tag to delete
+     * @returns the updated user object
+     */
+    async deleteTagUsed(id, tagId) {
+        // Check the Id and convert it to a string
+        id = checkId(id)
+        tagId = checkId(tagId)
+
+        // Get the user by id and remove the tag from it
+        let user = await getById(id)
+        user.tagsUsed = user.tagsUsed.filter((tag) => tag != tagId)
+
+        return await updateUser(user._id, user)
+    },
+
+    /**
+     *  Adds a favorite poem to the user with the given ObjectId
+     * 
+     * @param {string|ObjectId} id - The ObjectId of the user to update
+     * @param {string|ObjectId} poemId - The ObjectId of the poem to add
+     * @returns the updated user object
+     */
+    async addFavorite(id, poemId) {
+        // Check the Id and convert it to a string
+        id = checkId(id)
+        poemId = checkId(poemId)
+
+        // Get the user by id and add the poem to it
+        let user = await getById(id)
+        user.favorites.push(poemId)
+
+        return await updateUser(user._id, user)
+    },
+
+    /**
+     *  Deletes a favorite poem from the user with the given ObjectId
+     * 
+     * @param {string|ObjectId} id - The ObjectId of the user to update
+     * @param {string|ObjectId} poemId - The ObjectId of the poem to delete
+     * @returns the updated user object
+     */
+    async deleteFavorite(id, poemId) {
+        // Check the Id and convert it to a string
+        id = checkId(id)
+        poemId = checkId(poemId)
+
+        // Get the user by id and remove the poem from it
+        let user = await getById(id)
+        user.favorites = user.favorites.filter((poem) => poem != poemId)
+
+        return await updateUser(user._id, user)
+    },
+
+    /**
+     *  Adds a follower to the user with the given ObjectId
+     * 
+     * @param {string|ObjectId} id - The ObjectId of the user to update
+     * @param {string|ObjectId} poemId - The ObjectId of the poem to add
+     * @returns the updated user object
+     */
+    async addRecentlyViewedPoem(id, poemId) {
+        // Check the Id and convert it to a string
+        id = checkId(id)
+        poemId = checkId(poemId)
+
+        // Get the user by id and add the poem to it
+        let user = await getById(id)
+        user.recentlyViewedPoemIds.push(poemId)
+
+        return await updateUser(user._id, user)
+    },
+
+    /**
+     *  Deletes a recently viewed poem from the user with the given ObjectId
+     * 
+     * @param {string|ObjectId} id - The ObjectId of the user to update
+     * @param {string|ObjectId} poemId - The ObjectId of the poem to delete
+     * @returns the updated user object
+     */
+    async deleteRecentlyViewedPoem(id, poemId) {
+        // Check the Id and convert it to a string
+        id = checkId(id)
+        poemId = checkId(poemId)
+
+        // Get the user by id and remove the poem from it
+        let user = await getById(id)
+        user.recentlyViewedPoemIds = user.recentlyViewedPoemIds.filter((poem) => poem != poemId)
+
+        return await updateUser(user._id, user)
+    },
+
+    /**
+     * Adds a follower to the user with the given ObjectId
+     * 
+     * @param {string|ObjectId} id - The ObjectId of the user to update
+     * @param {string|ObjectId} followerId - The ObjectId of the follower to add
+     * @returns the updated user object
+     */
+    async addFollower(id, followerId) {
+        // Check the Id and convert it to a string
+        id = checkId(id)
+        followerId = checkId(followerId)
+
+        // Get the user by id and add the follower to it
+        let user = await getById(id)
+        user.followers.push(followerId)
+
+        return await updateUser(user._id, user)
+    },
+
+    /**
+     *  Deletes a follower from the user with the given ObjectId
+     * 
+     * @param {string|ObjectId} id - The ObjectId of the user to update
+     * @param {string|ObjectId} followerId - The ObjectId of the follower to delete
+     * @returns the updated user object
+     */
+    async deleteFollower(id, followerId) {
+        // Check the Id and convert it to a string
+        id = checkId(id)
+        followerId = checkId(followerId)
+
+        // Get the user by id and remove the follower from it
+        let user = await getById(id)
+        user.followers = user.followers.filter((follower) => follower != followerId)
+
+        return await updateUser(user._id, user)
+    },
+
+    /**
+     * Adds a following to the user with the given ObjectId
+     * 
+     * @param {string|ObjectId} id - The ObjectId of the user to update
+     * @param {string|ObjectId} followingId - The ObjectId of the following to add
+     * @returns the updated user object
+     */
+    async addFollowing(id, followingId) {
+        // Check the Id and convert it to a string
+        id = checkId(id)
+        followingId = checkId(followingId)
+
+        // Get the user by id and add the follower to it
+        let user = await getById(id)
+        user.following.push(followingId)
+
+        return await updateUser(user._id, user)
+    },
+
+    /**
+     * Deletes a following from the user with the given ObjectId
+     * 
+     * @param {string|ObjectId} id - The ObjectId of the user to update
+     * @param {string|ObjectId} followingId - The ObjectId of the following to delete
+     * @returns the updated user object
+     */
+    async deleteFollowing(id, followingId) {
+        // Check the Id and convert it to a string
+        id = checkId(id)
+        followingId = checkId(followingId)
+
+        // Get the user by id and remove the follower from it
+        let user = await getById(id)
+        user.following = user.following.filter((following) => following != followingId)
 
         return await updateUser(user._id, user)
     },
