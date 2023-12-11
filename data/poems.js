@@ -3,6 +3,12 @@ import { ObjectId } from "mongodb";
 import validation from "../helpers/validation.js";
 
 const exportedMethods = {
+   /**
+    * Get a poem by it's ID
+    *
+    * @param {string} id
+    * @returns
+    */
    async getPoemById(id) {
       id = validation.checkId(id, "id");
 
@@ -13,6 +19,17 @@ const exportedMethods = {
       return poem;
    },
 
+   /**
+    * Add a poem to the data base
+    *
+    * @param {Date} timeSubmitted
+    * @param {string} title
+    * @param {string} body
+    * @param {string} userId
+    * @param {string} link
+    * @param {boolean} priv
+    * @returns
+    */
    async addPoem(
       timeSubmitted,
       title = "Untitled",
@@ -59,6 +76,12 @@ const exportedMethods = {
       return gotPoem;
    },
 
+   /**
+    * Remove a poem from the database
+    *
+    * @param {string} id
+    * @returns
+    */
    async removePoem(id) {
       // TODO validate id
       id = validation.checkId(id);
@@ -75,6 +98,12 @@ const exportedMethods = {
       return { ...deletionInfo.value, deleted: true };
    },
 
+   /**
+    *
+    * @param {string} id
+    * @param {Object} updatedPoem
+    * @returns
+    */
    async updatePoemPatch(id, updatedPoem) {
       // TODO validate as checking if there is a field
 
@@ -84,19 +113,28 @@ const exportedMethods = {
       }
 
       if (updatedPoem.title) {
-         updatedPoemData.title = validation.checkString(updatedPoem.title, "Title"); 
+         updatedPoemData.title = validation.checkString(
+            updatedPoem.title,
+            "Title"
+         );
       }
 
       if (updatedPoem.body) {
-         updatedPoemData.body = validation.checkString(updatedPoem.body, "Body"); 
+         updatedPoemData.body = validation.checkString(
+            updatedPoem.body,
+            "Body"
+         );
       }
 
       if (updatedPoem.userId) {
-         updatedPoemData.userId = validation.checkId(updatedPoem.userId, "User Id"); 
+         updatedPoemData.userId = validation.checkId(
+            updatedPoem.userId,
+            "User Id"
+         );
       }
 
       if (updatedPoem.link) {
-         updatedPoemData.link = validation.checkUrl(updatedPoem.link, "Link"); 
+         updatedPoemData.link = validation.checkUrl(updatedPoem.link, "Link");
       }
 
       if (updatedPoem.submittedTags) {
@@ -104,11 +142,15 @@ const exportedMethods = {
       }
 
       if (updatedPoem.totalTagCount) {
-         updatedPoemData.totalTagCount = validation.checkNumber(updatedPoem.totalTagCount);
+         updatedPoemData.totalTagCount = validation.checkNumber(
+            updatedPoem.totalTagCount
+         );
       }
 
       if (updatedPoem.favoriteCount) {
-         updatedPoemData.favoriteCount = validation.checkNumber(updatedPoem.favoriteCount); 
+         updatedPoemData.favoriteCount = validation.checkNumber(
+            updatedPoem.favoriteCount
+         );
       }
 
       if (updatedPoem.comments) {
@@ -116,7 +158,7 @@ const exportedMethods = {
       }
 
       if (updatedPoem.private) {
-         updatedPoemData.private = validation.checkBool(updatedPoem.private); 
+         updatedPoemData.private = validation.checkBool(updatedPoem.private);
       }
 
       const poemCollection = await poems();
@@ -131,6 +173,11 @@ const exportedMethods = {
       return newPoem.value;
    },
 
+   /**
+    *
+    * @param {string} poemId
+    * @param {string} tagId
+    */
    async addSubmittedTag(poemId, tagId) {
       // TODO validate tagId
       const poemCollection = await poems();
@@ -140,13 +187,80 @@ const exportedMethods = {
       // otherwise
    },
 
-   async removeSubmittedTag(poemId, tagId) {
-      // TODO validate tagId
+   /**
+    * Decreaese a submittedTags field by one in a poem
+    *
+    * @param {string} poemId
+    * @param {string} tagId
+    */
+   async decrementSubmittedTag(poemId, tagId) {
+      poemId = validation.checkId(poemId, "PoemId");
+      tagId = validation.checkId(tagId, "TagId");
+
       const poemCollection = await poems();
       const poem = await poemCollection.findOne({ _id: new ObjectId(poemId) });
+      if (!poem) {
+         throw new Error(
+            `removeSubmittedTag: no poem found with poemId ${poemId}`
+         );
+      }
+
+      const submittedTag = await poem.submittedTags.find(
+         (submittedTag) => submittedTag.tagId.toString() === tagId
+      );
+
+      if (!submittedTag) {
+         throw new Error(
+            `removeSubmittedTag: no submittedTag with tagId ${tagId} found in poem ${poemId}`
+         );
+      }
+
+      if (submittedTag.tagCount > 1) {
+         submittedTag.tagCount = submittedTag.tagCount - 1;
+
+         const updatedPoem = await poemCollection.findOneAndUpdate(
+            { _id: new ObjectId(poemId), "submittedTags.tagId": tagId },
+            {
+               $set: { "submittedTags.$.tagCount": submittedTag.tagCount },
+            },
+            { returnDocument: "after" }
+         );
+         if (updatedPoem === null) {
+            throw new Error(
+               `removeSubmittedTag: could not remove the submittedTag`
+            );
+         }
+         return updatedPoem;
+      } else {
+         const updatedPoem = await poemCollection.findOneAndUpdate(
+            { _id: new ObjectId(poemId) },
+            {
+               $pull: { submittedTags: { tagId: tagId } },
+            },
+            { returnDocument: "after" }
+         );
+         if (updatedPoem === null) {
+            throw new Error(
+               `removeSubmittedTag: could not remove the submittedTag`
+            );
+         }
+         return updatedPoem;
+      }
 
       // check if he in there, if he in there just add one to tagCount
       // otherwise
+   },
+
+   /**
+    * Search all poems by their title string
+    *
+    * @param {string} searchStr
+    */
+   async searchByTitle(searchStr) {
+      searchStr = validation.checkString(searchStr, "Search string");
+      let regex = new RegExp(searchStr, "i"); // things that contain this string, regardless of case
+      const poemCollection = await poems();
+      return await poemCollection.find({ title: { $regex: regex } });
    },
 };
 
