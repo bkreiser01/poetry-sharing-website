@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb";
 
 const exportedMethods = {
   checkId(id, varName) {
+    // TODO: Check if object is in a collection
     if (!id) throw new Error(`Error: You must provide a ${varName}`);
     if (typeof id !== "string")
       throw new Error(`Error: ${varName} must be a string`);
