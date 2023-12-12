@@ -1,20 +1,30 @@
 {{!-- registration form --}}
 <main>
     <h2>Register</h2>
-    <form id="login_form">
+    <form id="register_form">
         <label for="username_input">Username</label><br>
-        <input name="username_input" id="username_input"><br>
+        <input name="username_input" id="username_input">
+        <label id="username_error"></label><br>
         <label for="email_input">Email</label><br>
-        <input name="email_input" id="email_input"><br>
+        <input name="email_input" id="email_input">
+        <label id="email_error"></label><br>
         <label for="password_input">Password</label><br>
-        <input name="password_input" id="password_input"><br>
+        <input name="password_input" id="password_input">
+        <label id="password_error"></label><br>
         <label for="password_confirm">Password Confirmation</label><br>
-        <input name="password_confirm" id="password_confirm"><br>
+        <input name="password_confirm" id="password_confirm">
+        <label id="password_confirm_error"></label><br>
         <select name="privacy_input" id="privacy_input">
-            <option value="">--</option>
+            <option value>--</option>
             <option value="public">Public</option>
             <option value="private">Private</option>
-        </select><br>
-        <button type="submit">Register</button>
+        </select>
+        <label id="privacy_error"></label><br>
+        <button type="submit">Register</button> <br>
+        <label id="error"></label>
     </form>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+    <script type='module' src="../public/js/register.js"></script>
 </main>

@@ -39,7 +39,7 @@ const validationMethods = {
    * @returns the valid username string
    */
   checkUsername(username) {
-    username = this.checkString(username)
+    username = validationMethods.checkString(username, "username")
 
     // Usernames should be between 3-50 chars
     if (username.length < 3 || username.length > 50) {
@@ -55,7 +55,7 @@ const validationMethods = {
    * @returns the valid email address string
    */
   checkEmail(email) {
-    email = this.checkString(email)
+    email = validationMethods.checkString(email, "email")
 
     // Regex to validate an email
     if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -71,7 +71,7 @@ const validationMethods = {
    * @returns the valid password string
    */
   checkPassword(password) {
-    password = this.checkString(password)
+    password = validationMethods.checkString(password, "password")
 
     /**
      * Password Reqs
@@ -94,7 +94,7 @@ const validationMethods = {
    * @returns the valid privacy string
    */
   checkPrivacy(privacy) {
-    privacy = this.checkString(privacy)
+    privacy = validationMethods.checkString(privacy, "privacy")
 
     // Privacy is either public or private
     if (privacy != "public" && privacy != "private") {
@@ -105,21 +105,21 @@ const validationMethods = {
   /**
    * Validate the register fields
    * 
-   * @param {Object} obj - the user object to validate, this does not include the ObjectId
+   * @param {Object} obj - the user object to validate, validationMethods does not include the ObjectId
    * @returns the validated register fields
    */
   checkRegisterFields(obj) {
 
     // User objects must have the 4 needed keys
-    if (this.checkObjKeys(obj, ["username", "email", "password", "privacy"]).length != 0) {
+    if (validationMethods.checkObjKeys(obj, ["username", "email", "password", "privacy"]).length != 0) {
       throw new Error("Missing required fields")
     }
 
     // Validate the fields
-    obj.username = this.checkUsername(obj.username)
-    obj.email = this.checkEmail(obj.email)
-    obj.password = this.checkPassword(obj.password)
-    obj.privacy = this.checkPrivacy(obj.privacy)
+    obj.username = validationMethods.checkUsername(obj.username)
+    obj.email = validationMethods.checkEmail(obj.email)
+    obj.password = validationMethods.checkPassword(obj.password)
+    obj.privacy = validationMethods.checkPrivacy(obj.privacy)
 
     return obj
   },
@@ -132,14 +132,14 @@ const validationMethods = {
    */
   checkLoginFields(obj) {
     // User objects must have the 2 needed keys
-    if (this.checkObjKeys(obj, ["username", "password"]).length != 0) {
+    if (validationMethods.checkObjKeys(obj, ["username", "password"]).length != 0) {
       throw new Error("Missing required fields")
     }
 
     // Validate the fields
     try {
-      obj.username = this.checkUsername(obj.username)
-      obj.password = this.checkPassword(obj.password)
+      obj.username = validationMethods.checkUsername(obj.username)
+      obj.password = validationMethods.checkPassword(obj.password)
     } catch (e) {
       throw new Error("Invalid login fields provided")
     }
