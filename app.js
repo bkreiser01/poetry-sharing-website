@@ -1,6 +1,6 @@
-// This is how we'll start the script
 import express from 'express';
 const app = express();
+import session from 'express-session';
 import configRoutes from './routes/index.js';
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
@@ -30,6 +30,16 @@ app.use(rewriteUnsupportedBrowserMethods);
 
 app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
+
+app.use(
+  session({
+    name: 'AuthState',
+    secret: "M6Mn#APSxDX#MNaWqSD#StafG",
+    saveUninitialized: false,
+    resave: false,
+    cookie: {maxAge: 60000}
+  })
+);
 
 configRoutes(app);
 
