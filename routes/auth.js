@@ -52,7 +52,26 @@ router.route('/register')
 
     // POST /register
     .post(async (req, res) => {
+        try {
+            // Get the register user data from the request body
+            let registerUser = req.body;
 
+            // Validate the register user
+            registerUser = validation.checkRegisterFields(registerUser);
+
+            // Attempt to register the user
+            registerUser = await user.addUser(
+                registerUser.username,
+                registerUser.email,
+                registerUser.password,
+                registerUser.privacy
+            );
+
+            // Return a success
+            return res.status(200).json({success: true});
+        } catch (e) {
+            return res.status(500).json({error: e.message});
+        }
     })
 
 // Logout route

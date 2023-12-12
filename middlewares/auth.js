@@ -11,7 +11,6 @@ const exports = {
      * @param {Function} next - Next function
      */
     forceLogin(req, res, next) {
-        // TODO: Implement this middleware
         if (!req.session.user && req.originalUrl != '/login' && req.originalUrl != '/register') {
             return res.redirect('/login');
         }
