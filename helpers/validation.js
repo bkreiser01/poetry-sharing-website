@@ -159,9 +159,52 @@ const exportedMethods = {
 
     // TODO: the object ID's inside the tagged poems should all be validated
     return obj
-  }
+  },
+
+  /**
+   * Validate the register fields
+   * 
+   * @param {Object} obj - the user object to validate, this does not include the ObjectId
+   * @returns the validated register fields
+   */
+  checkRegisterFields(obj) {
+
+    // User objects must have the 4 needed keys
+    if (this.checkObjKeys(obj, ["username", "email", "password", "privacy"]).length != 0) {
+      throw new Error("Missing required fields")
+    }
+
+    // Validate the fields
+    obj.username = this.checkUsername(obj.username)
+    obj.email = this.checkEmail(obj.email)
+    obj.password = this.checkPassword(obj.password)
+    obj.privacy = this.checkPrivacy(obj.privacy)
+
+    return obj
+  },
+
+  /**
+   * Validate the login fields
+   * 
+   * @param {Object} obj - the login fields to validate
+   * @returns the validated login fields
+   */
+  checkLoginFields(obj) {
+    // User objects must have the 2 needed keys
+    if (this.checkObjKeys(obj, ["username", "password"]).length != 0) {
+      throw new Error("Missing required fields")
+    }
+
+    // Validate the fields
+    try {
+      obj.username = this.checkUsername(obj.username)
+      obj.password = this.checkPassword(obj.password)
+    } catch (e) {
+      throw new Error("Invalid login fields provided")
+    }
+
+    return obj
+  },
 };
 
 export default exportedMethods;
-
-console.log(exportedMethods.checkTaggedPoem({poemId: "", tagIds: ""}))

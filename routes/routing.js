@@ -13,13 +13,6 @@ router.route('/user').get(async (req, res) => {
     res.render('user', {title:"User"});
 });
 
-router.route('/login').get(async (req, res) => {
-    res.render('login', {title:"Login"});
-});
-
-router.route('/register').get(async (req, res) => {
-    res.render('register', {title:"Register"});
-});
 
 router.route('/poem').get(async (req, res) => {
     res.render('poem', {title:"Poem"});

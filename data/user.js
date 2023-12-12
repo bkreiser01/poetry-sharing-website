@@ -26,11 +26,11 @@
  * 
  */
 
-// Import from installs
+// Package Imports
 import { ObjectId } from 'mongodb';
 import bcrypt from 'bcryptjs';
 
-// Import local functions
+// Local Imports
 import { users } from '../config/mongoCollections.js'
 import validation from '../helpers/validation.js'
 import mongo from '../helpers/mongo.js'
@@ -524,6 +524,31 @@ const exportedMethods = {
         str = validation.checkString(str)
         let regex = new RegExp(str, 'i'); // things that contain this string, regardless of case
         return await collection.find({ username: { $regex: regex }})
+    },
+
+    /**
+     * Login a user
+     * 
+     * @param {string} username - The username of the user to get
+     * @param {string} password - The password of the user to get
+     */
+    async login(username, password) {
+        // Validate the username and password
+        username = validation.checkUsername(username)
+        password = validation.checkPassword(password)
+
+        // Get the user by username
+        let user = await userCollection.findOne({ username: username })
+        if (!user) {
+            throw new Error("Invalid username or password")
+        }
+
+        // Check the password
+        if (!(await bcrypt.compare(password, user.hashedPassword))) {
+            throw new Error("Invalid username or password")
+        }
+
+        return user
     },
 }
 export default exportedMethods;
