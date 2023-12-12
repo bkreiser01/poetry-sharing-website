@@ -5,6 +5,7 @@ import configRoutes from './routes/index.js';
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
 import exphbs from 'express-handlebars';
+import middlewares from './middlewares/index.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -40,6 +41,11 @@ app.use(
     cookie: {maxAge: 60000}
   })
 );
+
+// Add the middlewares
+Object.values(middlewares).forEach((middleware) => {
+  app.use(middleware);
+});
 
 configRoutes(app);
 
