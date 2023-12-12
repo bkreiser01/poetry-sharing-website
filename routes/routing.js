@@ -52,7 +52,12 @@ router.route("/SearchForTag").post(async (req, res) => {
 });
 
 router.route("/testing").get(async (req, res) => {
-  return res.render("void", { title: "void-page" });
+  return res.render("void", {
+    title: "void-page",
+    layout: "default",
+    showLeftColumn: true,
+    showRightColumn: true,
+  });
 });
 
 export default router;

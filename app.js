@@ -28,7 +28,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(rewriteUnsupportedBrowserMethods);
 
-app.engine("handlebars", exphbs.engine({ defaultLayout: "default" }));
+app.engine(
+  "handlebars",
+  exphbs.engine({ defaultLayout: "default", partialsDir: ["views/partials/"] })
+);
 app.set("view engine", "handlebars");
 
 app.use(

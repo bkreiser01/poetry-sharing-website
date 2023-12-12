@@ -40,17 +40,19 @@
         </header>
 
         <div id="default-canvas">
-            <div id="left-column" class="side-column">
-                <h2>Poets you follow</h2>
-                {{!-- List of top following here --}}
-            </div>
+            {{#if showLeftColumn}}
+            {{!-- Pass parameters to partial this way: > whichPartial parameter=value --}}
+            {{!-- e.g.: > top_tags title=title --}}
+            {{> top_tags}}
+            {{/if}}
 
             {{{body}}}
 
-            <div id="right-column" class="side-column">
-                <h2>Most-used tags</h2>
-                {{!-- List of top tags here --}}
-            </div>
+            {{#if showRightColumn}}
+            {{> top_followers}}
+
+            {{/if}}
+
         </div>
 
         <footer>
