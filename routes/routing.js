@@ -52,4 +52,8 @@ router.route('/SearchForTag').post(async (req, res) => {
     return res.redirect('/tagTest');
 });
 
+router.route('/testing').get(async (req, res) => {
+    return res.render('void', {layout: "default", title: "void-page"})
+})
+
 export default router;
