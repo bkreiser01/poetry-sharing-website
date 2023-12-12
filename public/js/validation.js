@@ -1,4 +1,37 @@
+/**
+ *  Public Validation Methods for the client.
+ *  These methods are also imported by the server side validation methods so the code is common
+ */
+
 const validationMethods = {
+  
+  checkString(strVal, varName) {
+    if (!strVal) throw new Error(`Error: You must supply a ${varName}!`);
+    if (typeof strVal !== "string")
+      throw new Error(`Error: ${varName} must be a string!`);
+    strVal = strVal.trim();
+    if (strVal.length === 0)
+      throw new Error(
+        `Error: ${varName} cannot be an empty string or string with just spaces`
+      );
+    if (!isNaN(strVal))
+      throw new Error(
+        `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`
+      );
+    return strVal;
+  },
+  /**
+   * Validate keys in an object
+   * 
+   * @param {Object} obj 
+   * @param {Array} keys 
+   * @returns an array of all the keys from 'keys' that are not in 'obj'
+   */
+  checkObjKeys(obj, keys) {
+    const objKeys = Object.keys(obj);
+    const missingKeys = keys.filter(key => !objKeys.includes(key));
+    return missingKeys;
+  },
   /**
    * Validate the username
    * 
@@ -48,7 +81,7 @@ const validationMethods = {
      * 4) At least one special character @$!%*?&
      */
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
-      throw new Error('Email is not a valid email address')
+      throw new Error('Password is not a valid password')
     }
 
     return password

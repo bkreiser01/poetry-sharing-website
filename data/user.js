@@ -552,3 +552,10 @@ const exportedMethods = {
     },
 }
 export default exportedMethods;
+
+// console.log(await exportedMethods.addUser(
+//     "bkreiser",
+//     "bkreiser@duck.com",
+//     "Password@01",
+//     "public"
+// ))

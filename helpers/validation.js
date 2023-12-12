@@ -20,22 +20,6 @@ const exportedMethods = {
     return id;
   },
 
-  checkString(strVal, varName) {
-    if (!strVal) throw new Error(`Error: You must supply a ${varName}!`);
-    if (typeof strVal !== "string")
-      throw new Error(`Error: ${varName} must be a string!`);
-    strVal = strVal.trim();
-    if (strVal.length === 0)
-      throw new Error(
-        `Error: ${varName} cannot be an empty string or string with just spaces`
-      );
-    if (!isNaN(strVal))
-      throw new Error(
-        `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`
-      );
-    return strVal;
-  },
-
   checkStringArray(arr, varName) {
     //We will allow an empty array for this,
     //if it's not empty, we will make sure all tags are strings
@@ -58,19 +42,6 @@ const exportedMethods = {
     if (isNaN(new Date(date)))
       throw new Error(`Error: ${varName} is not a valid Date`);
     return date;
-  },
-
-  /**
-   * Validate keys in an object
-   * 
-   * @param {Object} obj 
-   * @param {Array} keys 
-   * @returns an array of all the keys from 'keys' that are not in 'obj'
-   */
-  checkObjKeys(obj, keys) {
-    const objKeys = Object.keys(obj);
-    const missingKeys = keys.filter(key => !objKeys.includes(key));
-    return missingKeys;
   },
 
   /**

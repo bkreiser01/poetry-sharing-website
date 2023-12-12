@@ -28,10 +28,16 @@ router.route('/login')
                 loginUser.username,
                 loginUser.password
             );
+            
+            // Delete the hashed password from the user object for security
+            delete loginUser.hashedPassword
 
+            // Set the session user
+            req.session.user = loginUser;
+        
             throw new Error("Not implemented");
         } catch (e) {
-            res.status(500).render('error', {title:"Error", error:e.message});
+            return res.status(500).json({error: e.message});
         }
     })
 
