@@ -2,7 +2,6 @@
  * @fileoverview General middlewares
  * @module middlewares/general
  */
-
 const exports = {
     /**
      * Browsers like to get the favicon and that clutters up the console
