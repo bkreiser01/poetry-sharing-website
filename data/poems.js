@@ -179,12 +179,63 @@ const exportedMethods = {
     * @param {string} tagId
     */
    async addSubmittedTag(poemId, tagId) {
-      // TODO validate tagId
-      const poemCollection = await poems();
-      const poem = await poemCollection.findOne({ _id: ObjectId(poemId) });
+      poemId = validation.checkId(poemId, "PoemId");
+      tagId = validation.checkId(tagId, "TagId");
 
-      // check if he in there, if he in there just add one to tagCount
-      // otherwise
+      const poemCollection = await poems();
+      const poem = await poemCollection.findOne({ _id: new ObjectId(poemId) });
+      if (!poem) {
+         throw new Error(
+            `removeSubmittedTag: no poem found with poemId ${poemId}`
+         );
+      }
+
+      // TODO check that the tag exists in tags collection
+
+      const submittedTag = await poem.submittedTags.find(
+         (submittedTag) => submittedTag.tagId.toString() === tagId
+      );
+
+      if (!submittedTag) {
+         const updatedPoem = await poemCollection.findOneAndUpdate(
+            { _id: new ObjectId(poemId) },
+            {
+               $push: {
+                  _id: new ObjectId(),
+                  tagId: new ObjectId(tagId),
+                  tagCount: 1,
+               },
+            },
+            { returnDocument: "after" }
+         );
+
+         if (updatedPoem === null)
+            throw new Error("addSubmittedTag: could not add the submittedTag");
+         return updatedPoem;
+      }
+
+      submittedTag.tagCount = submittedTag.tagCount + 1;
+
+      const updatedPoem = await poemCollection.findOneAndUpdate(
+         { "submittedTags.tagId": tagId },
+         {
+            $set: {
+               "submittedTags.$._id": submittedTag._id,
+               "submittedTags.$.tagId": submittedTag.tagId,
+               "submittedTags.$.tagCount": submittedTag.tagCount,
+            },
+            $inc: { totalTagCount: 1 },
+         },
+         { returnDocument: "after" }
+      );
+
+      if (updatedPoem === null) {
+         throw new Error(
+            `addSubmittedTag: could not increment the submittedTag`
+         );
+      }
+
+      return updatedPoem;
    },
 
    /**
