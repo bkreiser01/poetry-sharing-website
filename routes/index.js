@@ -1,6 +1,6 @@
 // Amalgamate routes here!
 import routes from './routing.js'
-import auth from './authentication.js'
+import auth from './auth.js'
 
 const constructorMethod = (app) => {
   app.use('/', routes);

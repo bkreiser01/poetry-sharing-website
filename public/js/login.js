@@ -24,20 +24,18 @@ import validation from './validation.js';
             }
             $.ajax({
                 url: '/login',
-                type: 'post',
+                method: 'POST',
+                contentType: 'application/json',
                 data: JSON.stringify(data),
-                headers: {
-                    'x-auth-token': localStorage.accessToken,
-                    "Content-Type": "application/json"
+                success: function(data) {
+                    if (data.success) {
+                        window.location.href = '/'
+                    }
                 },
-                dataType: 'json'
-            }).fail(function (xhr, status, e) {
-                if (xhr.responseJSON.error != undefined) {
-                    console.error(xhr.responseJSON.error)
-                    error.text(xhr.responseJSON.error)
-                } else {
-                    error.text("Internal Server Error")
-                }
-            })
+                error: function(e) {
+                    console.error(e.responseJSON.error)
+                    error.text(e.responseJSON.error)
+                },
+            });
         })
 })(window.jQuery)
