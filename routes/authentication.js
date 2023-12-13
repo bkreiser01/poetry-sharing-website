@@ -17,7 +17,6 @@ router.route('/login')
     // POST /login
     .post(async (req, res) => {
         try {
-            console.log("Logging in")
             // Get the login user data from the request body
             let loginUser = req.body;
 
@@ -35,9 +34,8 @@ router.route('/login')
 
             // Set the session user
             req.session.user = loginUser;
-
-            // Return a success
-            return res.status(200).json({success: true});
+        
+            throw new Error("Not implemented");
         } catch (e) {
             return res.status(500).json({error: e.message});
         }
@@ -53,41 +51,7 @@ router.route('/register')
 
     // POST /register
     .post(async (req, res) => {
-        try {
-            // Get the register user data from the request body
-            let registerUser = req.body;
 
-            // Validate the register user
-            registerUser = validation.checkRegisterFields(registerUser);
-
-            // Attempt to register the user
-            registerUser = await user.addUser(
-                registerUser.username,
-                registerUser.email,
-                registerUser.password,
-                registerUser.privacy
-            );
-
-            // Return a success
-            return res.status(200).json({success: true});
-        } catch (e) {
-            return res.status(500).json({error: e.message});
-        }
     })
-
-// Logout route
-router.route('/logout')
-
-    // GET /logout
-    .get(async (req, res) => {
-        // If there is a user destroy the session and render the logout page,
-        // otherwise redirect to the login page
-        if (req.session.user) {
-            req.session.destroy();
-            res.status(200).render('logout', {title:"Logout"});
-        } else {
-            res.redirect('/login')
-        }
-    });
 
 export default router;

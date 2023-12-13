@@ -12,14 +12,6 @@ router.route('/user').get(async (req, res) => {
     res.status(200).render('user', {title:"User"});
 });
 
-router.route('/login').get(async (req, res) => {
-    res.render('login', {title:"Login"});
-});
-
-router.route('/poem').get(async (req, res) => {
-    res.status(200).render('poem', {title:"Poem"});
-});
-
 router.route('/editor').get(async (req, res) => {
     res.status(200).render('editor', {title:"Editor"});
 });
