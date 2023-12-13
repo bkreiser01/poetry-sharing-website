@@ -1,3 +1,28 @@
+/**
+ * Contains all functions (other than comments) that interact with the poems collection
+ * 
+ * @module data/poems
+ * 
+ * The poem collection contains the following fields:
+ *    - _id: ObjectId
+ *    - timeSubmitted: Date
+ *    - title: string
+ *    - body: string
+ *    - userId: ObjectId
+ *    - link: string
+ *    - submittedTags: array of submittedTag objects
+ *    - totalTagCount: number
+ *    - favoriteCount: number
+ *    - comments: array of comment objects (see data/comments)
+ *    - private: boolean
+ * 
+ *  submittedTag object contains the following fields:
+ *    - _id: ObjectId
+ *    - tagId: ObjectId
+ *    - tagCount: number
+ */
+
+
 import { poems, users, tags } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import validation from "../helpers/validation.js";
@@ -183,6 +208,8 @@ const exportedMethods = {
       tagId = validation.checkId(tagId, "TagId");
 
       const poemCollection = await poems();
+
+      // Get the poem from the database and check it exists
       const poem = await poemCollection.findOne({ _id: new ObjectId(poemId) });
       if (!poem) {
          throw new Error(
@@ -192,10 +219,12 @@ const exportedMethods = {
 
       // TODO check that the tag exists in tags collection
 
+      // get submittedTag with tagId from the poem
       const submittedTag = await poem.submittedTags.find(
          (submittedTag) => submittedTag.tagId.toString() === tagId
       );
 
+      // if the submittedTag does not exist, add a new submitteTag to the poem
       if (!submittedTag) {
          const updatedPoem = await poemCollection.findOneAndUpdate(
             { _id: new ObjectId(poemId) },
@@ -205,6 +234,7 @@ const exportedMethods = {
                   tagId: new ObjectId(tagId),
                   tagCount: 1,
                },
+               $inc: { totalTagCount: 1 },
             },
             { returnDocument: "after" }
          );
@@ -216,12 +246,11 @@ const exportedMethods = {
 
       submittedTag.tagCount = submittedTag.tagCount + 1;
 
+      // if the submittedTag does exist just add one to the tag count
       const updatedPoem = await poemCollection.findOneAndUpdate(
-         { "submittedTags.tagId": tagId },
+         { _id: new ObjectId(poemId), "submittedTags._id": submittedTag._id },
          {
             $set: {
-               "submittedTags.$._id": submittedTag._id,
-               "submittedTags.$.tagId": submittedTag.tagId,
                "submittedTags.$.tagCount": submittedTag.tagCount,
             },
             $inc: { totalTagCount: 1 },
