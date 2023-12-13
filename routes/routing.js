@@ -5,25 +5,24 @@ import {CreateNewTag, SearchForTag} from '../data/tags.js';
 const router = Router();
 
 router.route('/').get(async (req, res) => {
-    //code here for GET will render the home handlebars file
-    res.render('homepage', {title:"Poetry Sharing"});
+    res.status(200).render('homepage', {title:"Poetry Sharing"});
 });
 
 router.route('/user').get(async (req, res) => {
-    res.render('user', {title:"User"});
+    res.status(200).render('user', {title:"User"});
 });
 
 
 router.route('/poem').get(async (req, res) => {
-    res.render('poem', {title:"Poem"});
+    res.status(200).render('poem', {title:"Poem"});
 });
 
 router.route('/editor').get(async (req, res) => {
-    res.render('editor', {title:"Editor"});
+    res.status(200).render('editor', {title:"Editor"});
 });
 
 router.route('/tagTest').get(async (req, res) => {
-    res.render('tagTest', {title:"Testing Tags"});
+    res.status(200).render('tagTest', {title:"Testing Tags"});
 });
 
 router.route('/CreateNewTag').post(async (req, res) => {

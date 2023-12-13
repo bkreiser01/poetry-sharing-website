@@ -1,0 +1,32 @@
+<main>
+   <form action="/poems/new" method="POST" class="new-poem-form" id="new-poem-form">
+      <label for="title">
+         Title:
+         <input type="text" name="title" placeholder="Poem Title" value="{{poem.title}}" class="full-width-input">
+      </label>
+      <label for="body">
+         Body:
+         <textarea name="body" placeholder="Write your poem here!" id="poem-body-area">{{poem.body}}</textarea>
+      </label>
+      <label for="link">
+         Link to reading
+         <input type="url" name="link" id="reading-link" value="{{poem.link}}">
+      </label>
+
+      <label for="private">
+         Visibility:
+         <select name="private" value="on" id="private-checkbox">
+            <option value="false">Public</option>
+            <option value="true">Private</option>
+         </select>
+      </label>
+      <button type="submit">Submit Poem</button>
+
+   </form>
+
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+   <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+   <script>
+      const easyMDE = new EasyMDE({ element: document.getElementById('poem-body-area') });
+   </script>
+</main>
