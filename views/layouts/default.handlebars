@@ -1,0 +1,64 @@
+{{!-- FIXME Check HTML validity --}}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{{title}}</title>
+        <link rel="stylesheet" href="/public/css/site.css">
+    </head>
+
+    <body>
+        <header>
+            <img src="/public/assets/tmp_logo_small.png" alt="Logo"
+                id="website-logo">
+
+            <h1 id="website-title">Poet-me</h1>
+
+            {{!-- Make a form out of this --}}
+            <label for="search-bar"></label>
+            <input id="search-bar" type="text" name="search-bar"
+                placeholder="Search for...">
+
+            <label for="search-select"></label>
+            <select name="serach-select" id="search-select">
+                <option value="user">User</option>
+                <option value="poem">Poem</option>
+                <option value="tag">Tag</option>
+            </select>
+
+            {{!-- Invalid html: button can't be a descendent of link. Check
+            https://stackoverflow.com/questions/3303675/how-to-make-an-input-type-button-act-like-a-hyperlink-and-redirect-using-a-get-r
+            to find a fix --}}
+            <a href="/write">
+                <button id="button-write" type="button">Write</button>
+            </a>
+
+            <div id="user-account">
+                <a href="/testing">User account</a>
+            </div>
+
+        </header>
+
+        <div id="default-canvas">
+            {{#if showLeftColumn}}
+            {{!-- Pass parameters to partial this way: > whichPartial parameter=value --}}
+            {{!-- e.g.: > top_tags title=title --}}
+            {{> top_tags}}
+            {{/if}}
+
+            {{{body}}}
+
+            {{#if showRightColumn}}
+            {{> top_followers}}
+
+            {{/if}}
+
+        </div>
+
+        <footer>
+            CS 546 - Poetry Sharing Website
+            <br>
+            Adrien Huet - Brandon Kreiser - Joseph Vasallo - Roger Shagawat
+        </footer>
+    </body>
+</html>
