@@ -74,12 +74,8 @@ router.route('/logout')
   .get(async (req, res) => {
     // If there is a user destroy the session and render the logout page,
     // otherwise redirect to the login page
-    if (req.session.user) {
-      req.session.destroy();
-      res.status(200).render("logout", { title: "Logout" });
-    } else {
-      res.redirect("/login");
-    }
+    req.session.destroy();
+    res.status(200).render("logout", { title: "Logout" })
   });
 
 

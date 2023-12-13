@@ -4,14 +4,25 @@
  */
 const exports = {
     /**
-     * Middleware to not allow logged in users to access login and register pages
+     * Middleware to restrict the user based on auth status
      * 
      * @param {Object} req - Request object
      * @param {Object} res - Response object
      * @param {Function} next - Next function
      */
     restrictions(req, res, next) {
-        if (req.session.user && (req.originalUrl == '/login' || req.originalUrl == '/register')) {
+        // Prevent an authenticated user from accessing the login and register pages
+        if (req.session.user && (
+            req.originalUrl == '/login' ||
+            req.originalUrl == '/register'
+        )) {
+            return res.redirect('/');
+        }
+
+        if (!req.session.user && (
+            req.originalUrl == '/user' || 
+            req.originalUrl == '/logout'
+        )) {
             return res.redirect('/');
         }
         next();

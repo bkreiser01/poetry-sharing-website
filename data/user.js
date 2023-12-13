@@ -521,9 +521,14 @@ const exportedMethods = {
      * @returns - All users who's usernames contain the given string
      */
     async searchByUsername(str){
+        // Validate the search string
         str = validation.checkString(str)
-        let regex = new RegExp(str, 'i'); // things that contain this string, regardless of case
-        return await collection.find({ username: { $regex: regex }})
+
+        let res = []
+        res.push(await userCollection.find({ username: { $regex: str, $options: 'i' } }).toArray())
+
+        // Search for users
+        return res.flat(Infinity)
     },
 
     /**

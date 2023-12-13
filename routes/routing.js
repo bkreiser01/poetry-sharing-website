@@ -8,10 +8,6 @@ router.route("/").get(async (req, res) => {
   res.status(200).render("homepage", { title: "Poetry Sharing" });
 });
 
-router.route("/user").get(async (req, res) => {
-  res.status(200).render("user", { title: "User" });
-});
-
 router.route('/editor').get(async (req, res) => {
     res.status(200).render('editor', {title:"Editor"});
 });
