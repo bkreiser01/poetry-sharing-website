@@ -1,6 +1,6 @@
 // Amalgamate routes here!
 import routes from "./routing.js";
-import auth from './authentication.js'
+import auth from './auth.js'
 import poemRoutes from "./poems.js";
 
 const constructorMethod = (app) => {
