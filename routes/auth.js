@@ -6,7 +6,6 @@ const router = Router();
 import validation from '../helpers/validation.js'
 import user from '../data/user.js'
 
-// Login route
 router.route('/login')
 
     // GET /login
@@ -17,7 +16,6 @@ router.route('/login')
     // POST /login
     .post(async (req, res) => {
         try {
-            console.log("Logging in")
             // Get the login user data from the request body
             let loginUser = req.body;
 
@@ -43,7 +41,6 @@ router.route('/login')
         }
     })
 
-// Register route
 router.route('/register')
 
     // GET /register
@@ -75,7 +72,6 @@ router.route('/register')
         }
     })
 
-// Logout route
 router.route('/logout')
 
     // GET /logout
@@ -87,6 +83,19 @@ router.route('/logout')
             res.status(200).render('logout', {title:"Logout"});
         } else {
             res.redirect('/login')
+        }
+    });
+
+
+router.route('/check-authentication')
+
+    // GET /check-authentication
+    .get(async (req, res) => {
+        // If there is a user return a success, otherwise return an error
+        if (req.session.user) {
+            res.status(200).json({authenticated: true});
+        } else {
+            res.status(200).json({authenticated: false});
         }
     });
 
