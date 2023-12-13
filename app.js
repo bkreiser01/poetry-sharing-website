@@ -16,8 +16,7 @@ app.use(
     name: 'AuthState',
     secret: "M6Mn#APSxDX#MNaWqSD#StafG",
     saveUninitialized: false,
-    resave: false,
-    cookie: {maxAge: 60000}
+    resave: false
   })
 );
 
