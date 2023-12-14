@@ -1,43 +1,113 @@
-//Functions for tags
+/**
+ * Contains all functions that interact with the tags collection
+ *
+ * @module data/tags
+ *
+ * The tag document contains the following fields
+ *    _id: ObjectId
+ *    tagString: string
+ *    taggedPoemsId: array of object ids
+ */
+
 import * as connections from "../config/mongoConnection.js";
 import { tags } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
+import validation from "../helpers/validation.js";
 
+const exportedMethods = {
+   /**
+    * Returns tag object according to id
+    *
+    * @param {string} tagId
+    */
+   async getTagById(tagId) {
+      tagId = validation.checkId(tagId);
 
+      const tagCollection = await tags();
+      const tag = await tagCollection.findOne({ _id: new ObjectId(tagId) });
+      if (!tag) throw new Error("getTabById: Could not get tag");
 
-//Create new tag in Tags database
-export const CreateNewTag = async (tagString, taggedPoemsId) => {
-    //Validate here
+      return tag;
+   },
 
-    //Connect
-    const db = await connections.dbConnection();
-    const tagCollection = await tags();
+   /**
+    * Adds a tag to a poem, inserts a tag if the tag does not exist yet
+    *
+    * @param {string} tagString
+    * @param {string} poemId
+    */
+   async addTag(tagString, poemId) {
+      // Validation
+      tagString = validation.checkTagString(tagString);
+      poemId = validation.checkId(poemId);
 
-    //Create Tag
-    const NewID = new ObjectId();
-    const seedTagData = 
-    {
-        _id: NewID,
-        tagString: tagString,
-        taggedPoemsId: [taggedPoemsId],
-    };
+      const tagCollection = await tags();
 
-    //Insert tag
-    await tagCollection.insertOne(seedTagData);
-    return;
-}
+      // check that the tag does not already exist
+      const findInfoTagString = await tagCollection
+         .find({
+            tagString: { $eq: tagString },
+         })
+         .toArray();
 
+      // if there's no tag with that string, add one
+      if (findInfoTagString.length < 1) {
+         // Insert new tag
+         const newTag = {
+            tagString: tagString,
+            taggedPoemsId: [new ObjectId(poemId)],
+         };
+         const insertInfo = await tagCollection.insertOne(newTag);
 
+         if (!insertInfo.acknowledged || !insertInfo.insertedId) {
+            throw new Error("addTag: could not add tag");
+         }
+         return newTag;
+      }
 
-//Search for tag in Tags database
-export const SearchForTag = async (inputTagString) => {
-    //Validate here
+      // check if the poem is already in the tag
+      const findInfoPoemId = await tagCollection
+         .find({
+            poemId: { $eq: new Object(poemId) },
+         })
+         .toArray();
+      if (findInfoPoemId.length > 0) {
+         // might want different behavior here
+         throw new Error("addTag: tag already assigned to this poem");
+      }
 
-    //Connect
-    const db = await connections.dbConnection();
-    const tagCollection = await tags();
+      const updatedTag = tagCollection.findOneAndUpdate(
+         { tagString: tagString },
+         {
+            $push: { taggedPoemsId: new ObjectId(poemId) },
+         }
+      );
 
-    //Search for tag and return
-    let FoundTag = await tagCollection.findOne({tagString: inputTagString});
-    return FoundTag;
-}
+      if (!updatedTag) {
+         throw new Error("addTag: Could not add poemId to taggedPoemsId");
+      }
+
+      return updatedTag;
+   },
+
+   /**
+    * Search's for a tag by it's name
+    * @param {string} searchStr
+    * @returns {Array.<Object>}
+    */
+   async searchTagByName(searchStr) {
+      searchStr = validation.checkString(searchStr);
+
+      const tagCollection = await tags();
+
+      let retVal = [];
+      retVal.push(
+         await tagCollection
+            .find({ tagString: { $regex: searchStr, $options: "i" } })
+            .toArray()
+      );
+      retVal = retVal.flat(Infinity);
+
+      return retVal;
+   },
+};
