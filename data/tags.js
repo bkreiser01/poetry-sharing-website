@@ -96,6 +96,24 @@ const exportedMethods = {
    async searchTagByName(searchStr) {
       searchStr = validation.checkString(searchStr);
 
+      const tagCollection = await tags();
+
+      if (!updatedTag) {
+         throw new Error("addTag: Could not add poemId to taggedPoemsId");
+      }
+
+      return updatedTag;
+   },
+
+   /**
+    * Search's for a tag by it's name
+    * @param {string} searchStr
+    * @returns {Array.<Object>}
+    */
+   async searchTagByName(searchStr) {
+      searchStr = validation.checkString(searchStr);
+
+      const tagCollection = await tags();
       let retVal = [];
       retVal.push(
          await tagCollection
@@ -126,4 +144,4 @@ const exportedMethods = {
    },
 };
 
-export default exportedMethods;
+export default exportedMethods
