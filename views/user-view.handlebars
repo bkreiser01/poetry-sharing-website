@@ -1,0 +1,26 @@
+{{!-- login form --}}
+<main>
+    <h2>{{username}}</h2>
+    <p>Account Age: {{account_age}}</p>
+    <p>Biography: {{bio}}</p>
+
+    <div id="follow-unfollow-option"></div>
+
+    <ul>
+        <li><a href="/user/{{userId}}">Poems</a></li>
+        <li><a href="/user/{{userId}}/followers">Followers</a></li>
+        <li><a href="/user/{{userId}}/following">Following</a></li>
+    </ul>
+
+    {{#if poems}}
+    {{> user/poems}}
+    {{/if}}
+
+    {{#if followers}}
+    {{> user/followers}}
+    {{/if}} 
+
+    {{#if following}}
+    {{> user/following}}
+    {{/if}}
+</main>

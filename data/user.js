@@ -498,6 +498,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async addFollower(id, followerId) {
+        await addIdToUserField(followerId, id, "following")
         return await addIdToUserField(id, followerId, "followers")
     },
 
@@ -509,6 +510,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async deleteFollower(id, followerId) {
+        await deleteIdFromUserField(followerId, id, "following")
         return await deleteIdFromUserField(id, followerId, "followers")
     },
 
@@ -520,6 +522,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async addFollowing(id, followingId) {
+        addIdToUserField(followingId, id, "followers")
         return await addIdToUserField(id, followingId, "following")
     },
 
@@ -531,6 +534,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async deleteFollowing(id, followingId) {
+        deleteIdFromUserField(followingId, id, "followers")
         return await deleteIdFromUserField(id, followingId, "following")
     },
 

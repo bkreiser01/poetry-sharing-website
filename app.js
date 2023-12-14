@@ -44,15 +44,6 @@ app.engine(
 );
 app.set("view engine", "handlebars");
 
-app.use(
-  session({
-    name: 'AuthState',
-    secret: "M6Mn#APSxDX#MNaWqSD#StafG",
-    saveUninitialized: false,
-    resave: false,
-    cookie: {maxAge: 60000}
-  })
-);
 // Add the middlewares
 Object.values(middlewares).forEach((middleware) => {
   app.use(middleware);
