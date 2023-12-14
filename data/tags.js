@@ -127,6 +127,3 @@ const exportedMethods = {
       return updateInfo;
    },
 };
-
-const db = await connections.dbConnection();
-await exportedMethods.deletePoemFromAllTags("aaaaaaaaaaaaaaaaaaaaaaa0");
