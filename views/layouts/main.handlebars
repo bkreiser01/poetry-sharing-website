@@ -5,16 +5,18 @@
       <meta charset="utf-8">
       <title>{{title}}</title>
       <link rel="stylesheet" href="/public/css/site.css">
+      <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="crossorigin="anonymous"></script>
    </head>
    <header>
       <h1>Poetry Sharing</h1>
       <ul class="navbar">
-         <li class="navelem"><a href="/">Homepage</a></li>
-         <li class="navelem"><a href="/user">User</a></li>
-         <li class="navelem"><a href="/login">Login</a></li>
-         <li class="navelem"><a href="/poems">Poems</a></li>
-         <li class="navelem"><a href="/editor">Editor</a></li>
+         <li class="navelem" id="nav1"><a href="/">Homepage</a></li>
+         <li class="navelem" id="nav2"><a href="/user">User</a></li>
+         <li class="navelem" id="nav3"><a href="/poems">Poems</a></li>
+         <li class="navelem" id="nav4"><a href="/editor">Editor</a></li>
+         <li class="navelem" id="nav5"><a href="/login">Login</a></li>
       </ul>
    </header>
    {{{body}}}
+   <script type='module' src="../public/js/site.js"></script>
 </html>

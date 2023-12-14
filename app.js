@@ -1,4 +1,4 @@
-import express from 'express';
+import express from "express";
 const app = express();
 import session from 'express-session';
 import configRoutes from './routes/index.js';
@@ -9,15 +9,14 @@ import middlewares from './middlewares/index.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const staticDir = express.static(__dirname + '/public');
+const staticDir = express.static(__dirname + "/public");
 
 app.use(
   session({
     name: 'AuthState',
     secret: "M6Mn#APSxDX#MNaWqSD#StafG",
     saveUninitialized: false,
-    resave: false,
-    cookie: {maxAge: 60000}
+    resave: false
   })
 );
 
@@ -34,13 +33,16 @@ const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   next();
 };
 
-app.use('/public', staticDir);
+app.use("/public", staticDir);
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(rewriteUnsupportedBrowserMethods);
 
-app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
-app.set('view engine', 'handlebars');
+app.engine(
+  "handlebars",
+  exphbs.engine({ defaultLayout: "default", partialsDir: ["views/partials/"] })
+);
+app.set("view engine", "handlebars");
 
 app.use(
   session({

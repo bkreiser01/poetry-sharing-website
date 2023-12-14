@@ -82,7 +82,6 @@ let validate = (data, func, err) => {
                     }
                 },
                 error: function(e) {
-                    console.log("fail")
                     console.error(e.responseJSON.error)
                     error.text(e.responseJSON.error)
                 },

@@ -1,7 +1,69 @@
-<<<<<<< HEAD
-/* Main cite css probably want to have different css files for different pages */
-=======
-/* Main cite css probably want to have different css files for different pages */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    display: flex;
+    /* flex-direction: row; */
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-bottom: 2px solid gray;
+
+}
+
+#website-logo {
+    width: 64px;
+    height: 64px;
+    margin-right: 10px;
+}
+
+#search-bar,
+#search-select,
+#button-write {
+    margin: 0 5px;
+}
+
+#default-canvas {
+    display: flex;
+    flex: 1;
+}
+
+main {
+    flex: 1;
+}
+
+.side-column {
+    width: 250px;
+    text-align: center;
+}
+
+#right-column {
+    border-left: 1px solid gray;
+    margin-left: 10px;
+}
+
+#left-column {
+    border-right: 1px solid gray;
+    margin-right: 10px;
+}
+
+footer {
+    margin-top: auto;
+    background-color: lightgray;
+    text-align: center;
+    padding: 10px 0;
+}
+
 
 header {
    display: flex;
@@ -16,4 +78,3 @@ header {
    list-style-type: none;
    margin-left: 15px;
 }
->>>>>>> main
