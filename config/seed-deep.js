@@ -41,42 +41,42 @@ let jvasa_id = await users.addUser(
 )
 console.log(` - jvasallo created with id ${jvasa_id}`)
 
-let ahuet = await users.addUser(
+let ahuet_id = await users.addUser(
     "ahuet",
     "ahuet@stevens.edu",
     "Password@01",
     "public"
 )
-console.log(` - ahuet created with id ${ahuet}`)
+console.log(` - ahuet created with id ${ahuet_id}`)
 
-let jdoe = await users.addUser(
+let jdoe_id = await users.addUser(
     "jdoe",
     "jdoe@gmail.com",
     "Password@01",
     "public"
 )
-console.log(` - jdoe created with id ${jdoe}`)
+console.log(` - jdoe created with id ${jdoe_id}`)
 
-let jsmith = await users.addUser(
+let jsmith_id = await users.addUser(
     "jsmith",
     "jsmith@yahoo.com",
     "Password@01",
     "private"
 )
-console.log(` - jsmith created with id ${jsmith}`)
+console.log(` - jsmith created with id ${jsmith_id}`)
 
 
 
 console.log("\nCreating Poems")
 let p1 = await poems.addPoem(
     new Date(),
-    "Poem 1",
-    "This is poem 1",
+    "A Blessing",
+    "Just off the highway to Rochester, Minnesota,\nTwilight bounds softly forth on the grass.\nAnd the eyes of those two Indian ponies\nDarken with kindness.\nThey have come gladly out of the willows\nTo welcome my friend and me.\nWe step over the barbed wire into the pasture\nWhere they have been grazing all day, alone.\nThey ripple tensely, they can hardly contain their happiness\nThat we have come.\nThey bow shyly as wet swans. They love each other.\nThere is no loneliness like theirs.\nAt home once more,\nThey begin munching the young tufts of spring in the darkness.\nI would like to hold the slenderer one in my arms,\nFor she has walked over to me\nAnd nuzzled my left hand.\nShe is black and white,\nHer mane falls wild on her forehead,\nAnd the light breeze moves me to caress her long ear\nThat is delicate as the skin over a girl’s wrist.\nSuddenly I realize\nThat if I stepped out of my body I would break\nInto blossom.",
     bkrei_id.toString(),
-    "",
+    "https://www.poetryfoundation.org/poems/46481/a-blessing",
     false
 )
-console.log(` - poem 1 created with id ${p1._id}`)
+console.log(` - ${p1.title} created with id ${p1._id}`)
 
 let p2 = await poems.addPoem(
     new Date(),
@@ -86,7 +86,7 @@ let p2 = await poems.addPoem(
     "",
     false
 )
-console.log(` - poem 2 created with id ${p2._id}`)
+console.log(` - ${p2.title} created with id ${p2._id}`)
 
 let p3 = await poems.addPoem(
     new Date(),
@@ -96,7 +96,7 @@ let p3 = await poems.addPoem(
     "",
     false
 )
-console.log(` - poem 3 created with id ${p3._id}`)
+console.log(` - ${p3.title} created with id ${p3._id}`)
 
 let p4 = await poems.addPoem(
     new Date(),
@@ -106,7 +106,7 @@ let p4 = await poems.addPoem(
     "",
     false
 )
-console.log(` - poem 4 created with id ${p4._id}`)
+console.log(` - ${p4.title} created with id ${p4._id}`)
 
 let p5 = await poems.addPoem(
     new Date(),
@@ -116,157 +116,156 @@ let p5 = await poems.addPoem(
     "",
     false
 )
-console.log(` - poem 5 created with id ${p5._id}`)
+console.log(` - ${p5.title} created with id ${p5._id}`)
 
 let p6 = await poems.addPoem(
     new Date(),
     "Poem 6",
     "This is poem 6",
-    bkrei_id.toString(),
+    rshag_id.toString(),
     "",
     false
 )
-console.log(` - poem 6 created with id ${p6._id}`)
+console.log(` - ${p6.title} created with id ${p6._id}`)
 
 let p7 = await poems.addPoem(
     new Date(),
     "Poem 7",
     "This is poem 7",
-    bkrei_id.toString(),
+    rshag_id.toString(),
     "",
     false
 )
-console.log(` - poem 7 created with id ${p7._id}`)
+console.log(` - ${p7.title} created with id ${p7._id}`)
 
 let p8 = await poems.addPoem(
     new Date(),
     "Poem 8",
     "This is poem 8",
-    bkrei_id.toString(),
+    rshag_id.toString(),
     "",
     false
 )
-console.log(` - poem 8 created with id ${p8._id}`)
+console.log(` - ${p8.title} created with id ${p8._id}`)
 
 let p9 = await poems.addPoem(
     new Date(),
     "Poem 9",
     "This is poem 9",
-    bkrei_id.toString(),
+    rshag_id.toString(),
     "",
     false
 )
-console.log(` - poem 9 created with id ${p9._id}`)
+console.log(` - ${p9.title} created with id ${p9._id}`)
 
 let p10 = await poems.addPoem(
     new Date(),
     "Poem 10",
     "This is poem 10",
-    bkrei_id.toString(),
+    rshag_id.toString(),
     "",
     false
 )
-console.log(` - poem 10 created with id ${p10._id}`)
+console.log(` - ${p10.title} created with id ${p10._id}`)
 
 let p11 = await poems.addPoem(
     new Date(),
     "Poem 11",
     "This is poem 11",
-    bkrei_id.toString(),
+    ahuet_id.toString(),
     "",
     false
 )
-console.log(` - poem 11 created with id ${p11._id}`)
+console.log(` - ${p11.title} created with id ${p11._id}`)
 
 let p12 = await poems.addPoem(
     new Date(),
     "Poem 12",
     "This is poem 12",
-    bkrei_id.toString(),
+    ahuet_id.toString(),
     "",
     false
 )
-console.log(` - poem 12 created with id ${p12._id}`)
+console.log(` - ${p12.title} created with id ${p12._id}`)
 
 let p13 = await poems.addPoem(
     new Date(),
     "Poem 13",
     "This is poem 13",
-    bkrei_id.toString(),
+    ahuet_id.toString(),
     "",
     false
 )
-console.log(` - poem 13 created with id ${p13._id}`)
 
 let p14 = await poems.addPoem(
     new Date(),
     "Poem 14",
     "This is poem 14",
-    bkrei_id.toString(),
+    ahuet_id.toString(),
     "",
     false
 )
-console.log(` - poem 14 created with id ${p14._id}`)
+console.log(` - ${p14.title} created with id ${p14._id}`)
 
 let p15 = await poems.addPoem(
     new Date(),
     "Poem 15",
     "This is poem 15",
-    bkrei_id.toString(),
+    ahuet_id.toString(),
     "",
     false
 )
-console.log(` - poem 15 created with id ${p15._id}`)
+console.log(` - ${p15.title} created with id ${p15._id}`)
 
 let p16 = await poems.addPoem(
     new Date(),
     "Poem 16",
     "This is poem 16",
-    bkrei_id.toString(),
+    jvasa_id.toString(),
     "",
     false
 )
-console.log(` - poem 16 created with id ${p16._id}`)
+console.log(` - ${p16.title} created with id ${p16._id}`)
 
 let p17 = await poems.addPoem(
     new Date(),
     "Poem 17",
     "This is poem 17",
-    bkrei_id.toString(),
+    jvasa_id.toString(),
     "",
     false
 )
-console.log(` - poem 17 created with id ${p17._id}`)
+console.log(` - ${p17.title} created with id ${p17._id}`)
 
 let p18 = await poems.addPoem(
     new Date(),
     "Poem 18",
     "This is poem 18",
-    bkrei_id.toString(),
+    jvasa_id.toString(),
     "",
     false
 )
-console.log(` - poem 18 created with id ${p18._id}`)
+console.log(` - ${p18.title} created with id ${p18._id}`)
 
 let p19 = await poems.addPoem(
     new Date(),
     "Poem 19",
     "This is poem 19",
-    bkrei_id.toString(),
+    jvasa_id.toString(),
     "",
     false
 )
-console.log(` - poem 19 created with id ${p19._id}`)
+console.log(` - ${p19.title} created with id ${p19._id}`)
 
 let p20 = await poems.addPoem(
     new Date(),
     "Poem 20",
     "This is poem 20",
-    bkrei_id.toString(),
+    jvasa_id.toString(),
     "",
     false
 )
-console.log(` - poem 20 created with id ${p20._id}`)
+console.log(` - ${p20.title} created with id ${p20._id}`)
 
 
 
@@ -285,3 +284,50 @@ console.log(` - "${t4.tagString}" tag created with id ${t4._id}\n   tagged "${p4
 
 
 console.log("")
+
+console.log("Populating Users with data")
+
+// Populate bio's
+await users.updateBio(bkrei_id, "My name is Brandon! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology.")
+console.log(` - bkreiser bio updated`)
+await users.updateBio(rshag_id, "My name is Roger! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology.")
+console.log(` - rshagawat bio updated`)
+await users.updateBio(jvasa_id, "My name is Joe! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology.")
+console.log(` - jvasallo bio updated`)
+await users.updateBio(ahuet_id, "My name is Adrien! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology.")
+console.log(` - ahuet bio updated`)
+
+// Populate tagged poems
+
+// Populate favorites
+
+// Populate recently viewed
+
+// Populate followers
+
+// Populate following
+await users.addFollowing(bkrei_id.toString(), rshag_id.toString())
+console.log(` - bkreiser is now following rshagawat`)
+await users.addFollowing(bkrei_id.toString(), jvasa_id)
+console.log(` - bkreiser is now following jvasallo`)
+await users.addFollowing(rshag_id, jsmith_id)
+console.log(` - rshagawat is now following jsmith`)
+await users.addFollowing(rshag_id, ahuet_id)
+console.log(` - rshagawat is now following ahuet`)
+await users.addFollowing(ahuet_id, jvasa_id)
+console.log(` - ahuet is now following jvasallo`)
+await users.addFollowing(ahuet_id, jdoe_id)
+console.log(` - ahuet is now following jdoe`)
+await users.addFollowing(jvasa_id, jsmith_id)
+console.log(` - jvasallo is now following jsmith`)
+await users.addFollowing(jvasa_id, ahuet_id)
+console.log(` - jvasallo is now following ahuet`)
+await users.addFollowing(jdoe_id, jvasa_id)
+console.log(` - jdoe is now following jvasallo`)
+await users.addFollowing(jdoe_id, jsmith_id)
+console.log(` - jdoe is now following jsmith`)
+await users.addFollowing(jsmith_id, ahuet_id)
+console.log(` - jsmith is now following ahuet`)
+await users.addFollowing(jsmith_id, jvasa_id)
+console.log(` - jsmith is now following jvasallo`)
+

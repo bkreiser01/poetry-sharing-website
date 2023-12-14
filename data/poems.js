@@ -23,9 +23,11 @@
  */
 
 
-import { poems, users, tags } from "../config/mongoCollections.js";
+import { poems } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import validation from "../helpers/validation.js";
+
+import users from "./user.js";
 
 const exportedMethods = {
    /**
@@ -90,8 +92,8 @@ const exportedMethods = {
 
       const newId = newPoemInsertInformation.insertedId;
 
-      // TODO add poemid to user poemIds
-      // const userCollection = await users();
+      let user = await users.getById(userId);
+      user = await users.addPoem(userId, newId.toString());
 
       const gotPoem = await this.getPoemById(newId.toString());
 
