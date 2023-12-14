@@ -14,10 +14,6 @@ const validationMethods = {
       throw new Error(
         `Error: ${varName} cannot be an empty string or string with just spaces`
       );
-    if (!isNaN(strVal))
-      throw new Error(
-        `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`
-      );
     return strVal;
   },
   /**

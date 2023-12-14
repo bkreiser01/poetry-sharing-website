@@ -1,1 +1,15 @@
-<h2>edit</h2>
+<div id="user_edit">
+    <form action="/user/edit" method="post">
+        <label for="username_input">Username</label>
+        <input type="text" name="username_input" id="username_input" value="{{username}}"/> <br>
+        <label for="email_input">Email</label>
+        <input type="text" name="email_input" id="email_input" value="{{email}}"/><br>
+        <label for="password_input">Password</label>
+        <input type="password" name="password_input" id="password_input"/> <br>
+        <label for="password_confirm">Password Confirm</label>
+        <input type="password" name="password_confirm" id="password_confirm"/> <br>
+        <label for="bio">Biography</label>
+        <textarea name="bio" id="bio">{{bio}}</textarea>
+        <input type="submit" value="Save" />
+    </form>
+</div>

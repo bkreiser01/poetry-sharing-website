@@ -49,8 +49,8 @@ router.route('/liked-poems')
 router.route('/tagged-poems')
     .get(async (req, res) => {
         return res.render("user", await userRender(req.session.user, {
-            title: "Liked Poems",
-            liked_poems: true
+            title: "Tagged Poems",
+            tagged_poems: true
         }));
     })
 
@@ -102,6 +102,19 @@ router.route('/searchByUsername/:username')
         }
     })
 
-//Private User Routes
+//Private User Routes. MUST BE AUTHENTICATED TO USE!!!
+router.route('/delete')
+    .delete(async (req, res) => {
+        try {
+            // Delete the user
+            let userData = await user.deleteUser(req.session.user._id);
 
+            // Log the user out
+            return res.redirect('/logout')
+        } catch (e) {
+            return res.status(500).json({ error: e.message });
+        }   
+    })
+
+router.route('/update-username')
 export default router

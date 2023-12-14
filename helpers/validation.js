@@ -69,13 +69,13 @@ const exportedMethods = {
    */
   checkTaggedPoem(obj) {
     // tagged poems must have 2 keys
-    if (Object.keys(obj).length != 2) {
+    if (Object.keys(obj).length != 3) {
       throw new Error('A taggedPoem object must have 2 keys')
     }
 
     // tagged poems must have the following keys
     //    poemId, tagIds
-    let missingKeys = this.checkObjKeys(obj, ["poemId", "tagIds"])
+    let missingKeys = this.checkObjKeys(obj, ["_id", "poemId", "tagIds"])
     if (missingKeys.length != 0) {
       throw new Error(`The taggedPoem object is missing the key(s) ${missingKeys}`)
     }
@@ -109,22 +109,6 @@ const exportedMethods = {
       return num;
    },
 
-   checkString(strVal, varName) {
-      if (!strVal) throw new Error(`Error: You must supply a ${varName}!`);
-      if (typeof strVal !== "string")
-         throw new Error(`Error: ${varName} must be a string!`);
-      strVal = strVal.trim();
-      if (strVal.length === 0)
-         throw new Error(
-            `Error: ${varName} cannot be an empty string or string with just spaces`
-         );
-      if (!isNaN(strVal))
-         throw new Error(
-            `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`
-         );
-      return strVal;
-   },
-
    checkStringArray(arr, varName) {
       //We will allow an empty array for this,
       //if it's not empty, we will make sure all tags are strings
@@ -141,7 +125,7 @@ const exportedMethods = {
 
       return arr;
    },
-
+   
    checkDateString(date, varName) {
       date = this.checkString(date, varName);
       if (isNaN(new Date(date)))
