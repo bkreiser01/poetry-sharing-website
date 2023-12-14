@@ -100,12 +100,6 @@ const exportedMethods = {
 
       const tagCollection = await tags();
 
-<<<<<<< Updated upstream
-    //Search for tag and return
-    let FoundTag = await tagCollection.findOne({tagString: inputTagString});
-    return FoundTag;
-}
-=======
       if (!updatedTag) {
          throw new Error("addTag: Could not add poemId to taggedPoemsId");
       }
@@ -136,4 +130,3 @@ const exportedMethods = {
 };
 
 export default exportedMethods
->>>>>>> Stashed changes
