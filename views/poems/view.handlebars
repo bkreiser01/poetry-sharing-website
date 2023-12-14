@@ -1,11 +1,56 @@
-<main>
-   <h1>{{poem.title}}</h1>
-   <p>
-      By:
-      <a href="/user/{{poem.userId}}">{{username}}</a>
-   </p>
-   {{{poem.body}}}
-   <a href="{{poem.link}}">Link to Reading</a>
+<main class="poem-container">
+   <div class="poem-header">
+      <div class="author-picture">author pp</div>
+      <div class="poem-header-metadata">
+         <h1>{{poem.title}}</h1>
+         <p>
+            By:
+            <a href="/user/{{poem.userId}}">FIXME{{username}}</a>
+         </p>
+         {{#if poem.link}}
+         Link to Reading: <a href="{{poem.link}}">{{poem.link}}</a>
+         {{/if}}
+      </div>
+   </div>
+
+   {{!-- TODO action buttons --}}
+   <div class="poem-actions">
+      <button type="button">Tag it!</button>
+      <button type="button">Save it!</button>
+      <button type="button">Like it!</button>
+   </div>
+
+   <div class="poem-body">
+      {{!-- TODO markdown render --}}
+      <div class="poem-markdown">{{{poem.body}}}</div>
+
+      <ol class="poem-comments">
+         <h2>Comments</h2>
+         {{#each poem.comments as |comment|}}
+         {{!-- TODO Only top-level comments, AJAX for comment replies? or
+         partial? --}}
+         {{#unless comment.repliesTo}}
+         {{!-- TODO AJAX for comment author? --}}
+         <li class="poem-comment-container">
+            <div class="poem-comment-author-info">
+               <p>{{comment.userId}}</p>
+               <p>{{comment.tagId}}</p>
+            </div>
+            <p class="comment-string">
+               {{{comment.commentString}}}
+            </p>
+         </li>
+         {{/unless}}
+         {{/each}}
+      </ol>
+   </div>
+
+   <ol class="poem-tags">
+      {{#each poem.submittedTags as |tag|}}
+      {{!-- TODO AJAX for tag strings? --}}
+      <li class="poem-tag-container">{{tag.tagId}}</li>
+      {{/each}}
+   </ol>
 
    {{!-- TODO fix errors --}}
    <p class="error">{{error}}</p>
@@ -14,6 +59,4 @@
    <a href="/"></a>
    {{/if}}
 
-   {{!-- TODO add comments --}}
-   {{!-- TODO add tags --}}
 </main>
