@@ -73,3 +73,81 @@ footer {
    list-style-type: none;
    margin-left: 15px;
 }
+
+/* Poem view */
+
+/* Just for debugging */
+/* .poem-container > * {
+    border: 1px dotted gray;
+} */
+
+.poem-container {
+    display: flex;
+    padding: 5px 10px;
+    flex-direction: column;
+}
+
+.poem-header {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    align-items: center;
+    max-height: 30%;
+}
+
+.author-picture {
+    width: 128px;
+    height: 128px;
+    border: 1px solid black;
+    margin-right: 20px;
+    border-radius: 100%;
+    text-align: center;
+}
+
+.poem-body {
+    display: flex;
+    flex-direction: row;
+    height: 350px;
+}
+
+.poem-markdown {
+    flex: 2;
+    border-radius: 8px;
+    border: 1px solid black;
+    margin: 5px;
+    padding: 15px;
+}
+
+.poem-comments {
+    flex: 1;
+    overflow-y: auto; /* Makes the comment window scrollable if necessary*/
+    padding: 0;
+    margin: 0;
+}
+
+.poem-comments h2 {
+    text-align: center;
+    margin: 0;
+}
+
+.poem-comment-container {
+    border: 1px darkgray;
+    border-style: solid none none none;
+    /* border-radius: 5px; */
+    padding: 5px;
+    list-style-type: none;
+}
+
+.poem-comment-author-info {
+    display: flex;
+    flex-direction: row;
+}
+
+.poem-comment-author-info p {
+    margin-left: 5px;
+}
+
+.poem-comment-container .comment-string {
+    margin: 5px 0;
+    margin-left: 25px
+}
