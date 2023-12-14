@@ -296,5 +296,4 @@ router.route('/delete')
             return res.status(500).json({ error: e.message });
         }   
     })
-router.route('/update-username')
 export default router
