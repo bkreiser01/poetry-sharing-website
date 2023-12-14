@@ -6,17 +6,89 @@ const router = Router();
 import validation from "../helpers/validation.js";
 import user from "../data/user.js";
 
-router.route('/')
 
+let userRender = async (currentUser, obj) => {
+    let accountAge = await user.calulcateAccountAge(currentUser._id)
+    let defaultParams = {
+        layout: "default",
+        username: currentUser.username,
+        account_age: 
+            accountAge.years + " Year(s) " +
+            accountAge.months + " Month(s) " +
+            accountAge.days + " Day(s)",
+        bio: currentUser.bio,
+    }
+    return {...defaultParams, ...obj}
+}
+
+// Routes for the user page
+router.route('/')
     .get(async (req, res) => {
-        return res.render("/user", {
-            title: "user",
-            layout: "default",
-            showLeftColumn: false,
-            showRightColumn: false,
-          });
+        return res.render("user", await userRender(req.session.user, {
+            title: "Poems",
+            poems: true
+        }));
     })
 
+router.route('/history')
+    .get(async (req, res) => {
+        return res.render("user", await userRender(req.session.user, {
+            title: "History",
+            history: true
+        }));
+    })
+
+router.route('/liked-poems')
+    .get(async (req, res) => {
+        return res.render("user", await userRender(req.session.user, {
+            title: "Liked Poems",
+            liked_poems: true
+        }));
+    })
+
+router.route('/tagged-poems')
+    .get(async (req, res) => {
+        return res.render("user", await userRender(req.session.user, {
+            title: "Liked Poems",
+            liked_poems: true
+        }));
+    })
+
+router.route('/followers')
+    .get(async (req, res) => {
+        return res.render("user", await userRender(req.session.user, {
+            title: "Followers",
+            followers: true
+        }));
+    })
+
+router.route('/following')
+    .get(async (req, res) => {
+        return res.render("user", await userRender(req.session.user, {
+            title: "Following",
+            following: true
+        }));
+    })
+
+router.route('/history')
+    .get(async (req, res) => {
+        return res.render("user", await userRender(req.session.user, {
+            title: "Following",
+            following: true
+        }));
+    })
+
+
+router.route('/edit')
+    .get(async (req, res) => {
+        return res.render("user", await userRender(req.session.user, {
+            title: "Edit Profile",
+            edit: true
+        }));
+    })
+
+
+//Public User Routes
 router.route('/searchByUsername/:username')
     .get(async (req, res) => {
         try {
@@ -30,5 +102,6 @@ router.route('/searchByUsername/:username')
         }
     })
 
+//Private User Routes
 
 export default router

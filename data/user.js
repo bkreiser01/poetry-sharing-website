@@ -62,18 +62,19 @@ let checkId = (id) => {
 let updateUser = async (userId, updatedUserInfo) => {
     return await mongo.findOneAndUpdate(userCollection, userId, updatedUserInfo)
 }
-/**
- * Local helper function to get a user by id
- * 
- * @param {string|ObjectId} id - An ObjectId as either a string or the ObjectId itself
- * @returns the requested user object
- */
-let getById = async (id) => {
-    id = checkId(id)
-    return await userCollection.findOne({ _id: new ObjectId(id) });
-}
 
 const exportedMethods = {
+    /**
+     * Get a user by id
+     * 
+     * @param {string|ObjectId} id - An ObjectId as either a string or the ObjectId itself
+     * @returns the requested user object
+     */
+    async getById(id) {
+        id = checkId(id)
+        return await userCollection.findOne({ _id: new ObjectId(id) });
+    },
+
     /**
      * Add a new user to the db
      * 
@@ -156,7 +157,7 @@ const exportedMethods = {
         id = checkId(id)
 
         // Get the user by id and update the username
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.username = newUsername
 
         return await updateUser(user._id, user)
@@ -177,7 +178,7 @@ const exportedMethods = {
         id = checkId(id)
 
         // Get the user by id and update the username
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.email = newEmail
 
         return await updateUser(user._id, user)
@@ -198,7 +199,7 @@ const exportedMethods = {
         id = checkId(id)
 
         // Get the user by id and update the password
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.hashedPassword = await bcrypt.hash(newPassword, saltRounds)
 
         return await updateUser(user._id, user)
@@ -219,7 +220,7 @@ const exportedMethods = {
         id = checkId(id)
 
         // Get the user by id and update the privacy
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.private = (newPrivacy == "private")
 
         return await updateUser(user._id, user)
@@ -240,7 +241,7 @@ const exportedMethods = {
         id = checkId(id)
 
         // Get the user by id and update the bio
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.bio = newBio
 
         return await updateUser(user._id, user)
@@ -259,7 +260,7 @@ const exportedMethods = {
         poemId = checkId(poemId)
 
         // Get the user by id and add the poem to it
-        let user = await getById(userId)
+        let user = await exportedMethods.getById(userId)
         user.poemIds.push(poemId)
 
         return await updateUser(user._id, user)
@@ -278,7 +279,7 @@ const exportedMethods = {
         poemId = checkId(poemId)
 
         // Get the user by id and remove the poem from it
-        let user = await getById(userId)
+        let user = await exportedMethods.getById(userId)
         user.poemIds = user.poemIds.filter((poem) => poem != poemId)
 
         return await updateUser(user._id, user)
@@ -298,7 +299,7 @@ const exportedMethods = {
         id = checkId(id)
 
         // Get the user by id and add the tagged poem to it
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         taggedPoem._id = new ObjectId()
         user.taggedPoems.push(taggedPoem)
 
@@ -318,7 +319,7 @@ const exportedMethods = {
         taggedPoemId = checkId(taggedPoemId)
 
         // Get the user by id and remove the tagged poem from it
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.taggedPoems = user.taggedPoems.filter((taggedPoem) => taggedPoem._id != taggedPoemId)
 
         return await updateUser(user._id, user)
@@ -337,7 +338,7 @@ const exportedMethods = {
         tagId = checkId(tagId)
 
         // Get the user by id and add the tag to it
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.tagsUsed.push(tagId)
 
         return await updateUser(user._id, user)
@@ -356,7 +357,7 @@ const exportedMethods = {
         tagId = checkId(tagId)
 
         // Get the user by id and remove the tag from it
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.tagsUsed = user.tagsUsed.filter((tag) => tag != tagId)
 
         return await updateUser(user._id, user)
@@ -375,7 +376,7 @@ const exportedMethods = {
         poemId = checkId(poemId)
 
         // Get the user by id and add the poem to it
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.favorites.push(poemId)
 
         return await updateUser(user._id, user)
@@ -394,7 +395,7 @@ const exportedMethods = {
         poemId = checkId(poemId)
 
         // Get the user by id and remove the poem from it
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.favorites = user.favorites.filter((poem) => poem != poemId)
 
         return await updateUser(user._id, user)
@@ -413,7 +414,7 @@ const exportedMethods = {
         poemId = checkId(poemId)
 
         // Get the user by id and add the poem to it
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.recentlyViewedPoemIds.push(poemId)
 
         return await updateUser(user._id, user)
@@ -432,7 +433,7 @@ const exportedMethods = {
         poemId = checkId(poemId)
 
         // Get the user by id and remove the poem from it
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.recentlyViewedPoemIds = user.recentlyViewedPoemIds.filter((poem) => poem != poemId)
 
         return await updateUser(user._id, user)
@@ -451,7 +452,7 @@ const exportedMethods = {
         followerId = checkId(followerId)
 
         // Get the user by id and add the follower to it
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.followers.push(followerId)
 
         return await updateUser(user._id, user)
@@ -470,7 +471,7 @@ const exportedMethods = {
         followerId = checkId(followerId)
 
         // Get the user by id and remove the follower from it
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.followers = user.followers.filter((follower) => follower != followerId)
 
         return await updateUser(user._id, user)
@@ -489,7 +490,7 @@ const exportedMethods = {
         followingId = checkId(followingId)
 
         // Get the user by id and add the follower to it
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.following.push(followingId)
 
         return await updateUser(user._id, user)
@@ -508,7 +509,7 @@ const exportedMethods = {
         followingId = checkId(followingId)
 
         // Get the user by id and remove the follower from it
-        let user = await getById(id)
+        let user = await exportedMethods.getById(id)
         user.following = user.following.filter((following) => following != followingId)
 
         return await updateUser(user._id, user)
@@ -524,11 +525,16 @@ const exportedMethods = {
         // Validate the search string
         str = validation.checkString(str)
 
-        let res = []
-        res.push(await userCollection.find({ username: { $regex: str, $options: 'i' } }).toArray())
+        let retVal = []
+        retVal.push(await userCollection.find({ username: { $regex: str, $options: 'i' } }).toArray())
+        retVal = retVal.flat(Infinity)
 
-        // Search for users
-        return res.flat(Infinity)
+        // Remove hashedPassword from each user object
+        for (let i = 0; i < retVal.length; i++) {
+            delete retVal[i].hashedPassword
+        }
+        
+        return retVal
     },
 
     /**
@@ -554,6 +560,23 @@ const exportedMethods = {
         }
 
         return user
+    },
+
+    async calulcateAccountAge(id) {
+        // Check the Id and convert it to a string
+        id = checkId(id)
+
+        // Get the user by id
+        let user = await exportedMethods.getById(id)
+
+        // Calculate the account age
+        let accountAge = new Date() - new Date(user.timeAccountMade)
+        
+        let years = Math.floor(accountAge / (1000 * 60 * 60 * 24 * 365))
+        let months = Math.floor((accountAge % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30))
+        let days = Math.floor((accountAge % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24))
+
+        return { years, months, days }
     },
 }
 export default exportedMethods;

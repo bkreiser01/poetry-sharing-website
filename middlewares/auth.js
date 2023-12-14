@@ -21,6 +21,12 @@ const exports = {
 
         if (!req.session.user && (
             req.originalUrl == '/user' || 
+            req.originalUrl == '/user/liked-poems' || 
+            req.originalUrl == '/user/tagged-poems' || 
+            req.originalUrl == '/user/followers' || 
+            req.originalUrl == '/user/following' || 
+            req.originalUrl == '/user/history' || 
+            req.originalUrl == '/user/edit' ||
             req.originalUrl == '/logout'
         )) {
             return res.redirect('/');
