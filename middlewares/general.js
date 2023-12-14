@@ -28,6 +28,9 @@ const exports = {
      */
     log(req, res, next) {
         let log = "[" + new Date().toUTCString() + "]: ";
+            if (req.session.user) {
+                log += "(" + req.session.user.username + ") "
+            }
             log += req.method + " "
             log += req.originalUrl + " "
         console.log(log);

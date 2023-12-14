@@ -6,9 +6,7 @@ const router = Router();
 import validation from "../helpers/validation.js";
 import user from "../data/user.js";
 
-// Login route
-router
-  .route("/login")
+router.route('/login')
 
   // GET /login
   .get(async (req, res) => {
@@ -37,9 +35,7 @@ router
     }
   });
 
-// Register route
-router
-  .route("/register")
+router.route('/register')
 
   // GET /register
   .get(async (req, res) => {
@@ -72,20 +68,27 @@ router
     }
   });
 
-// Logout route
-router
-  .route("/logout")
+router.route('/logout')
 
   // GET /logout
   .get(async (req, res) => {
     // If there is a user destroy the session and render the logout page,
     // otherwise redirect to the login page
-    if (req.session.user) {
-      req.session.destroy();
-      res.status(200).render("logout", { title: "Logout" });
-    } else {
-      res.redirect("/login");
-    }
+    req.session.destroy();
+    res.status(200).render("logout", { title: "Logout" })
   });
+
+
+router.route('/check-authentication')
+
+    // GET /check-authentication
+    .get(async (req, res) => {
+        // If there is a user return a success, otherwise return an error
+        if (req.session.user) {
+            res.status(200).json({authenticated: true});
+        } else {
+            res.status(200).json({authenticated: false});
+        }
+    });
 
 export default router;

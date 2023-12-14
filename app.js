@@ -16,8 +16,7 @@ app.use(
     name: 'AuthState',
     secret: "M6Mn#APSxDX#MNaWqSD#StafG",
     saveUninitialized: false,
-    resave: false,
-    cookie: {maxAge: 60000}
+    resave: false
   })
 );
 
@@ -45,13 +44,23 @@ app.engine(
 );
 app.set("view engine", "handlebars");
 
+app.use(
+  session({
+    name: 'AuthState',
+    secret: "M6Mn#APSxDX#MNaWqSD#StafG",
+    saveUninitialized: false,
+    resave: false,
+    cookie: {maxAge: 60000}
+  })
+);
 // Add the middlewares
 Object.values(middlewares).forEach((middleware) => {
   app.use(middleware);
 });
 
 configRoutes(app);
+
 app.listen(3000, () => {
   console.log("We've now got a server!");
-  console.log("Your routes will be running on http://localhost");
+  console.log('Your routes will be running on http://localhost/:3000');
 });

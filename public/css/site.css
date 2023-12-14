@@ -1,5 +1,3 @@
-/* Main cite css probably want to have different css files for different pages */
-
 body, html {
     margin: 0;
     padding: 0;
@@ -64,4 +62,14 @@ footer {
     background-color: lightgray;
     text-align: center;
     padding: 10px 0;
+}
+
+.navbar {
+   margin: 10px;
+   display: flex;
+}
+
+.navelem {
+   list-style-type: none;
+   margin-left: 15px;
 }

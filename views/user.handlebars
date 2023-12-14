@@ -1,4 +1,44 @@
 {{!-- login form --}}
 <main>
-    <h2>User</h2>
+    <h2>{{username}}</h2>
+    <p>Account Age: {{account_age}}</p>
+    <p>Biography: {{bio}}</p>
+
+    <ul>
+        <li><a href="/user">Poems</a></li>
+        <li><a href="/user/liked-poems">Liked Poems</a></li>
+        <li><a href="/user/tagged-poems">Tagged Poems</a></li>
+        <li><a href="/user/followers">Followers</a></li>
+        <li><a href="/user/following">Following</a></li>
+        <li><a href="/user/history">History</a></li>
+        <li><a href="/user/edit">Edit Profile</a></li>
+    </ul>
+
+    {{#if poems}}
+    {{> user/poems}}
+    {{/if}}
+
+    {{#if history}}
+    {{> user/history}}
+    {{/if}}
+
+    {{#if liked_poems}}
+    {{> user/liked-poems}}
+    {{/if}}
+
+    {{#if tagged_poems}}
+    {{> user/liked-poems}}
+    {{/if}}
+
+    {{#if followers}}
+    {{> user/followers}}
+    {{/if}}
+
+    {{#if following}}
+    {{> user/following}}
+    {{/if}}
+
+    {{#if edit}}
+    {{> user/edit}}
+    {{/if}}
 </main>
