@@ -31,6 +31,8 @@ const exports = {
         )) {
             return res.redirect('/');
         }
+
+
         next();
     },
 };
