@@ -63,6 +63,11 @@ let updateUser = async (userId, updatedUserInfo) => {
     return await mongo.findOneAndUpdate(userCollection, userId, updatedUserInfo)
 }
 
+// Local helper function to get all user ids
+let getAllIds = async () => {
+    return await userCollection.find({}, { projection: { _id: 1 } }).toArray()
+}
+
 const exportedMethods = {
     /**
      * Get a user by id
@@ -326,6 +331,25 @@ const exportedMethods = {
     },
 
     /**
+     * Deletes the tagged poem of a certain ObjectId for all users
+     * @param {string|ObjectId} poemId - The ObjectId of the poem to delete
+     */
+    async deleteTaggedPoemForAllUsers(poemId) {
+        // Check the Id and convert it to a string
+        poemId = checkId(poemId)
+
+        // Get all user ids
+        let userIds = await getAllIds()
+
+        // Get each user and remove the tagged poem from it
+        for (let i = 0; i < userIds.length; i++) {
+            let user = await exportedMethods.getById(userIds[i]._id)
+            user.taggedPoems = user.taggedPoems.filter((taggedPoem) => taggedPoem.poemId != poemId)
+            await updateUser(user._id, user)
+        }
+    },
+
+    /**
      *  Adds a tag to the user with the given ObjectId
      * 
      * @param {string|ObjectId} id - The ObjectId of the user to update
@@ -402,6 +426,25 @@ const exportedMethods = {
     },
 
     /**
+     * Delete a favorite poem from all users
+     * @param {string|ObjectId} poemId - The ObjectId of the poem to delete
+     */
+    async deleteFavoriteForAllUsers(poemId) {
+        // Check the Id and convert it to a string
+        poemId = checkId(poemId)
+
+        // Get all user ids
+        let userIds = await getAllIds()
+
+        // Get each user and remove the tagged poem from it
+        for (let i = 0; i < userIds.length; i++) {
+            let user = await exportedMethods.getById(userIds[i]._id)
+            user.favorites = user.favorites.filter((poem) => poem != poemId)
+            await updateUser(user._id, user)
+        }
+    },
+
+    /**
      *  Adds a follower to the user with the given ObjectId
      * 
      * @param {string|ObjectId} id - The ObjectId of the user to update
@@ -437,6 +480,26 @@ const exportedMethods = {
         user.recentlyViewedPoemIds = user.recentlyViewedPoemIds.filter((poem) => poem != poemId)
 
         return await updateUser(user._id, user)
+    },
+
+    /**
+     * Delete a recently viewed poem from all users
+     * 
+     * @param {string|ObjectId} poemId - The ObjectId of the poem to delete
+     */
+    async deleteRecentlyViewedPoemForAllUsers(poemId) {
+        // Check the Id and convert it to a string
+        poemId = checkId(poemId)
+
+        // Get all user ids
+        let userIds = await getAllIds()
+
+        // Get each user and remove the tagged poem from it
+        for (let i = 0; i < userIds.length; i++) {
+            let user = await exportedMethods.getById(userIds[i]._id)
+            user.recentlyViewedPoemIds = user.recentlyViewedPoemIds.filter((poem) => poem != poemId)
+            await updateUser(user._id, user)
+        }
     },
 
     /**
@@ -578,6 +641,15 @@ const exportedMethods = {
 
         return { years, months, days }
     },
+
+    async deletePoemFromAllUsers(poemId) {
+        // Check the Id and convert it to a string
+        poemId = checkId(poemId)
+
+        await deleteTaggedPoemForAllUsers(poemId);
+        await deleteFavoriteForAllUsers(poemId);
+        await deleteRecentlyViewedPoemForAllUsers(poemId);
+    }
 }
 export default exportedMethods;
 
