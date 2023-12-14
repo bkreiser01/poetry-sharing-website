@@ -9,7 +9,6 @@
  *    taggedPoemsId: array of object ids
  */
 
-import * as connections from "../config/mongoConnection.js";
 import { tags } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import validation from "../helpers/validation.js";
@@ -110,20 +109,21 @@ const exportedMethods = {
 
    /**
     * deletes a poem from all tags
-    * @param {string} poemId 
-    * @returns 
+    * @param {string} poemId
+    * @returns
     */
    async deletePoemFromAllTags(poemId) {
       poemId = validation.checkId(poemId);
 
-      const updateInfo = await tagCollection
-         .updateMany(
-            {},
-            {
-               $pull: { taggedPoemsId: { $eq: new ObjectId(poemId) } },
-            }
-         );
+      const updateInfo = await tagCollection.updateMany(
+         {},
+         {
+            $pull: { taggedPoemsId: { $eq: new ObjectId(poemId) } },
+         }
+      );
 
       return updateInfo;
    },
 };
+
+export default exportedMethods;
