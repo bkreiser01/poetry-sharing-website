@@ -3,23 +3,23 @@ import publicValidation from "../public/js/validation.js";
 import validUrl from "valid-url";
 
 const exportedMethods = {
-  // Import the validation methods from public/js/validation.js
-  ...publicValidation,
+   // Import the validation methods from public/js/validation.js
+   ...publicValidation,
 
-  checkId(id, varName) {
-    // TODO: Check if object is in a collection
-    if (!id) throw new Error(`Error: You must provide a ${varName}`);
-    if (typeof id !== "string")
-      throw new Error(`Error: ${varName} must be a string`);
-    id = id.trim();
-    if (id.length === 0)
-      throw new Error(
-        `Error: ${varName} cannot be an empty string or just spaces`
-      );
-    if (!ObjectId.isValid(id))
-      throw new Error(`Error: ${varName} invalid ObjectId`);
-    return id;
-  },
+   checkId(id, varName) {
+      // TODO: Check if object is in a collection
+      if (!id) throw new Error(`Error: You must provide a ${varName}`);
+      if (typeof id !== "string")
+         throw new Error(`Error: ${varName} must be a string`);
+      id = id.trim();
+      if (id.length === 0)
+         throw new Error(
+            `Error: ${varName} cannot be an empty string or just spaces`
+         );
+      if (!ObjectId.isValid(id))
+         throw new Error(`Error: ${varName} invalid ObjectId`);
+      return id;
+   },
 
    checkStringArray(arr, varName) {
       //We will allow an empty array for this,
@@ -28,9 +28,11 @@ const exportedMethods = {
          throw new Error(`You must provide an array of ${varName}`);
       }
       for (let i in arr) {
-      if (typeof arr[i] !== "string" || arr[i].trim().length === 0) {
-         throw new Error(`One or more elements in ${varName} array is not a string or is an empty string` );
-      }
+         if (typeof arr[i] !== "string" || arr[i].trim().length === 0) {
+            throw new Error(
+               `One or more elements in ${varName} array is not a string or is an empty string`
+            );
+         }
       }
       return bool;
    },
@@ -107,6 +109,21 @@ const exportedMethods = {
          throw new Error(`Error: ${varName} is NaN`);
       }
       return num;
+   },
+
+   /**
+    * Checks if a tagString is valid (no spaces), also makes it lowercase
+    *
+    * @param {string} strVal
+    * @param {string} varName
+    */
+   checkTagString(strVal, varName) {
+      strVal = exportedMethods.checkString(strVal, varName);
+      strVal = strVal.toLowerCase();
+      if (/\s/g.test(strVal)) {
+         throw new Error(`Error: ${varName} must not have white space`);
+      }
+      return strVal;
    },
 
    checkStringArray(arr, varName) {
