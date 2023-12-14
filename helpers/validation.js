@@ -64,29 +64,27 @@ const exportedMethods = {
       return url;
    },
 
-   /**
-    * Validate the taggedPoem object
-    *
-    * @param {Object} tp
-    */
-   checkTaggedPoem(obj) {
-      // tagged poems must have 2 keys
-      if (Object.keys(obj).length != 2) {
-         throw new Error("A taggedPoem object must have 2 keys");
-      }
+  /**
+   * Validate the taggedPoem object
+   * 
+   * @param {Object} tp 
+   */
+  checkTaggedPoem(obj) {
+    // tagged poems must have 2 keys
+    if (Object.keys(obj).length != 3) {
+      throw new Error('A taggedPoem object must have 2 keys')
+    }
 
-      // tagged poems must have the following keys
-      //    poemId, tagIds
-      let missingKeys = this.checkObjKeys(obj, ["poemId", "tagIds"]);
-      if (missingKeys.length != 0) {
-         throw new Error(
-            `The taggedPoem object is missing the key(s) ${missingKeys}`
-         );
-      }
+    // tagged poems must have the following keys
+    //    poemId, tagIds
+    let missingKeys = this.checkObjKeys(obj, ["_id", "poemId", "tagIds"])
+    if (missingKeys.length != 0) {
+      throw new Error(`The taggedPoem object is missing the key(s) ${missingKeys}`)
+    }
 
-      // TODO: the object ID's inside the tagged poems should all be validated
-      return obj;
-   },
+    // TODO: the object ID's inside the tagged poems should all be validated
+    return obj
+  },
 
    checkId(id, varName) {
       if (!id) throw new Error(`Error: You must provide a ${varName}`);
@@ -111,22 +109,6 @@ const exportedMethods = {
          throw new Error(`Error: ${varName} is NaN`);
       }
       return num;
-   },
-
-   checkString(strVal, varName) {
-      if (!strVal) throw new Error(`Error: You must supply a ${varName}!`);
-      if (typeof strVal !== "string")
-         throw new Error(`Error: ${varName} must be a string!`);
-      strVal = strVal.trim();
-      if (strVal.length === 0)
-         throw new Error(
-            `Error: ${varName} cannot be an empty string or string with just spaces`
-         );
-      if (!isNaN(strVal))
-         throw new Error(
-            `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`
-         );
-      return strVal;
    },
 
    /**
@@ -160,7 +142,7 @@ const exportedMethods = {
 
       return arr;
    },
-
+   
    checkDateString(date, varName) {
       date = this.checkString(date, varName);
       if (isNaN(new Date(date)))

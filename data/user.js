@@ -20,9 +20,8 @@
  * 
  * The tagged poem object contains the following fields:
  *     - poemId: ObjectId
- *     - taggedBy: ObjectId
- *     - taggedAt: string
- *     - taggedText: string
+ *     - poemId: ObjectId
+ *     - tagIds: array of ObjectIds
  * 
  */
 
@@ -42,14 +41,33 @@ const saltRounds = 16;
  * Local helper function to handle id checks
  * 
  * @param {*} id - An ObjectId as either a string or the ObjectId itself
- * @returns String representation of the given id
+ * @returns the given ObjectId
  */
 let checkId = (id) => {
     if (typeof id != "string" && !(id instanceof ObjectId)) {
         throw new Error("Input must be either a string or ObjectId")
     }
     id = validation.checkString(id.toString())
-    return id
+    return new ObjectId(id)
+}
+
+let idIsIn = (elem, arr) => {
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].toString() == elem.toString()) {
+            return true
+        }
+    }
+    return false
+}
+
+let removeIdFromArray = (elem, arr) => {
+    let retVal = []
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].toString() != elem.toString()) {
+            retVal.push(arr[i])
+        }
+    }
+    return retVal
 }
 
 /**
@@ -63,9 +81,31 @@ let updateUser = async (userId, updatedUserInfo) => {
     return await mongo.findOneAndUpdate(userCollection, userId, updatedUserInfo)
 }
 
-// Local helper function to get all user ids
-let getAllIds = async () => {
-    return await userCollection.find({}, { projection: { _id: 1 } }).toArray()
+let addIdToUserField = async(userId, idToAdd, field) => {
+    userId = checkId(userId)
+    idToAdd = checkId(idToAdd)
+
+    let user = await exportedMethods.getById(userId)
+
+    if (idIsIn(idToAdd, user[field])) {
+        throw new Error(`User already has an instance of '${idToAdd.toString()}' in '${field}'!`)
+    }
+
+    user[field].push(idToAdd)
+
+    return await updateUser(user._id, user)
+}
+
+let deleteIdFromUserField = async(userId, idToDelete, field) => {
+    // Check the Id and convert it to a string
+    userId = checkId(userId)
+    idToDelete = checkId(idToDelete)
+
+    // Get the user by id and remove the poem from it
+    let user = await exportedMethods.getById(userId)
+    user[field] = removeIdFromArray(idToDelete, user[field])
+
+    return await updateUser(user._id, user)
 }
 
 const exportedMethods = {
@@ -161,6 +201,10 @@ const exportedMethods = {
         // Check the Id and convert it to a string
         id = checkId(id)
 
+        if(await userCollection.findOne({ username: newUsername })) {
+            throw new Error("Username is already in use!")
+        }
+
         // Get the user by id and update the username
         let user = await exportedMethods.getById(id)
         user.username = newUsername
@@ -177,10 +221,15 @@ const exportedMethods = {
      */
     async updateEmail(id, newEmail) {
         // Validate the new email
-        newUsername = validation.checkEmail(newEmail)
+        newEmail = validation.checkEmail(newEmail)
 
         // Check the Id and convert it to a string
         id = checkId(id)
+
+        // Verify that the email is not already in use
+        if(await userCollection.findOne({ email: newEmail })) {
+            throw new Error("Email is already in use!")
+        }
 
         // Get the user by id and update the username
         let user = await exportedMethods.getById(id)
@@ -260,15 +309,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async addPoem(userId, poemId) {
-        // Check the Id and convert it to a string
-        userId = checkId(userId)
-        poemId = checkId(poemId)
-
-        // Get the user by id and add the poem to it
-        let user = await exportedMethods.getById(userId)
-        user.poemIds.push(poemId)
-
-        return await updateUser(user._id, user)
+        return await addIdToUserField(userId, poemId, "poemIds")
     },
 
     /**
@@ -279,15 +320,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async deletePoem(userId, poemId) {
-        // Check the Id and convert it to a string
-        userId = checkId(userId)
-        poemId = checkId(poemId)
-
-        // Get the user by id and remove the poem from it
-        let user = await exportedMethods.getById(userId)
-        user.poemIds = user.poemIds.filter((poem) => poem != poemId)
-
-        return await updateUser(user._id, user)
+        return await deleteIdFromUserField(userId, poemId, "poemIds")
     },
 
     /**
@@ -297,15 +330,17 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async addTaggedPoem(id, taggedPoem) {
-        // Validate the tagged poem
-
-
-        // Check the Id and convert it to a string
+        taggedPoem = validation.checkTaggedPoem(taggedPoem)
         id = checkId(id)
 
-        // Get the user by id and add the tagged poem to it
         let user = await exportedMethods.getById(id)
-        taggedPoem._id = new ObjectId()
+
+        for (let i = 0; i < user.taggedPoems.length; i++) {
+            if (user.taggedPoems[i]._id.toString() == taggedPoem._id.toString()) {
+                throw new Error(`User already has a tagged poem with that id!`)
+            }
+        }
+
         user.taggedPoems.push(taggedPoem)
 
         return await updateUser(user._id, user)
@@ -319,13 +354,20 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async deleteTaggedPoem(id, taggedPoemId) {
-        // Check the Id and convert it to a string
-        id = checkId(id)
         taggedPoemId = checkId(taggedPoemId)
+        id = checkId(id)
 
-        // Get the user by id and remove the tagged poem from it
         let user = await exportedMethods.getById(id)
-        user.taggedPoems = user.taggedPoems.filter((taggedPoem) => taggedPoem._id != taggedPoemId)
+
+        let newTaggedPoems = []
+        for (let i = 0; i < user.taggedPoems.length; i++) {
+            console.log(user.taggedPoems[i]._id.toString() )
+            if (user.taggedPoems[i]._id.toString() != taggedPoemId.toString()) {
+                newTaggedPoems.push(user.taggedPoems[i])
+            }
+        }
+        
+        user.taggedPoems = newTaggedPoems
 
         return await updateUser(user._id, user)
     },
@@ -335,16 +377,20 @@ const exportedMethods = {
      * @param {string|ObjectId} poemId - The ObjectId of the poem to delete
      */
     async deleteTaggedPoemForAllUsers(poemId) {
-        // Check the Id and convert it to a string
-        poemId = checkId(poemId)
-
         // Get all user ids
-        let userIds = await getAllIds()
+        let userIds = await userCollection.distinct('_id')
 
         // Get each user and remove the tagged poem from it
         for (let i = 0; i < userIds.length; i++) {
-            let user = await exportedMethods.getById(userIds[i]._id)
-            user.taggedPoems = user.taggedPoems.filter((taggedPoem) => taggedPoem.poemId != poemId)
+            let newTaggedPoems = []
+            let user = await exportedMethods.getById(userIds[i])
+
+            for (let j = 0; j < user.taggedPoems.length; j++) {
+                if (user.taggedPoems[j].poemId.toString() != poemId.toString()) {
+                    newTaggedPoems.push(user.taggedPoems[j])
+                }
+            }
+            user.taggedPoems = newTaggedPoems
             await updateUser(user._id, user)
         }
     },
@@ -357,15 +403,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async addTagUsed(id, tagId) {
-        // Check the Id and convert it to a string
-        id = checkId(id)
-        tagId = checkId(tagId)
-
-        // Get the user by id and add the tag to it
-        let user = await exportedMethods.getById(id)
-        user.tagsUsed.push(tagId)
-
-        return await updateUser(user._id, user)
+        return await addIdToUserField(id, tagId, "tagsUsed")
     },
 
     /**
@@ -376,15 +414,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async deleteTagUsed(id, tagId) {
-        // Check the Id and convert it to a string
-        id = checkId(id)
-        tagId = checkId(tagId)
-
-        // Get the user by id and remove the tag from it
-        let user = await exportedMethods.getById(id)
-        user.tagsUsed = user.tagsUsed.filter((tag) => tag != tagId)
-
-        return await updateUser(user._id, user)
+        return await deleteIdFromUserField(id, tagId, "tagsUsed")
     },
 
     /**
@@ -395,15 +425,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async addFavorite(id, poemId) {
-        // Check the Id and convert it to a string
-        id = checkId(id)
-        poemId = checkId(poemId)
-
-        // Get the user by id and add the poem to it
-        let user = await exportedMethods.getById(id)
-        user.favorites.push(poemId)
-
-        return await updateUser(user._id, user)
+        return await addIdToUserField(id, poemId, "favorites")
     },
 
     /**
@@ -414,15 +436,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async deleteFavorite(id, poemId) {
-        // Check the Id and convert it to a string
-        id = checkId(id)
-        poemId = checkId(poemId)
-
-        // Get the user by id and remove the poem from it
-        let user = await exportedMethods.getById(id)
-        user.favorites = user.favorites.filter((poem) => poem != poemId)
-
-        return await updateUser(user._id, user)
+        return await deleteIdFromUserField(id, poemId, "favorites")
     },
 
     /**
@@ -430,17 +444,12 @@ const exportedMethods = {
      * @param {string|ObjectId} poemId - The ObjectId of the poem to delete
      */
     async deleteFavoriteForAllUsers(poemId) {
-        // Check the Id and convert it to a string
-        poemId = checkId(poemId)
-
         // Get all user ids
-        let userIds = await getAllIds()
+        let userIds = await userCollection.distinct('_id')
 
         // Get each user and remove the tagged poem from it
         for (let i = 0; i < userIds.length; i++) {
-            let user = await exportedMethods.getById(userIds[i]._id)
-            user.favorites = user.favorites.filter((poem) => poem != poemId)
-            await updateUser(user._id, user)
+            await exportedMethods.deleteFavorite(userIds[i], poemId)
         }
     },
 
@@ -452,15 +461,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async addRecentlyViewedPoem(id, poemId) {
-        // Check the Id and convert it to a string
-        id = checkId(id)
-        poemId = checkId(poemId)
-
-        // Get the user by id and add the poem to it
-        let user = await exportedMethods.getById(id)
-        user.recentlyViewedPoemIds.push(poemId)
-
-        return await updateUser(user._id, user)
+        return await addIdToUserField(id, poemId, "recentlyViewedPoemIds")
     },
 
     /**
@@ -471,15 +472,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async deleteRecentlyViewedPoem(id, poemId) {
-        // Check the Id and convert it to a string
-        id = checkId(id)
-        poemId = checkId(poemId)
-
-        // Get the user by id and remove the poem from it
-        let user = await exportedMethods.getById(id)
-        user.recentlyViewedPoemIds = user.recentlyViewedPoemIds.filter((poem) => poem != poemId)
-
-        return await updateUser(user._id, user)
+        return await deleteIdFromUserField(id, poemId, "recentlyViewedPoemIds")
     },
 
     /**
@@ -488,17 +481,12 @@ const exportedMethods = {
      * @param {string|ObjectId} poemId - The ObjectId of the poem to delete
      */
     async deleteRecentlyViewedPoemForAllUsers(poemId) {
-        // Check the Id and convert it to a string
-        poemId = checkId(poemId)
-
         // Get all user ids
-        let userIds = await getAllIds()
+        let userIds = await userCollection.distinct('_id')
 
         // Get each user and remove the tagged poem from it
         for (let i = 0; i < userIds.length; i++) {
-            let user = await exportedMethods.getById(userIds[i]._id)
-            user.recentlyViewedPoemIds = user.recentlyViewedPoemIds.filter((poem) => poem != poemId)
-            await updateUser(user._id, user)
+            await exportedMethods.deleteRecentlyViewedPoem(userIds[i], poemId)
         }
     },
 
@@ -510,15 +498,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async addFollower(id, followerId) {
-        // Check the Id and convert it to a string
-        id = checkId(id)
-        followerId = checkId(followerId)
-
-        // Get the user by id and add the follower to it
-        let user = await exportedMethods.getById(id)
-        user.followers.push(followerId)
-
-        return await updateUser(user._id, user)
+        return await addIdToUserField(id, followerId, "followers")
     },
 
     /**
@@ -529,15 +509,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async deleteFollower(id, followerId) {
-        // Check the Id and convert it to a string
-        id = checkId(id)
-        followerId = checkId(followerId)
-
-        // Get the user by id and remove the follower from it
-        let user = await exportedMethods.getById(id)
-        user.followers = user.followers.filter((follower) => follower != followerId)
-
-        return await updateUser(user._id, user)
+        return await deleteIdFromUserField(id, followerId, "followers")
     },
 
     /**
@@ -548,15 +520,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async addFollowing(id, followingId) {
-        // Check the Id and convert it to a string
-        id = checkId(id)
-        followingId = checkId(followingId)
-
-        // Get the user by id and add the follower to it
-        let user = await exportedMethods.getById(id)
-        user.following.push(followingId)
-
-        return await updateUser(user._id, user)
+        return await addIdToUserField(id, followingId, "following")
     },
 
     /**
@@ -567,15 +531,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async deleteFollowing(id, followingId) {
-        // Check the Id and convert it to a string
-        id = checkId(id)
-        followingId = checkId(followingId)
-
-        // Get the user by id and remove the follower from it
-        let user = await exportedMethods.getById(id)
-        user.following = user.following.filter((following) => following != followingId)
-
-        return await updateUser(user._id, user)
+        return await deleteIdFromUserField(id, followingId, "following")
     },
 
     /**
@@ -646,9 +602,9 @@ const exportedMethods = {
         // Check the Id and convert it to a string
         poemId = checkId(poemId)
 
-        await deleteTaggedPoemForAllUsers(poemId);
-        await deleteFavoriteForAllUsers(poemId);
-        await deleteRecentlyViewedPoemForAllUsers(poemId);
+        await exportedMethods.deleteTaggedPoemForAllUsers(poemId);
+        await exportedMethods.deleteFavoriteForAllUsers(poemId);
+        await exportedMethods.eleteRecentlyViewedPoemForAllUsers(poemId);
     }
 }
 export default exportedMethods;
