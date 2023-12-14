@@ -88,15 +88,12 @@ const exportedMethods = {
       const poemCollection = await poems();
       const newPoemInsertInformation = await poemCollection.insertOne(newPoem);
 
-      console.log(newPoemInsertInformation);
-
       const newId = newPoemInsertInformation.insertedId;
 
       // TODO add poemid to user poemIds
       // const userCollection = await users();
 
       const gotPoem = await this.getPoemById(newId.toString());
-      console.log(gotPoem);
 
       return gotPoem;
    },
