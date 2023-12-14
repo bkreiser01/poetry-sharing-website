@@ -1,8 +1,8 @@
 /**
  * Contains all functions (other than comments) that interact with the poems collection
- * 
+ *
  * @module data/poems
- * 
+ *
  * The poem collection contains the following fields:
  *    - _id: ObjectId
  *    - timeSubmitted: Date
@@ -15,7 +15,7 @@
  *    - favoriteCount: number
  *    - comments: array of comment objects (see data/comments)
  *    - private: boolean
- * 
+ *
  *  submittedTag object contains the following fields:
  *    - _id: ObjectId
  *    - tagId: ObjectId
@@ -26,8 +26,7 @@
 import { poems } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import validation from "../helpers/validation.js";
-
-import users from "./user.js";
+import userData from "./user.js";
 
 const exportedMethods = {
    /**
@@ -87,12 +86,32 @@ const exportedMethods = {
          private: priv,
       };
 
+      // insert the poem
       const poemCollection = await poems();
       const newPoemInsertInformation = await poemCollection.insertOne(newPoem);
+      // check the poem was inserted
+      if (
+         !newPoemInsertInformation.acknowledged ||
+         !newPoemInsertInformation.insertedId
+      ) {
+         throw new Error("poems/addPoem: could not add poem");
+      }
 
       const newId = newPoemInsertInformation.insertedId;
 
+      // Make sure the poem has been added
       const gotPoem = await this.getPoemById(newId.toString());
+      if (!gotPoem) {
+         throw new Error("poems/addPoem: could not find new poem");
+      }
+
+      // Add poem to the author's poemId list
+      const updatedUser = userData.addPoem(userId, gotPoem._id.toString());
+      if (!updatedUser) {
+         throw new Error("poems/addPoem: could not add to author poem list");
+      }
+
+      console.log(gotPoem);
 
       return gotPoem;
    },
@@ -106,15 +125,39 @@ const exportedMethods = {
    async removePoem(id) {
       // TODO validate id
       id = validation.checkId(id);
+      const poem = this.getPoemById(id);
+
+      if (!poem) {
+         throw new Error("removePoem: could not get poem");
+      }
 
       const poemCollection = await poems();
       const deletionInfo = await poemCollection.findOneAndDelete({
          _id: new ObjectId(id),
       });
       if (deletionInfo.lastErrorObject.n === 0)
-         throw new Error(`Could not delete poem with id of ${id}`);
+         throw new Error(`removePoem: Could not delete poem with id of ${id}`);
 
-      // TODO remove poem from user poemIds, remove poem from all tags, and from user taggedPoemIds
+      // TODO  remove poem from all tags, and from user taggedPoemIds
+
+      //remove poem from author poemIds
+      const changedUser = userData.deletePoem(poem.userData.toString(), id);
+      if (!changedUser) {
+         throw new Error("removePoem: could not delete poem from user");
+      }
+
+      // Remove poem from all user taggedPoems
+      // const updateDoc = {
+      //    $pull: { taggedPoems: { poemId: { $eq: [new Object(id)] } } },
+      // };
+      // const userModInfo = users.updateMany({}, updateDoc);
+
+      // if (!userModInfo) {
+
+      // }
+
+      // TODO Remove poem from all favorites
+      // TODO Remove poem from all tags
 
       return { ...deletionInfo.value, deleted: true };
    },
