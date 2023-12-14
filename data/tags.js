@@ -14,6 +14,8 @@ import { tags } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import validation from "../helpers/validation.js";
 
+const tagCollection = await tags();
+
 const exportedMethods = {
    /**
     * Returns tag object according to id
@@ -23,7 +25,6 @@ const exportedMethods = {
    async getTagById(tagId) {
       tagId = validation.checkId(tagId);
 
-      const tagCollection = await tags();
       const tag = await tagCollection.findOne({ _id: new ObjectId(tagId) });
       if (!tag) throw new Error("getTabById: Could not get tag");
 
@@ -40,8 +41,6 @@ const exportedMethods = {
       // Validation
       tagString = validation.checkTagString(tagString);
       poemId = validation.checkId(poemId);
-
-      const tagCollection = await tags();
 
       // check that the tag does not already exist
       const findInfoTagString = await tagCollection
@@ -98,8 +97,6 @@ const exportedMethods = {
    async searchTagByName(searchStr) {
       searchStr = validation.checkString(searchStr);
 
-      const tagCollection = await tags();
-
       let retVal = [];
       retVal.push(
          await tagCollection
@@ -110,4 +107,26 @@ const exportedMethods = {
 
       return retVal;
    },
+
+   /**
+    * deletes a poem from all tags
+    * @param {string} poemId 
+    * @returns 
+    */
+   async deletePoemFromAllTags(poemId) {
+      poemId = validation.checkId(poemId);
+
+      const updateInfo = await tagCollection
+         .updateMany(
+            {},
+            {
+               $pull: { taggedPoemsId: { $eq: new ObjectId(poemId) } },
+            }
+         );
+
+      return updateInfo;
+   },
 };
+
+const db = await connections.dbConnection();
+await exportedMethods.deletePoemFromAllTags("aaaaaaaaaaaaaaaaaaaaaaa0");
