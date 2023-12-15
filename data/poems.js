@@ -92,9 +92,6 @@ const exportedMethods = {
 
       const newId = newPoemInsertInformation.insertedId;
 
-      let user = await users.getById(userId);
-      user = await users.addPoem(userId, newId.toString());
-
       const gotPoem = await this.getPoemById(newId.toString());
 
       return gotPoem;

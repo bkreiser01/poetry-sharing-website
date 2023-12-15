@@ -29,7 +29,8 @@
     "express-session": "^1.17.3",
     "handlebars": "^4.7.8",
     "mongodb": "^6.3.0",
-    "valid-url": "^1.0.9"
+    "valid-url": "^1.0.9",
+    "xss": "^1.0.14"
   },
   "devDependencies": {
     "@babel/core": "^7.23.3",
