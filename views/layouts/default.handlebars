@@ -1,0 +1,68 @@
+{{!-- FIXME Check HTML validity --}}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{{title}}</title>
+        <link rel="stylesheet" href="/public/css/site.css">
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <header>
+            <a href="/">
+                <img src="/public/assets/tmp_logo_small.png" alt="Logo"
+                    id="website-logo">
+            </a>
+            <a href="/">
+                <h1 id="website-title">Poet-me</h1>
+            </a>
+
+            {{!-- Make a form out of this --}}
+            <label for="search-bar"></label>
+            <input id="search-bar" type="text" name="search-bar"
+                placeholder="Search for...">
+
+            <label for="search-select"></label>
+            <select name="serach-select" id="search-select">
+                <option value="user">User</option>
+                <option value="poem">Poem</option>
+                <option value="tag">Tag</option>
+            </select>
+
+            {{!-- Invalid html: button can't be a descendent of link. Check
+            https://stackoverflow.com/questions/3303675/how-to-make-an-input-type-button-act-like-a-hyperlink-and-redirect-using-a-get-r
+            to find a fix --}}
+            <a href="/poems/new">
+                <button id="button-write" type="button">Write</button>
+            </a>
+
+            <div id="user-account"></div>
+            <div id="login-logout"></div>
+
+        </header>
+
+        <div id="default-canvas">
+            {{#if showLeftColumn}}
+            {{!-- Pass parameters to partial this way: > whichPartial parameter=value --}}
+            {{!-- e.g.: > top_tags title=title --}}
+            {{> top_tags}}
+            {{/if}}
+
+            {{{body}}}
+
+            {{#if showRightColumn}}
+            {{> top_followers}}
+
+            {{/if}}
+
+        </div>
+
+        <footer>
+            CS 546 - Poetry Sharing Website
+            <br>
+            Adrien Huet - Brandon Kreiser - Joseph Vasallo - Roger Shagawat
+            <script type='module' src="/public/js/site.js"></script>
+        </footer>
+    </body>
+</html>

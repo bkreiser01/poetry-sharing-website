@@ -1,11 +1,14 @@
 {{!-- login form --}}
-<body>
+<main>
     <h2>Login</h2>
     <form id="login_form">
         <label for="username_input">Username</label><br>
-        <input name="username_input" id="username_input"><br>
+        <input name="username_input" id="username_input" type="username"><br>
         <label for="password_input">Password</label><br>
-        <input name="password_input" id="password_input"><br>
-        <button type="login">Login</button>
+        <input name="password_input" id="password_input" type="password"><br>
+        <button type="login">Login</button> <br>
+        <label id="error"></label>
     </form>
-</body>
+    <a href="/register">Click here to register!</a>
+    <script type='module' src="../public/js/login.js"></script>
+</main>
