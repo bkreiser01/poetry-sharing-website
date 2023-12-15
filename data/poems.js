@@ -473,8 +473,8 @@ const exportedMethods = {
 
 export default exportedMethods;
 
-import { dbConnection } from "../config/mongoConnection.js";
-const db = await dbConnection();
+// import { dbConnection } from "../config/mongoConnection.js";
+// const db = await dbConnection();
 // console.log(
 //    await exportedMethods.addTag(
 //       "657c908ab14912562bcc452b",
@@ -482,6 +482,6 @@ const db = await dbConnection();
 //    )
 // );
 
-console.log(await exportedMethods.searchByBody("off"));
+// console.log(await exportedMethods.searchByBody("off"));
 
 // // console.log(await exportedMethods.getMostRecentPoems());
