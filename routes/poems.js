@@ -9,8 +9,8 @@ import markdown, { getCodeString } from "@wcj/markdown-to-html";
 import xss from "xss";
 
 router.route("/").get(async (req, res) => {
-  // Can change to redirect somewhere else
-  res.redirect("/poems/new");
+   // Can change to redirect somewhere else
+   res.redirect("/poems/new");
 });
 
 router
@@ -169,11 +169,11 @@ router
             return res.status(400).render("error", { error: e });
          }
 
-    try {
-      const updatedPoem = await poemData.updatePoemPatch(
-        req.params.id,
-        inputData
-      );
+      try {
+         const updatedPoem = await poemData.updatePoemPatch(
+            req.params.id,
+            inputData
+         );
 
          res.json(updatedPoem); // TODO change to poem render
       } catch (e) {
@@ -205,4 +205,6 @@ router.route("/getPoemById/:id").get(async (req, res) => {
       res.status(404).json({ error: e.toString() });
    }
 });
+
+
 export default router;

@@ -1,12 +1,11 @@
-{{!-- homepage form --}}
 <main>
    <div>
-      <h2>Homepage</h2>
       {{#if noPoems}}
       {{!-- If there aren't any poems in the website display this --}}
       <p>Apologies the site is devoid of poems or something went horribly wrong</p>
       {{else}}
       {{!-- If there are poems, do the functionality --}}
+      <h1>Popular Poems</h1>
       <ul>
          {{#each poemList}}
          <li>
@@ -17,6 +16,7 @@
          {{/each}}
       </ul>
       {{/if}}
+
 
    </div>
 </main>

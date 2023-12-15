@@ -4,9 +4,9 @@ import tags from "../data/tags.js";
 //import {seedDb} from '../config/seed.js';
 const router = Router();
 
-router.route("/").get(async (req, res) => {
-  res.status(200).render("homepage", { title: "Poetry Sharing" });
-});
+// router.route("/").get(async (req, res) => {
+//   res.status(200).render("homepage", { title: "Poetry Sharing" });
+// });
 
 router.route("/editor").get(async (req, res) => {
   res.status(200).render("editor", { title: "Editor" });
