@@ -40,10 +40,11 @@ const exportedMethods = {
     * Return tag object associated with given id
     *
     * @param {string} tagId
+    * @returns {Array.<Object>}
    */
    async getTagById(tagId) {
       //Validation
-      //tagId = validation.checkId(tagId, "Tag id");
+      tagId = validation.checkId(tagId, "Tag id");
 
       //Get tag
       const foundTag = await tagCollection.findOne({ _id: new ObjectId(tagId) });
@@ -61,7 +62,7 @@ const exportedMethods = {
    */
    async getTagByName(tagString) {
       //Validation
-      //tagString = validation.checkString(tagString, "Tag string");
+      tagString = validation.checkTagString(tagString, "Tag string");
 
       //Get tag
       const foundTag = await tagCollection.findOne({ tagString: tagString });
@@ -76,10 +77,11 @@ const exportedMethods = {
     * Create a new tag and return its id (does not associate this tag with any poems)
     * 
     * @param {string} tagString
+    * @returns {string}
    */
    async createNewTag(tagString) {
       //Validation
-      //tagString = validation.checkString(tagString, "Tag string");
+      tagString = validation.checkTagString(tagString, "Tag string");
 
       //Check if tag already exists
       try{
@@ -114,8 +116,8 @@ const exportedMethods = {
    */
    async addTagToPoem(tagString, poemId) {
       //Validation
-      //tagString = validation.checkTagString(tagString);
-      //poemId = validation.checkId(poemId);
+      tagString = validation.checkTagString(tagString);
+      poemId = validation.checkId(poemId, "Poem id");
 
       //Check if tag already exists
       let existingTag;
@@ -183,7 +185,7 @@ const exportedMethods = {
    */
    async deletePoemFromAllTags(poemId) {
       //Validation
-      //poemId = validation.checkId(poemId);
+      poemId = validation.checkId(poemId, "Poem id");
 
       //Delete poem
       const deletedPoem = await tagCollection.updateMany(
