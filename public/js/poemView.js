@@ -3,25 +3,45 @@
 import validation from './validation.js';
 
 (function($) {
-    let PoemActions = $('.poem-actions');
-    let TagButton = $('#TagIt');
-    let LikeButton = $('#SaveIt');
-    let SaveButton = $('#LikeIt');
+    let TagForm = $('#addTagForm');
+    let LikeButton = $('#LikeIt');
+    let SaveButton = $('#SaveIt');
 
-    TagButton.click(function (event) {
-        //Empty poem-actions div, and add form to submit tag
-        PoemActions.empty();
-        PoemActions.append("<form id='addTagForm'></form>");
-        let TagForm = $('#addTagForm');
-        TagForm.append("<label for='TagString'>Tag:</label>");
-        TagForm.append("<input type='text' id='TagString' name='TagString'>");
-        TagForm.append("<input type='submit' value='Submit'>");
-    })
+    TagForm.on('submit', function(event) {
+        event.preventDefault();
+        console.log("Submitted");
+
+        //Get data
+        let pathName = $(location).attr('pathname');
+        pathName = pathName.substring(7);
+        let data = {
+            tagString: $('#TagString').val(),
+            taggedPoemId: pathName
+        }
+        //AJAX call
+        $.ajax({
+            url: '/AddTagToPoem',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function(data) {
+                if (data.success) {
+                    window.location.href = '/'
+                }
+            },
+            error: function(e) {
+                console.error(e.responseJSON.error)
+                error.text(e.responseJSON.error)
+            },
+        });
+    });
+
+    SaveButton.on('click', function (event) {
+        console.log("Saved");
+    });
 
     LikeButton.click(function (event) {
-    })
-
-    SaveButton.click(function (event) {
-    })
+        console.log("Liked");
+    });
 
 })(window.jQuery)

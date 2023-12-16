@@ -59,6 +59,20 @@ router.route("/SearchForTag").post(async (req, res) => {
   return res.redirect("/tagTest");
 });
 
+router.route("/AddTagToPoem").post(async (req, res) => {
+  //Route to add tag to poem
+  //Validate here
+
+  //Add to database
+  let TagString = req.body.tagString;
+  let PoemID = req.body.taggedPoemId;
+  try{
+    await tags.addTagToPoem(TagString, PoemID);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 router.route("/testing").get(async (req, res) => {
   return res.render("void", {
     title: "void-page",
