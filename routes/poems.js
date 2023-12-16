@@ -197,14 +197,14 @@ router
       // TODO return something to indicate the deletion was succesfull
    });
 
-router.route("/getPoemById/:id").get(async (req, res) => {
-   try {
-      const poem = await poemData.getPoemById(req.params.id);
-      res.json(poem);
-   } catch (e) {
-      res.status(404).json({ error: e.toString() });
-   }
-});
 
-
+router.route('/getPoemById/:id')
+   .get(async (req, res) => {
+      try {
+         const poem = await poemData.getPoemById(req.params.id);
+         res.json(poem);
+      } catch (e) {
+         res.status(404).json({ error: e.toString() });
+      }
+   });
 export default router;

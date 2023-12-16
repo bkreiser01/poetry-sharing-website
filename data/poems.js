@@ -57,6 +57,8 @@ let setTotalTagCount = async (poemId) => {
    return updatedPoem;
 };
 
+import users from "./user.js";
+
 const exportedMethods = {
    /**
     * Get a poem by it's ID
@@ -139,8 +141,6 @@ const exportedMethods = {
       if (!updatedUser) {
          throw new Error("poems/addPoem: could not add to author poem list");
       }
-
-      console.log(gotPoem);
 
       return gotPoem;
    },

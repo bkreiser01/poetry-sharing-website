@@ -151,3 +151,11 @@ footer {
     margin: 5px 0;
     margin-left: 25px
 }
+
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
+}
