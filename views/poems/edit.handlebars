@@ -1,5 +1,5 @@
 <main>
-   <form action="/poems/{{poem._id}}" method="PATCH" class="edit-poem-form" id="edit-poem-form">
+   <form action="/poems/edit/{{poem._id}}" method="POST" class="edit-poem-form" id="edit-poem-form">
       <label for="title">
          Title:
          <input type="text" name="title" placeholder="Poem Title" value="{{poem.title}}" class="full-width-input">
@@ -8,9 +8,9 @@
          Body:
          <textarea name="body" placeholder="Write your poem here!" id="poem-body-area">{{poem.body}}</textarea>
       </label>
-      <label for="link">
+      <label for="linkInput">
          Link to reading:
-         <input type="url" name="link" id="reading-link" value="{{poem.link}}">
+         <input type="url" name="linkInput" id="reading-link" value="{{poem.link}}">
       </label>
 
       <label for="private">

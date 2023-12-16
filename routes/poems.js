@@ -8,6 +8,12 @@ import { ObjectId } from "mongodb";
 import markdown, { getCodeString } from "@wcj/markdown-to-html";
 import xss from "xss";
 
+const isUserAuthor = (userId, poemId) => {
+   
+};
+
+const updatePoen = (req, res) => {};
+
 router.route("/").get(async (req, res) => {
    // Can change to redirect somewhere else
    res.redirect("/poems/new");
@@ -104,8 +110,7 @@ router
          return res.status(status).render("error", { error: e });
       }
 
-      // TODO only redirect if everything is added successfully
-
+      // only redirect if everything is added successfully
       return res.redirect(`/poems/${newPoem._id.toString()}`);
    });
 
@@ -121,14 +126,24 @@ router
          safeId = validation.checkId(xss(req.params.id), "id");
          poem = await poemData.getPoemById(safeId);
          poem.body = markdown(poem.body);
+
+         // check that the user is loged in and add this poem to their recentlyViewed
       } catch (e) {
          const status = 404;
          return res
             .status(status)
-            .render("error", { error: "Poem does not exist" });
+            .render("error", { error: "Poem could not be found" });
       }
 
-      //TODO get user name for by
+      try {
+         const userId = xss(req?.session?.user?._id);
+         if (!!userId) await userData.addRecentlyViewedPoem(userId, safeId);
+      } catch (e) {
+         // Error isn't critical so don't need to tell the user about it rly
+         console.error(`${e.toString()}`);
+      }
+
+      // get user name for by
       try {
          const user = await userData.getById(poem.userId.toString());
          username = user.username;
@@ -136,51 +151,13 @@ router
          username = "User Not Found";
       }
 
+      //TODO add to user history
+
       return res.render("poems/view", {
          title: poem.title,
          poem: poem,
          username: username,
       });
-   })
-   .patch(async (req, res) => {
-      const inputData = xss(req.body);
-      // TODO validate body not undefined
-      if (req.body)
-         try {
-            req.params.id = req.params.id; // TODO validate id
-            if (inputData.timeSubmitted !== undefined) {
-               inputData.timeSubmitted = validation.checkString(
-                  inputData.timeSubmitted
-               ); // TODO validate timeSubmitted
-            }
-            if (inputData.title !== undefined) {
-               inputData.title = validation.checkString(inputData.title); // TODO validate title
-            }
-            if (inputData.body !== undefined) {
-               inputData.body = validation.checkString(inputData.body); // TODO validate body
-            }
-            if (inputData.link !== undefined) {
-               inputData.link = validation.checkUrl(inputData.link); // TODO validate link
-            }
-            if (inputData.private !== undefined) {
-               inputData.private = inputData.private; // TODO validate private
-            }
-         } catch (e) {
-            return res.status(400).render("error", { error: e });
-         }
-
-      try {
-         const updatedPoem = await poemData.updatePoemPatch(
-            req.params.id,
-            inputData
-         );
-
-         res.json(updatedPoem); // TODO change to poem render
-      } catch (e) {
-         let status = e[0];
-         let message = e[1];
-         res.status(status).json({ error: message });
-      }
    })
    .delete(async (req, res) => {
       const safeId = validation.checkId(xss(req.params.id), "id");
@@ -197,6 +174,75 @@ router
       // TODO return something to indicate the deletion was succesfull
    });
 
+router
+   .route("/edit/:id")
+   .get(async (req, res) => {
+      // TODO check that the user is the author and if they are send them the edit page otherwise redirect
+      let safeId, poem;
+      const userId = xss(req?.session?.user?._id);
+
+      try {
+         safeId = validation.checkId(xss(req.params.id), "id");
+         poem = await poemData.getPoemById(safeId);
+      } catch (e) {
+         const status = 404;
+         return res
+            .status(status)
+            .render("error", { error: "Poem could not be found" });
+      }
+
+      // User is the author, send them the edit page
+      if (poem.userId.toString() === userId.toString()) {
+         return res.render("poems/edit", { poem: poem });
+      }
+
+      // User is not the editor so redirect to view page
+
+      return res.redirect(`/poems/${safeId}`);
+   })
+   .post(async (req, res) => {
+      // TODO  check the user is the author then patch the data otherwise send them to error page
+      const inputData = xss(req.body);
+
+      // TODO check that the user is logged in and the author
+
+      if (!!inputData)
+         try {
+            req.params.id = req.params.id; // TODO validate id
+            if (inputData.timeSubmitted !== undefined) {
+               inputData.timeSubmitted = validation.checkString(
+                  inputData.timeSubmitted
+               ); // TODO validate timeSubmitted
+            }
+            if (inputData.title !== undefined) {
+               inputData.title = validation.checkString(inputData.title); // TODO validate title
+            }
+            if (inputData.body !== undefined) {
+               inputData.body = validation.checkString(inputData.body); // TODO validate body
+            }
+            if (inputData.linkInput !== undefined) {
+               inputData.linkInput = validation.checkUrl(inputData.link); // TODO validate link
+            }
+            if (inputData.private !== undefined) {
+               inputData.private = inputData.private; // TODO validate private
+            }
+         } catch (e) {
+            return res.status(400).render("error", { error: e });
+         }
+
+      try {
+         const updatedPoem = await poemData.updatePoemPatch(
+            req.params.id,
+            inputData
+         );
+
+         res.json(updatedPoem); // TODO change to poem render
+      } catch (e) {
+         let status = 400;
+         res.status(status).json({ error: e.toString() });
+      }
+   });
+
 router.route("/getPoemById/:id").get(async (req, res) => {
    try {
       const poem = await poemData.getPoemById(req.params.id);
@@ -205,6 +251,5 @@ router.route("/getPoemById/:id").get(async (req, res) => {
       res.status(404).json({ error: e.toString() });
    }
 });
-
 
 export default router;
