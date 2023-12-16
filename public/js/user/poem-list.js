@@ -1,16 +1,16 @@
 (function ($) {
-    let userId = $('#userId')[0].innerText,
-        method = $('#method_name')[0].innerText,
-        poems_list = $('#poems_list'),
-        request_url
+    let method = $('#method_name')[0].innerText,
+    poems_list = $('#poems_list'),
+        searchId
     
     if ($('#userViewId').length != 0) {
-        request_url = `/user/${method}/${$('#userViewId')[0].innerText}`
+        searchId = $('#userViewId')[0].innerText
     } else {
-        request_url = `/user/${method}/${userId}`
+        searchId = $('#userId')[0].innerText
     }
+
     $.ajax({
-        url: request_url,
+        url: `/user/${method}/${searchId}`,
         type: 'GET',
         success: function (users) {
             for (let i=0; i<users.length; i++) { 

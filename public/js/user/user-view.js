@@ -3,13 +3,15 @@
         userId = $('#userId')[0].innerText,
         followUnfolowBtn = $('#followUnfollowBtn')
 
-    followUnfolowBtn[0].innerText = "Follow"
+
     $.ajax({
         url: `/user/following/${userId}`,
         type: 'GET',
         success: (data) => {
             if (data.indexOf(userViewId) != -1) {
                 followUnfolowBtn[0].innerText = "Unfollow"
+            } else {
+                followUnfolowBtn[0].innerText = "Follow"
             }
         },
         error: function (err) {

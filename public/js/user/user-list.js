@@ -1,10 +1,16 @@
 (function ($) {
-    let userId = $('#userId')[0].innerText,
-        method = $('#method_name')[0].innerText,
-        user_list = $('#user_list')
+    let method = $('#method_name')[0].innerText,
+        user_list = $('#user_list'),
+        searchId
+    
+    if ($('#userViewId').length != 0) {
+        searchId = $('#userViewId')[0].innerText
+    } else {
+        searchId = $('#userId')[0].innerText
+    }
 
     $.ajax({
-        url: `/user/${method}/${userId}`,
+        url: `/user/${method}/${searchId}`,
         type: 'GET',
         success: function (users) {
             for (let i=0; i<users.length; i++) { 
