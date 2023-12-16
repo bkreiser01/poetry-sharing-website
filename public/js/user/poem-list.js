@@ -21,13 +21,13 @@
                         poems_list.append(`<li><a href="/poems/${poem._id}">${poem.title}</a></li>`)
                     },
                     error: function (err) {
-                        console.log(err);
+                        console.error(err);
                     }
                 });
             }
         },
         error: function (err) {
-            console.log(err);
+            console.error(err);
         }
     });
 }(window.jQuery))

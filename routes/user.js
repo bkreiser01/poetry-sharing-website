@@ -1,11 +1,11 @@
 // Package Imports
 import { Router } from "express";
 const router = Router();
+import xss from "xss";
 
 // Local Imports
 import validation from "../helpers/validation.js";
 import user from "../data/user.js";
-import { poems } from "../config/mongoCollections.js";
 
 
 let userRender = async (currentUser, obj) => {
@@ -204,6 +204,7 @@ router.route('/:id/tagged-poems')
 router.route('/searchByUsername/:username')
     .get(async (req, res) => {
         try {
+            req.params.username = validation.checkUsername(xss(req.params.username), "username")
 
             // Get the user
             let userData = await user.searchByUsername(req.params.username);
