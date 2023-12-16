@@ -8,12 +8,6 @@ import { ObjectId } from "mongodb";
 import markdown, { getCodeString } from "@wcj/markdown-to-html";
 import xss from "xss";
 
-const isUserAuthor = (userId, poemId) => {
-   
-};
-
-const updatePoen = (req, res) => {};
-
 router.route("/").get(async (req, res) => {
    // Can change to redirect somewhere else
    res.redirect("/poems/new");
@@ -200,43 +194,55 @@ router
 
       return res.redirect(`/poems/${safeId}`);
    })
-   .post(async (req, res) => {
+   .patch(async (req, res) => {
       // TODO  check the user is the author then patch the data otherwise send them to error page
-      const inputData = xss(req.body);
 
-      // TODO check that the user is logged in and the author
-
-      if (!!inputData)
-         try {
-            req.params.id = req.params.id; // TODO validate id
-            if (inputData.timeSubmitted !== undefined) {
-               inputData.timeSubmitted = validation.checkString(
-                  inputData.timeSubmitted
-               ); // TODO validate timeSubmitted
-            }
-            if (inputData.title !== undefined) {
-               inputData.title = validation.checkString(inputData.title); // TODO validate title
-            }
-            if (inputData.body !== undefined) {
-               inputData.body = validation.checkString(inputData.body); // TODO validate body
-            }
-            if (inputData.linkInput !== undefined) {
-               inputData.linkInput = validation.checkUrl(inputData.link); // TODO validate link
-            }
-            if (inputData.private !== undefined) {
-               inputData.private = inputData.private; // TODO validate private
-            }
-         } catch (e) {
-            return res.status(400).render("error", { error: e });
-         }
+      let safeId, poem;
+      let inputData = {};
+      const userId = xss(req?.session?.user?._id);
 
       try {
-         const updatedPoem = await poemData.updatePoemPatch(
-            req.params.id,
-            inputData
-         );
+         safeId = validation.checkId(xss(req.params.id), "id");
+         poem = await poemData.getPoemById(safeId);
+      } catch (e) {
+         const status = 404;
+         return res
+            .status(status)
+            .render("error", { error: "Poem could not be found" });
+      }
 
-         res.json(updatedPoem); // TODO change to poem render
+      // User is not the author so error (should never be reached)
+      if (poem.userId.toString() !== userId.toString()) {
+         const status = 403;
+         return res
+            .status(status)
+            .render("error", { error: "You are not the author of this poem" });
+      }
+
+      //  user is logged in and the author
+
+      try {
+         if (!!xss(req.body?.title) || xss(req.body?.title) === "") {
+            inputData.title = validation.checkTitle(xss(req.body?.title)); // TODO validate title
+         }
+         if (!!xss(req.body?.body)) {
+            inputData.body = validation.checkBody(xss(req.body?.body)); // TODO validate body
+         }
+         if (!!xss(req.body?.linkInput)) {
+            inputData.linkInput = validation.checkUrl(xss(req.body?.linkInput)); // TODO validate link
+         }
+         if (!!xss(req.body?.priv)) {
+            inputData.priv = validation.checkString(xss(req.body?.priv)); // TODO validate private
+         }
+      } catch (e) {
+         return res.status(400).render("error", { error: e });
+      }
+
+      try {
+         const updatedPoem = await poemData.updatePoemPatch(safeId, inputData);
+
+         // res.json(updatedPoem); // TODO change to poem render
+         res.redirect(200, `/poems/${safeId}`);
       } catch (e) {
          let status = 400;
          res.status(status).json({ error: e.toString() });

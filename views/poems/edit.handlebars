@@ -1,26 +1,27 @@
 <main>
-   <form action="/poems/edit/{{poem._id}}" method="POST" class="edit-poem-form" id="edit-poem-form">
-      <label for="title">
-         Title:
-         <input type="text" name="title" placeholder="Poem Title" value="{{poem.title}}" class="full-width-input">
-      </label>
-      <label for="body">
-         Body:
-         <textarea name="body" placeholder="Write your poem here!" id="poem-body-area">{{poem.body}}</textarea>
-      </label>
-      <label for="linkInput">
-         Link to reading:
-         <input type="url" name="linkInput" id="reading-link" value="{{poem.link}}">
-      </label>
+   <p id="poemId" hidden="">{{poem._id}}</p>
+   <form class="edit-poem-form" id="edit-poem-form">
+      <label id="success" class="success"></label><br>
+      <label for="title">Title: </label>
+      <input type="text" name="title" id="title_input" placeholder="Poem Title" value="{{poem.title}}"
+         class="full-width-input">
+      <label id="title_error" class="error"></label><br>
 
-      <label for="private">
-         Visibility:
-         <select name="private" value="on" id="private-checkbox">
-            <option value="false">Public</option>
-            <option value="true">Private</option>
-         </select>
-      </label>
-      <button type="submit">Submit Poem</button>
+      <label for="body">Body: </label>
+      <textarea name="body" placeholder="Write your poem here!" id="poem-body-area">{{poem.body}}</textarea>
+      <label id="body_error" class="error"></label><br>
+
+      <label for="linkInput">Link to reading:</label>
+      <input type="url" name="linkInput" id="reading-link" value="{{poem.link}}">
+      <label id="link_error" class="error"></label><br>
+
+      <label for="private"> Visibility: </label>
+      <select name="private" value="on" id="private-checkbox">
+         <option value="false">Public</option>
+         <option value="true">Private</option>
+      </select>
+      <label id="private_error" class="error"></label><br>
+      <button type="submit" value="Save">Save</button>
    </form>
 
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
@@ -28,4 +29,5 @@
    <script>
       const easyMDE = new EasyMDE({ element: document.getElementById('poem-body-area') });
    </script>
+   <script type='module' src="/public/js/poems/edit-poem.js"></script>
 </main>

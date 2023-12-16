@@ -64,27 +64,29 @@ const exportedMethods = {
       return url;
    },
 
-  /**
-   * Validate the taggedPoem object
-   * 
-   * @param {Object} tp 
-   */
-  checkTaggedPoem(obj) {
-    // tagged poems must have 2 keys
-    if (Object.keys(obj).length != 3) {
-      throw new Error('A taggedPoem object must have 2 keys')
-    }
+   /**
+    * Validate the taggedPoem object
+    *
+    * @param {Object} tp
+    */
+   checkTaggedPoem(obj) {
+      // tagged poems must have 2 keys
+      if (Object.keys(obj).length != 3) {
+         throw new Error("A taggedPoem object must have 2 keys");
+      }
 
-    // tagged poems must have the following keys
-    //    poemId, tagIds
-    let missingKeys = this.checkObjKeys(obj, ["_id", "poemId", "tagIds"])
-    if (missingKeys.length != 0) {
-      throw new Error(`The taggedPoem object is missing the key(s) ${missingKeys}`)
-    }
+      // tagged poems must have the following keys
+      //    poemId, tagIds
+      let missingKeys = this.checkObjKeys(obj, ["_id", "poemId", "tagIds"]);
+      if (missingKeys.length != 0) {
+         throw new Error(
+            `The taggedPoem object is missing the key(s) ${missingKeys}`
+         );
+      }
 
-    // TODO: the object ID's inside the tagged poems should all be validated
-    return obj
-  },
+      // TODO: the object ID's inside the tagged poems should all be validated
+      return obj;
+   },
 
    checkId(id, varName) {
       if (!id) throw new Error(`Error: You must provide a ${varName}`);
@@ -142,12 +144,46 @@ const exportedMethods = {
 
       return arr;
    },
-   
+
    checkDateString(date, varName) {
       date = this.checkString(date, varName);
       if (isNaN(new Date(date)))
          throw new Error(`Error: ${varName} is not a valid Date`);
       return date;
+   },
+
+   /**
+    * Validate the title
+    *
+    * @param {string} title
+    * @returns the validated title string
+    */
+   checkTitle(title) {
+      if (typeof title !== "string")
+         throw new Error(`Error: Title must be a string!`);
+      title = title.trim();
+
+      // Title should be between 0-1000 chars
+      if (title === "") return title;
+      if (title.length > 1000) {
+         throw new Error("Title must be 1000 characters or less");
+      }
+      return title;
+   },
+
+   /**
+    * Validate body
+    * @param {string} body
+    * @returns validated body string
+    */
+   checkBody(body) {
+      body = exportedMethods.checkString(body, "body");
+
+      // Title should be between 1-100,000 chars
+      if (body.length > 100000) {
+         throw new Error("Body must be 100,000 characters or less");
+      }
+      return body;
    },
 };
 
