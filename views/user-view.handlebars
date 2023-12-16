@@ -1,10 +1,11 @@
 {{!-- login form --}}
 <main>
+    <p id="userViewId" hidden="">{{userViewId}}</p>
     <h2>{{username}}</h2>
     <p>Account Age: {{account_age}}</p>
     <p>Biography: {{bio}}</p>
 
-    <div id="follow-unfollow-option"></div>
+    <button id="followUnfollowBtn"></button>
 
     <ul>
         <li><a href="/user/{{userId}}">Poems</a></li>
@@ -23,4 +24,6 @@
     {{#if following}}
     {{> user/following}}
     {{/if}}
+
+    <script type='module' src="/public/js/user/user-view.js"></script>
 </main>

@@ -28,7 +28,6 @@ let userRenderPublic = async (userId, obj) => {
     let defaultParams = {
         layout: "default",
         title: `${userData.username}'s ${obj.title}`,
-        userId: userId,
         username: userData.username,
         account_age: 
             accountAge.years + " Year(s) " +
@@ -144,6 +143,8 @@ router.route('/:id')
         try {
             return res.render("user-view", await userRenderPublic(req.params.id, {
                 title: "Account",
+                userId: req.session.user._id,
+                userViewId: req.params.id,
                 poems: true
             }));
         } catch (e) {
@@ -157,6 +158,8 @@ router.route('/:id/followers')
         try {
             return res.render("user-view", await userRenderPublic(req.params.id, {
                 title: "Followers",
+                userId: req.session.user._id,
+                userViewId: req.params.id,
                 followers: true
             }));   
         } catch (e) {
@@ -169,6 +172,8 @@ router.route('/:id/following')
         try {
             return res.render("user-view", await userRenderPublic(req.params.id, {
                 title: "Following",
+                userId: req.session.user._id,
+                userViewId: req.params.id,
                 following: true
             }));   
         } catch (e) {
@@ -176,7 +181,7 @@ router.route('/:id/following')
         }
     })
 
-//Public User Routes
+
 router.route('/searchByUsername/:username')
     .get(async (req, res) => {
         try {
@@ -257,11 +262,41 @@ router.route('/getFollowers/:id')
         }
     })
 
-router.route('/getFollowing/:id')
+router.route('/following/:id')
     .get(async (req, res) => {
         try {
             // Get the user
             let userData = await user.getById(req.params.id);
+
+            // Return the user
+            return res.status(200).json(userData.following);
+        } catch (e) {
+            return res.status(500).json({ error: e.message });
+        }
+    })
+    .post(async (req, res) => {
+        try {
+            if (!req.session.user) {
+                return res.status(401).json({ error: "You must be logged in to follow a user" });
+            }
+
+            // Follow the user
+            let userData = await user.addFollowing(req.session.user._id, req.params.id);
+
+            // Return the user
+            return res.status(200).json(userData.following);
+        } catch (e) {
+            return res.status(500).json({ error: e.message });
+        }
+    })
+    .delete(async (req, res) => {
+        try {
+            if (!req.session.user) {
+                return res.status(401).json({ error: "You must be logged in to unfollow a user" });
+            }
+
+            // Unfollow the user
+            let userData = await user.deleteFollowing(req.session.user._id, req.params.id);
 
             // Return the user
             return res.status(200).json(userData.following);
@@ -281,19 +316,5 @@ router.route('/getHistory/:id')
         } catch (e) {
             return res.status(500).json({ error: e.message });
         }
-    })
-
-//Private User Routes. MUST BE AUTHENTICATED TO USE!!!
-router.route('/delete')
-    .delete(async (req, res) => {
-        try {
-            // Delete the user
-            let userData = await user.deleteUser(req.session.user._id);
-
-            // Log the user out
-            return res.redirect('/logout')
-        } catch (e) {
-            return res.status(500).json({ error: e.message });
-        }   
     })
 export default router

@@ -35,7 +35,7 @@ import validation from '../helpers/validation.js'
 import mongo from '../helpers/mongo.js'
 
 let userCollection = await users();
-const saltRounds = 10;
+const saltRounds = 1;
 
 /**
  * Local helper function to handle id checks
