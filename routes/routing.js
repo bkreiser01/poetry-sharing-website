@@ -23,7 +23,11 @@ router.route("/CreateNewTag").post(async (req, res) => {
   //Add to database
   let TagString = req.body.newTagString;
   let PoemID = req.body.newTaggedPoem;
-  await tags.createNewTag(TagString, PoemID);
+  try{
+    await tags.createNewTag(TagString, PoemID);
+  } catch (e) {
+    console.log(e);
+  }
 
   //Refresh page
   return res.redirect("/tagTest");
@@ -35,7 +39,12 @@ router.route("/SearchForTag").post(async (req, res) => {
 
   //Search for tag
   let TagString = req.body.SearchTagString;
-  let FoundTag = await tags.getTagByName(TagString);
+  let FoundTag;
+  try{
+    FoundTag = await tags.getTagByName(TagString);
+  } catch (e) {
+    console.log(e);
+  }
   console.log(FoundTag);
 
   //Refresh page
