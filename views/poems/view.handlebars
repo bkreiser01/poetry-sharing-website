@@ -15,10 +15,14 @@
 
    {{!-- TODO action buttons --}}
    <div class="poem-actions">
-      <button type="button">Tag it!</button>
-      <button type="button">Save it!</button>
-      <button type="button">Like it!</button>
+      <form id='addTagForm'>
+         <input type='text' id='TagString' name='TagString'>
+         <input type='submit' value='Tag it!'>
+      </form>
+      <button type="button" id="SaveIt">Save it!</button>
+      <button type="button" id="LikeIt">Like it!</button>
    </div>
+   <script type='module' src="../../public/js/poemView.js"></script>
 
    <div class="poem-body">
       {{!-- TODO markdown render --}}

@@ -116,7 +116,7 @@ const exportedMethods = {
    */
    async addTagToPoem(tagString, poemId) {
       //Validation
-      tagString = validation.checkTagString(tagString);
+      tagString = validation.checkTagString(tagString, "Tag string");
       poemId = validation.checkId(poemId, "Poem id");
 
       //Check if tag already exists
@@ -129,13 +129,13 @@ const exportedMethods = {
 
       //If tag does not exist, create it
       if (!existingTag) {
-         createdTag = await this.createNewTag(tagString);
+         let createdTag = await this.createNewTag(tagString);
          existingTag = await this.getTagById(createdTag);
       }
 
       //Check if poem is alrady associated with tag
       let poemsArray = existingTag.taggedPoemsId;
-      for(i in poemsArray){
+      for(let i = 0; i < poemsArray.length; i++){
          if(poemsArray[i] == poemId){
             //Might want different behavior here:
             throw new Error("addTagToPoem: Tag already assigned to poem");  
