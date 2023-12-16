@@ -19,12 +19,12 @@ const exports = {
             return res.redirect('/');
         }
 
-        if (!req.session.user && 
-            req.originalUrl != '/login' && 
-            req.originalUrl != '/register'
-        ) {
-            return res.redirect('/login');
-        }
+        // if (!req.session.user && 
+        //     req.originalUrl != '/login' && 
+        //     req.originalUrl != '/register'
+        // ) {
+        //     return res.redirect('/login');
+        // }
 
         next();
     },

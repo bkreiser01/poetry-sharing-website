@@ -8,7 +8,8 @@ import validation from "../helpers/validation.js";
 import user from "../data/user.js";
 
 
-let userRender = async (currentUser, obj) => {
+let userRender = async (userId, obj) => {
+    let currentUser = await user.getById(userId._id)
     let accountAge = await user.calulcateAccountAge(currentUser._id)
     let defaultParams = {
         layout: "default",
@@ -19,6 +20,7 @@ let userRender = async (currentUser, obj) => {
             accountAge.months + " Month(s) " +
             accountAge.days + " Day(s)",
         bio: currentUser.bio,
+        email:currentUser.email,
     }
     return {...defaultParams, ...obj}
 }
@@ -137,6 +139,42 @@ router.route('/edit')
         } catch (e) {
             return res.status(404).render('error', { error: e.message });
         }
+    })
+    .patch(async (req, res) => {
+        try {
+            let userData
+
+            if (req.body.username != undefined) {
+                req.body.username = validation.checkUsername(xss(req.body.username), "username")
+                userData = await user.updateUsername(req.session.user._id, req.body.username)
+                req.session.user.username = req.body.username
+            }
+
+            if (req.body.email != undefined) {
+                req.body.email = validation.checkEmail(xss(req.body.email), "email")
+                userData = await user.updateEmail(req.session.user._id, req.body.email)
+                req.session.user.email = req.body.email
+            }
+
+            if (req.body.password != undefined) {
+                req.body.password = validation.checkPassword(xss(req.body.password), "password")
+                userData = await user.updatePassword(req.session.user._id, req.body.password)
+            }
+
+            if (req.body.bio != undefined) {
+                req.body.bio = validation.checkString(xss(req.body.bio), "bio")
+                userData = await user.updateBio(req.session.user._id, req.body.bio)
+                req.session.user.bio = req.body.bio
+            }
+
+            if (userData == undefined) {
+                return res.status(200).json({ success: "No fields were updated" });
+            }
+            return res.status(200).json({ success: "User updated successfully" });
+
+        } catch (e) {
+            return res.status(500).json({ error: e.message });
+        } 
     })
 
 router.route('/:id')

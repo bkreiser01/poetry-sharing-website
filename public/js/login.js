@@ -2,13 +2,14 @@ import validation from './validation.js';
 
 (function($) {
     let loginForm = $('#login_form'),
-        username = $('#username_input'),
-        password = $('#password_input'),
         error = $('#error')
 
 
         loginForm.submit(function (event) {
             event.preventDefault()
+            let username = $('#username_input'),
+                password = $('#password_input')
+                
             error.text('')
             let data = {
                 username: username.val(),
