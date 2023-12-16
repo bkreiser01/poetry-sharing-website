@@ -4,7 +4,6 @@
         followUnfolowBtn = $('#followUnfollowBtn')
 
     followUnfolowBtn[0].innerText = "Follow"
-    console.log(userId)
     $.ajax({
         url: `/user/following/${userId}`,
         type: 'GET',
