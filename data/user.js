@@ -35,7 +35,7 @@ import validation from '../helpers/validation.js'
 import mongo from '../helpers/mongo.js'
 
 let userCollection = await users();
-const saltRounds = 16;
+const saltRounds = 10;
 
 /**
  * Local helper function to handle id checks
@@ -161,7 +161,7 @@ const exportedMethods = {
             username: username,
             email: email,
             hashedPassword: password,
-            timeAccountMade: new Date().toUTCString(),
+            timeAccountMade: new Date(),
             private: (privacy == "private"),
             bio: "",
             poemIds: [],

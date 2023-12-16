@@ -12,7 +12,7 @@
                     url: `/poems/getPoemById/${users[i]}`,
                     type: 'GET',
                     success: function (poem) {
-                        poems_list.append(`<li><a href="/poem/${poem._id}">${poem.title}</a></li>`)
+                        poems_list.append(`<li><a href="/poems/${poem._id}">${poem.title}</a></li>`)
                     },
                     error: function (err) {
                         console.log(err);
