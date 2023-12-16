@@ -142,8 +142,6 @@ const exportedMethods = {
          throw new Error("poems/addPoem: could not add to author poem list");
       }
 
-      console.log(gotPoem);
-
       return gotPoem;
    },
 

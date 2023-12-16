@@ -33,6 +33,8 @@ import bcrypt from 'bcryptjs';
 import { users } from '../config/mongoCollections.js'
 import validation from '../helpers/validation.js'
 import mongo from '../helpers/mongo.js'
+import tagsData from './tags.js';
+import poemsData from './poems.js';
 
 let userCollection = await users();
 const saltRounds = 1;
@@ -117,7 +119,12 @@ const exportedMethods = {
      */
     async getById(id) {
         id = checkId(id)
-        return await userCollection.findOne({ _id: new ObjectId(id) });
+        let foundUser = await userCollection.findOne({ _id: new ObjectId(id) })
+
+        if (!foundUser) {
+            throw new Error(`No user with id '${id}'!`)
+        }
+        return foundUser;
     },
 
     /**
@@ -609,13 +616,68 @@ const exportedMethods = {
         await exportedMethods.deleteTaggedPoemForAllUsers(poemId);
         await exportedMethods.deleteFavoriteForAllUsers(poemId);
         await exportedMethods.eleteRecentlyViewedPoemForAllUsers(poemId);
+    },
+
+    /**
+     * Add a tag to a poem
+     * 
+     * @param {string|ObjectId} userId 
+     * @param {string} tagName 
+     * @param {string|ObjectId} poemId 
+     */
+    async addTagToPoem(userId, tagName, poemId) {
+        console.log("1")
+        // Make sure the global tags has the poemID
+        let addedTag;
+        try {
+            addedTag = await tagsData.addTagToPoem(tagName, poemId)
+        } catch (e) {
+            addedTag = await tagsData.getTagByName(tagName)
+        }
+
+        console.log("2")
+        // Make sure poems data is updated
+        await poemsData.addTag(poemId, addedTag._id.toString())
+
+        let taggedPoemObject = {}
+
+        console.log("3")
+        // See if the poem already had tags by the user
+        let user = await exportedMethods.getById(userId)
+        let alreadyExisted = false
+        for(let i = 0; i < user.taggedPoems.length; i++) { 
+            if(user.taggedPoems[i].poemId.toString() == poemId.toString()) {
+                taggedPoemObject = user.taggedPoems[i]
+                alreadyExisted = true
+                break;
+            }
+        }
+        console.log("4")
+        if (Object.keys(taggedPoemObject).length == 0) {
+            taggedPoemObject = {
+                _id: new ObjectId(),
+                poemId: new ObjectId(poemId),
+                tagIds: [addedTag._id]
+            }
+        } else {
+            if (idIsIn(addedTag._id, taggedPoemObject.tagIds)) {
+                throw new Error("Poem already has that tag!")
+            }
+
+            taggedPoemObject.tagIds.push(addedTag._id)
+        }
+        console.log("5")
+        // Add the tagged poem to the user
+        if (alreadyExisted) {
+            // Delete the old tagged poem because of poor planning
+            user = await exportedMethods.deleteTaggedPoem(userId, taggedPoemObject._id)
+        }
+        user = await exportedMethods.addTaggedPoem(userId, taggedPoemObject)
+
+        console.log("6")
+        return user
     }
 }
 export default exportedMethods;
 
-// console.log(await exportedMethods.addUser(
-//     "bkreiser",
-//     "bkreiser@duck.com",
-//     "Password@01",
-//     "public"
-// ))
+console.log(await exportedMethods.addTagToPoem("657e164f714e9a0921873f7b", "happy", "657e164f714e9a0921873f81"))

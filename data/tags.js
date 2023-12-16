@@ -121,6 +121,7 @@ const exportedMethods = {
 
       //Check if tag already exists
       let existingTag;
+      let createdTag;
       try{
          existingTag = await this.getTagByName(tagString);
       } catch (e){
@@ -135,7 +136,7 @@ const exportedMethods = {
 
       //Check if poem is alrady associated with tag
       let poemsArray = existingTag.taggedPoemsId;
-      for(i in poemsArray){
+      for(let i in poemsArray){
          if(poemsArray[i] == poemId){
             //Might want different behavior here:
             throw new Error("addTagToPoem: Tag already assigned to poem");  
@@ -149,11 +150,19 @@ const exportedMethods = {
       );
       if(!updatedTag) throw new Error("addTagToPoem: Could not add poemId to taggedPoemsId");
 
-      return updatedTag
+      return await this.getTagById(updatedTag.value._id.toString());
    },
 
 
+   async addTagByIdToPoem(tagId, poemId) {
+      //Validation
+      tagId = validation.checkId(tagId, "Tag id");
+      poemId = validation.checkId(poemId, "Poem id");
 
+      let tagName = (await this.getTagById(tagId)).tagString
+
+      return await this.addTagToPoem(tagName, poemId)
+   },
 
    /**
     * DEPRECATED: DO NOT USE
@@ -198,6 +207,17 @@ const exportedMethods = {
 
       return deletedPoem;
    },
+
+   async getMostPopularTags() {
+      let tagData = await tagCollection.distinct('_id')
+
+      for (let i = 0; i < tagData.length; i++) {
+         let currentTag = await exportedMethods.getTagById(tagData[i].toString())
+         tagData[i] = currentTag
+      }
+
+      return tagData.sort((a, b) => b.taggedPoemsId.length - a.taggedPoemsId.length);
+   }
 };
 
 export default exportedMethods

@@ -72,7 +72,7 @@ const exportedMethods = {
   checkTaggedPoem(obj) {
     // tagged poems must have 2 keys
     if (Object.keys(obj).length != 3) {
-      throw new Error('A taggedPoem object must have 2 keys')
+      throw new Error('A taggedPoem object must have 3 keys')
     }
 
     // tagged poems must have the following keys

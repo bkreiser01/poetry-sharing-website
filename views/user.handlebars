@@ -3,7 +3,9 @@
     <h2>{{username}}</h2>
     <p>Account Age: {{account_age}}</p>
     <p>Biography: {{bio}}</p>
+    {{> user/tags}}
 
+    <h3>User Views</h3>
     <ul>
         <li><a href="/user">Poems</a></li>
         <li><a href="/user/liked-poems">Liked Poems</a></li>
