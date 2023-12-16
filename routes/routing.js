@@ -23,12 +23,20 @@ router.route("/CreateNewTag").post(async (req, res) => {
   //Add to database
   let TagString = req.body.newTagString;
   let PoemID = req.body.newTaggedPoem;
-  try{
-    await tags.createNewTag(TagString, PoemID);
-  } catch (e) {
-    console.log(e);
+  if(PoemID !== ""){
+    try{
+      await tags.addTagToPoem(TagString, PoemID);
+    } catch (e) {
+      console.log(e);
+    }
+  }else {
+    try{
+      await tags.createNewTag(TagString);
+    } catch (e) {
+      console.log(e);
+    }
   }
-
+  
   //Refresh page
   return res.redirect("/tagTest");
 });
