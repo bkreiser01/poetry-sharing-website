@@ -1,7 +1,6 @@
 //import express and express router as shown in lecture code and worked in previous labs.  Import your data functions from /data/characters.js that you will call in your routes below
 import { Router } from "express";
 import tags from "../data/tags.js";
-//import {seedDb} from '../config/seed.js';
 const router = Router();
 
 // router.route("/").get(async (req, res) => {
