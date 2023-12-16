@@ -626,7 +626,10 @@ const exportedMethods = {
      * @param {string|ObjectId} poemId 
      */
     async addTagToPoem(userId, tagName, poemId) {
-        console.log("1")
+        userId = checkId(userId)
+        tagName = validation.checkTagString(tagName)
+        poemId = checkId(poemId)
+
         // Make sure the global tags has the poemID
         let addedTag;
         try {
@@ -635,13 +638,8 @@ const exportedMethods = {
             addedTag = await tagsData.getTagByName(tagName)
         }
 
-        console.log("2")
-        // Make sure poems data is updated
-        await poemsData.addTag(poemId, addedTag._id.toString())
-
         let taggedPoemObject = {}
 
-        console.log("3")
         // See if the poem already had tags by the user
         let user = await exportedMethods.getById(userId)
         let alreadyExisted = false
@@ -652,7 +650,7 @@ const exportedMethods = {
                 break;
             }
         }
-        console.log("4")
+
         if (Object.keys(taggedPoemObject).length == 0) {
             taggedPoemObject = {
                 _id: new ObjectId(),
@@ -666,7 +664,7 @@ const exportedMethods = {
 
             taggedPoemObject.tagIds.push(addedTag._id)
         }
-        console.log("5")
+
         // Add the tagged poem to the user
         if (alreadyExisted) {
             // Delete the old tagged poem because of poor planning
@@ -674,10 +672,13 @@ const exportedMethods = {
         }
         user = await exportedMethods.addTaggedPoem(userId, taggedPoemObject)
 
-        console.log("6")
+
+        // Make sure poems data is updated
+        await poemsData.addTag(poemId.toString(), addedTag._id.toString())
+
         return user
     }
 }
 export default exportedMethods;
 
-console.log(await exportedMethods.addTagToPoem("657e164f714e9a0921873f7b", "happy", "657e164f714e9a0921873f81"))
+console.log(await exportedMethods.addTagToPoem("657e2824c31f7ac368f69265", "happy", "657e2824c31f7ac368f6926b"))
