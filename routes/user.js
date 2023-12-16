@@ -5,6 +5,7 @@ const router = Router();
 // Local Imports
 import validation from "../helpers/validation.js";
 import user from "../data/user.js";
+import { poems } from "../config/mongoCollections.js";
 
 
 let userRender = async (currentUser, obj) => {
@@ -175,6 +176,20 @@ router.route('/:id/following')
                 userId: req.session.user._id,
                 userViewId: req.params.id,
                 following: true
+            }));   
+        } catch (e) {
+            return res.status(404).render('error', { error: e.message });
+        }
+    })
+
+router.route('/:id/tagged-poems')
+    .get(async (req, res) => {
+        try {
+            return res.render("user-view", await userRenderPublic(req.params.id, {
+                title: "Tagged Poems",
+                userId: req.session.user._id,
+                userViewId: req.params.id,
+                tagged_oems: true
             }));   
         } catch (e) {
             return res.status(404).render('error', { error: e.message });
