@@ -141,7 +141,7 @@ const exportedMethods = {
         }
         
         // Validate all inputs
-        username = validation.checkUsername(username)
+        username = validation.checkUsername(username).toLowerCase()
         email = validation.checkEmail(email)
         password = validation.checkPassword(password)
         privacy = validation.checkPrivacy(privacy)
@@ -568,7 +568,7 @@ const exportedMethods = {
      */
     async login(username, password) {
         // Validate the username and password
-        username = validation.checkUsername(username)
+        username = validation.checkUsername(username).toLowerCase()
         password = validation.checkPassword(password)
 
         // Get the user by username

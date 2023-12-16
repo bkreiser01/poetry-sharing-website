@@ -26,7 +26,6 @@ const exports = {
             return res.redirect('/login');
         }
 
-
         next();
     },
 };
