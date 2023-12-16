@@ -222,17 +222,17 @@ router
       //  user is logged in and the author
 
       try {
-         if (!!xss(req.body?.title) || xss(req.body?.title) === "") {
-            inputData.title = validation.checkTitle(xss(req.body?.title)); // TODO validate title
+         if (!!xss(req?.body?.title) || xss(req?.body?.title) === "") {
+            inputData.title = validation.checkTitle(xss(req?.body?.title)); // TODO validate title
          }
-         if (!!xss(req.body?.body)) {
-            inputData.body = validation.checkBody(xss(req.body?.body)); // TODO validate body
+         if (!!xss(req?.body?.body)) {
+            inputData.body = validation.checkBody(xss(req?.body?.body)); // TODO validate body
          }
-         if (!!xss(req.body?.linkInput)) {
-            inputData.linkInput = validation.checkUrl(xss(req.body?.linkInput)); // TODO validate link
+         if (!!xss(req?.body?.linkInput)) {
+            inputData.linkInput = validation.checkUrl(xss(req?.body?.linkInput)); // TODO validate link
          }
          if (!!xss(req.body?.priv)) {
-            inputData.priv = validation.checkString(xss(req.body?.priv)); // TODO validate private
+            inputData.priv = validation.checkString(xss(req?.body?.priv)); // TODO validate private
          }
       } catch (e) {
          return res.status(400).render("error", { error: e });
@@ -240,12 +240,10 @@ router
 
       try {
          const updatedPoem = await poemData.updatePoemPatch(safeId, inputData);
-
-         // res.json(updatedPoem); // TODO change to poem render
-         res.redirect(200, `/poems/${safeId}`);
+         return res.redirect(`/poems/${safeId}`);
       } catch (e) {
          let status = 400;
-         res.status(status).json({ error: e.toString() });
+         return res.status(status).render("error", { error: e.toString() });
       }
    });
 
