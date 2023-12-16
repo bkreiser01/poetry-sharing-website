@@ -173,3 +173,44 @@ footer {
     border-radius: 100%;
     text-align: center;
 }
+
+.write-poem-container {
+    padding: 5px;
+    padding-bottom: 20px;
+}
+
+#new-poem-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.full-width-input {
+    display: flex;
+    box-sizing: border-box;
+    border-style: solid;
+    border-radius: 3px;
+	min-height: 3em;
+	margin: 20px 0;
+	width: 100%;
+    padding: 5px 10px;
+}
+
+#reading-link {
+    width: 400px;
+    margin-right: 25px;
+}
+
+.new-poem-others {
+    display: flex;
+    justify-content:flex-start;
+}
+
+.new-poem-submit {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#submit-poem-button {
+    width: 25%;
+
+}
