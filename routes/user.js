@@ -142,6 +142,7 @@ router.route('/edit')
 router.route('/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
             return res.render("user-view", await userRenderPublic(req.params.id, {
                 title: "Account",
                 userId: req.session.user._id,
@@ -157,6 +158,7 @@ router.route('/:id/followers')
 
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
             return res.render("user-view", await userRenderPublic(req.params.id, {
                 title: "Followers",
                 userId: req.session.user._id,
@@ -171,6 +173,7 @@ router.route('/:id/followers')
 router.route('/:id/following')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
             return res.render("user-view", await userRenderPublic(req.params.id, {
                 title: "Following",
                 userId: req.session.user._id,
@@ -185,6 +188,7 @@ router.route('/:id/following')
 router.route('/:id/tagged-poems')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
             return res.render("user-view", await userRenderPublic(req.params.id, {
                 title: "Tagged Poems",
                 userId: req.session.user._id,
@@ -200,6 +204,7 @@ router.route('/:id/tagged-poems')
 router.route('/searchByUsername/:username')
     .get(async (req, res) => {
         try {
+
             // Get the user
             let userData = await user.searchByUsername(req.params.username);
 
@@ -213,6 +218,8 @@ router.route('/searchByUsername/:username')
 router.route('/searchById/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             // Get the user
             let userData = await user.getById(req.params.id);
 
@@ -228,6 +235,8 @@ router.route('/searchById/:id')
 router.route('/getPoems/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             // Get the user
             let userData = await user.getById(req.params.id);
 
@@ -241,6 +250,8 @@ router.route('/getPoems/:id')
 router.route('/getLikedPoems/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             // Get the user
             let userData = await user.getById(req.params.id);
 
@@ -254,6 +265,8 @@ router.route('/getLikedPoems/:id')
 router.route('/getTaggedPoems/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             // Get the user
             let userData = await user.getById(req.params.id);
 
@@ -267,6 +280,8 @@ router.route('/getTaggedPoems/:id')
 router.route('/getFollowers/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             // Get the user
             let userData = await user.getById(req.params.id);
 
@@ -280,6 +295,8 @@ router.route('/getFollowers/:id')
 router.route('/following/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             // Get the user
             let userData = await user.getById(req.params.id);
 
@@ -291,6 +308,8 @@ router.route('/following/:id')
     })
     .post(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             if (!req.session.user) {
                 return res.status(401).json({ error: "You must be logged in to follow a user" });
             }
@@ -306,6 +325,8 @@ router.route('/following/:id')
     })
     .delete(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             if (!req.session.user) {
                 return res.status(401).json({ error: "You must be logged in to unfollow a user" });
             }
@@ -323,6 +344,8 @@ router.route('/following/:id')
 router.route('/getHistory/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+            
             // Get the user
             let userData = await user.getById(req.params.id);
 

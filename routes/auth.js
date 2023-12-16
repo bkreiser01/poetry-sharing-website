@@ -1,6 +1,7 @@
 // Package Imports
 import { Router } from "express";
 const router = Router();
+import xss from "xss";
 
 // Local Imports
 import validation from "../helpers/validation.js";
@@ -23,7 +24,7 @@ router.route('/login')
       loginUser = validation.checkLoginFields(loginUser);
 
       // Attempt to login the user
-      loginUser = await user.login(loginUser.username, loginUser.password);
+      loginUser = await user.login(xss(loginUser.username), xss(loginUser.password));
 
       // Set the session user
       req.session.user = loginUser;
@@ -55,10 +56,10 @@ router.route('/register')
 
       // Attempt to register the user
       registerUser = await user.addUser(
-        registerUser.username,
-        registerUser.email,
-        registerUser.password,
-        registerUser.privacy
+        xss(registerUser.username),
+        xss(registerUser.email),
+        xss(registerUser.password),
+        xss(registerUser.privacy)
       );
 
       // Return a success
