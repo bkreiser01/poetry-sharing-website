@@ -151,3 +151,25 @@ footer {
     margin: 5px 0;
     margin-left: 25px
 }
+
+.homepage-container ul {
+    padding-left: 100px;
+}
+
+.homepage-poems {
+    list-style-type: none;
+}
+
+.homepage-poems-item {
+    margin-bottom: 15px;
+}
+
+.homepage-poems-item .author-picture {
+    display: block;
+    height: 92px;
+    width: 92px;
+    border: 1px solid black;
+    margin-right: 20px;
+    border-radius: 100%;
+    text-align: center;
+}
