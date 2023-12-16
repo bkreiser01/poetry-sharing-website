@@ -32,7 +32,7 @@ const exportedMethods = {
 
    /**
     * Adds a tag to a poem, inserts a tag if the tag does not exist yet
-    *
+    * 
     * @param {string} tagString
     * @param {string} poemId
     */
