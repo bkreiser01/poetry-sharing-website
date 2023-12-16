@@ -1,7 +1,6 @@
 //import express and express router as shown in lecture code and worked in previous labs.  Import your data functions from /data/characters.js that you will call in your routes below
 import { Router } from "express";
 import tags from "../data/tags.js";
-//import {seedDb} from '../config/seed.js';
 const router = Router();
 
 // router.route("/").get(async (req, res) => {
@@ -23,12 +22,20 @@ router.route("/CreateNewTag").post(async (req, res) => {
   //Add to database
   let TagString = req.body.newTagString;
   let PoemID = req.body.newTaggedPoem;
-  try{
-    await tags.createNewTag(TagString, PoemID);
-  } catch (e) {
-    console.log(e);
+  if(PoemID !== ""){
+    try{
+      await tags.addTagToPoem(TagString, PoemID);
+    } catch (e) {
+      console.log(e);
+    }
+  }else {
+    try{
+      await tags.createNewTag(TagString);
+    } catch (e) {
+      console.log(e);
+    }
   }
-
+  
   //Refresh page
   return res.redirect("/tagTest");
 });
@@ -49,6 +56,20 @@ router.route("/SearchForTag").post(async (req, res) => {
 
   //Refresh page
   return res.redirect("/tagTest");
+});
+
+router.route("/AddTagToPoem").post(async (req, res) => {
+  //Route to add tag to poem
+  //Validate here
+
+  //Add to database
+  let TagString = req.body.tagString;
+  let PoemID = req.body.taggedPoemId;
+  try{
+    await tags.addTagToPoem(TagString, PoemID);
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 router.route("/testing").get(async (req, res) => {
