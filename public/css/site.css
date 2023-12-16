@@ -158,10 +158,19 @@ footer {
 
 .homepage-poems {
     list-style-type: none;
+    padding: 0 100px
 }
 
 .homepage-poems-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     margin-bottom: 15px;
+}
+
+.nb-tags {
+    padding-right: 100px;
+    line-height: 100px;
 }
 
 .homepage-poems-item .author-picture {
