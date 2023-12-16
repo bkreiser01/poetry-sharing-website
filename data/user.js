@@ -633,7 +633,7 @@ const exportedMethods = {
         // Make sure the global tags has the poemID
         let addedTag;
         try {
-            addedTag = await tagsData.addTagToPoem(tagName, poemId)
+            addedTag = await tagsData.addTagToPoem(tagName, poemId.toString())
         } catch (e) {
             addedTag = await tagsData.getTagByName(tagName)
         }
@@ -675,10 +675,7 @@ const exportedMethods = {
 
         // Make sure poems data is updated
         await poemsData.addTag(poemId.toString(), addedTag._id.toString())
-
         return user
     }
 }
 export default exportedMethods;
-
-console.log(await exportedMethods.addTagToPoem("657e2824c31f7ac368f69265", "happy", "657e2824c31f7ac368f6926b"))
