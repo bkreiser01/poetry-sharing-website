@@ -32,7 +32,9 @@
         pathName = pathName.substring(7);
         let data = {
             tagString: $('#TagString').val(),
-            taggedPoemId: pathName
+            taggedPoemId: pathName,
+            //Change this to User ID
+            taggingUserId: pathName
         }
 
         //AJAX call to update tag data
