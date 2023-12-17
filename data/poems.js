@@ -126,13 +126,15 @@ const exportedMethods = {
       priv
    ) {
       timeSubmitted = validation.checkDate(timeSubmitted, "timeSubmitted");
-      title = validation.checkString(title.trim(), "title");
-      body = validation.checkString(body.trim(), "body");
+      title = validation.checkTitle(title.trim(), "title");
+      body = validation.checkBody(body.trim(), "body");
       userId = validation.checkId(userId.trim(), "userId");
       if (!!link.trim()) {
          link = validation.checkUrl(link.trim(), "link");
       }
       priv = validation.checkBool(priv, "priv");
+
+      if (title === "") title = "Untitled";
 
       const newPoem = {
          timeSubmitted: timeSubmitted,

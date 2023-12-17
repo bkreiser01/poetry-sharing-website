@@ -57,12 +57,13 @@ router
 
       // Validate input
       try {
-         title = validation.checkString(xss(req.body.title), "Title");
-         body = validation.checkString(xss(req.body.body), "Body");
+         title = validation.checkTitle(xss(req.body.title), "Title");
+         body = validation.checkBody(xss(req.body.body), "Body");
          if (xss(req.body.linkInput))
-            link = validation.checkString(xss(req.body.linkInput), "Link");
-         if (xss(req.body.private))
-            priv = validation.checkString(xss(req.body.private), "Private");
+            link = validation.checkUrl(xss(req.body.linkInput), "Link");
+         if (["true", "false"].includes(xss(req.body.private)))
+            priv = xss(req.body.private) === "true";
+         else throw new Error(`Private input malformed`);
       } catch (e) {
          const status = 400;
          return res.status(status).render("error", { error: e });
