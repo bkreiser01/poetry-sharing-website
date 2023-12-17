@@ -32,7 +32,7 @@ router.route("/").get(async (req, res) => {
 
    if (poemList.length <= 0) noPoem = true;
 
-   return res.render("popular", { poemList: poemList, noPoem: noPoem });
+   return res.render("popular", { title: "Popular Poems", poemList: poemList, noPoem: noPoem });
 });
 
 export default router;
