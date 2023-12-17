@@ -21,23 +21,22 @@
             </a>
 
             {{!-- Make a form out of this --}}
-            <label for="search-bar"></label>
-            <input id="search-bar" type="text" name="search-bar"
-                placeholder="Search for...">
+            <form id="search-form">
+                <label for="search-bar"></label>
+                <input id="search-bar" type="text" name="search-bar"
+                    placeholder="Search for...">
 
-            <label for="search-select"></label>
-            <select name="serach-select" id="search-select">
-                <option value="user">User</option>
-                <option value="poem">Poem</option>
-                <option value="tag">Tag</option>
-            </select>
+                <label for="search-select"></label>
+                <select name="serach-select" id="search-select">
+                    <option value="users">Users</option>
+                    <option value="poems">Poems</option>
+                    <option value="tags">Tags</option>
+                </select>
+                <button type="submit">Search</button>
+                <label id="error" class="error"></label>
+            </form>
 
-            {{!-- Invalid html: button can't be a descendent of link. Check
-            https://stackoverflow.com/questions/3303675/how-to-make-an-input-type-button-act-like-a-hyperlink-and-redirect-using-a-get-r
-            to find a fix --}}
-            <a href="/poems/new">
-                <button id="button-write" type="button">Write</button>
-            </a>
+            <a href="/poems/new">Write a Poem!</a>
 
             <div id="user-account"></div>
             <div id="login-logout"></div>
@@ -59,11 +58,16 @@
             {{/if}}
 
         </div>
-
+        <div id="search-canvas"hidden="">
+            <h2>Search results</h2>
+            <ul id="searchResults"></ul>
+            <button id="closeSearchResults">Back</button>
+        </div>
         <footer>
             CS 546 - Poetry Sharing Website
             <br>
             Adrien Huet - Brandon Kreiser - Joseph Vasallo - Roger Shagawat
+            <script type='module' src="/public/js/search.js"></script>
             <script type='module' src="/public/js/site.js"></script>
         </footer>
     </body>
