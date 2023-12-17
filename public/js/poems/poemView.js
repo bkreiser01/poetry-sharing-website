@@ -27,7 +27,8 @@ import validation from '/public/js/validation.js';
             console.error(e.responseJSON.error);
         },
     });
-    
+
+    TagForm[0].reset();
     TagForm.on('submit', function(event) {
         event.preventDefault();
         error.text('')
@@ -53,7 +54,7 @@ import validation from '/public/js/validation.js';
         if (likeBtn.text() == "Like") {
             method = 'POST';
         }
-        
+
         $.ajax({
             url: `/user/favorite/${poemId_}`,
             method: `${method}`,
@@ -61,7 +62,7 @@ import validation from '/public/js/validation.js';
             success: function(data) {
                 if (method == 'POST') {
                     likeBtn.text("Unlike")
-                } else {    
+                } else {
                     likeBtn.text("Like")
                 }
             },

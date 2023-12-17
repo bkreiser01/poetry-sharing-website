@@ -1,4 +1,5 @@
 <main class="poem-container">
+   <p id="poemViewId" hidden>{{poem._id}}</p>
    <div class="poem-header">
       <img class="author-picture"src="/public/assets/profile-pic.jpg">
       <div class="poem-header-metadata">
@@ -16,11 +17,12 @@
    {{!-- TODO action buttons --}}
    <div class="poem-actions">
       <form id='addTagForm'>
-         <input type='text' id='TagString' name='TagString'>
+         <input type='text' id='TagString' name='TagString'
+            placeholder="Type a tag...">
          <input type='submit' value='Tag it!'>
          <p id="error-tag" class="error"></p>
       </form>
-      <p id="poemId_" hidden="">{{poemId_}}</p>
+      <p id="poemId_" hidden>{{poemId_}}</p>
       <button type="button" id="likeBtn">Like it!</button>
 
       {{#if isAuthor}}
@@ -33,33 +35,12 @@
 
    <div class="poem-body">
       {{!-- TODO markdown render --}}
-      <div class="poem-markdown">
-         {{{poem.body}}}
-      </div>
-
-      <ol class="poem-comments">
-         <h2>Comments</h2>
-         {{#each poem.comments as |comment|}}
-         {{!-- TODO Only top-level comments, AJAX for comment replies? or
-         partial? --}}
-         {{#unless comment.repliesTo}}
-         {{!-- TODO AJAX for comment author? --}}
-         <li class="poem-comment-container">
-            <div class="poem-comment-author-info">
-               <p>{{comment.userId}}</p>
-               <p>{{comment.tagId}}</p>
-            </div>
-            <p class="comment-string">
-               {{{comment.commentString}}}
-            </p>
-         </li>
-         {{/unless}}
-         {{/each}}
-      </ol>
+      <div class="poem-markdown">{{{poem.body}}}</div>
+      {{> comment/comments-section}}
    </div>
 
    <button type="button" id="showTagsBtn">Show Tags</button>
-   <div id="tag-view" hidden="">
+   <div id="tag-view" hidden>
       <p>Global Poem Tags</p>
       <ul id="global-tags"></ul>
       <p>My Poem Tags</p>

@@ -172,7 +172,7 @@ const validationMethods = {
 
    /**
     * Validate body
-    * @param {string} body 
+    * @param {string} body
     * @returns validated body string
     */
    checkBody(body) {
@@ -187,7 +187,7 @@ const validationMethods = {
 
    /**
     * Validate a url
-    * @param {string} linkStr 
+    * @param {string} linkStr
     * @returns validated url string
     */
    checkUrl(linkStr) {
@@ -199,6 +199,20 @@ const validationMethods = {
          throw new Error(`Reading link must be a valid url`);
       }
    },
+
+   /**
+    * Validate a selected tag
+    * @param {string} tagStr
+    * @returns validated selected tag
+    */
+      checkTag(tagStr) {
+         try {
+            tagStr = validationMethods.checkString(tagStr, "tag");
+         } catch (e) {
+            throw new Error(`You must select a tag`)
+         }
+         return tagStr;
+      },
 };
 
 export default validationMethods;
