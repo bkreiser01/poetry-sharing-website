@@ -5,6 +5,7 @@ import user from "./user.js";
 import home from "./home.js";
 import poemRoutes from "./poems.js";
 import popularRoute from "./popular.js";
+import tags from "./tags.js";
 
 const constructorMethod = (app) => {
    app.use("/", routes);
@@ -12,6 +13,7 @@ const constructorMethod = (app) => {
    app.use("/", home);
    app.use("/user", user);
    app.use("/poems", poemRoutes);
+   app.use("/tags", tags);
    app.use("/popular", popularRoute);
 
    app.use("*", (req, res) => {
