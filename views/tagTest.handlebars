@@ -2,7 +2,7 @@
 <main>
     <h2>Tags Testing</h2>
     <p>Create new tag:</p>
-    <form action="/CreateNewTag" method="post">
+    <form action="/tags/createNewTag" method="post">
         <label for="newTagString">Tag string:</label>
         <input type="text" id="newTagString" name="newTagString">
         <label for="newTaggedPoem">Tagged poem:</label>
@@ -11,7 +11,7 @@
     </form>
 
     <p>Search for tag with string:</p>
-    <form action="/SearchForTag" method="post">
+    <form action="/tags/searchForTag" method="post">
         <label for="SearchTagString">Tag string:</label>
         <input type="text" id="SearchTagString" name="SearchTagString">
         <input type="submit" value="Submit">
