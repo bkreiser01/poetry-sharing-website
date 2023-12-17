@@ -34,7 +34,8 @@ router
       });
    })
    .post(async (req, res) => {
-      let title, body, link, priv;
+      let title, body, link;
+      const priv = false;
       const timeSubmitted = new Date();
       const userId = xss(req?.session?.user?._id);
 
@@ -57,15 +58,15 @@ router
          body = validation.checkBody(xss(req.body.body), "Body");
          if (xss(req.body.linkInput))
             link = validation.checkUrl(xss(req.body.linkInput), "Link");
-         if (["true", "false"].includes(xss(req.body.private)))
-            priv = xss(req.body.private) === "true";
-         else throw new Error(`Private input malformed`);
+         // if (["true", "false"].includes(xss(req.body.private)))
+         //    priv = xss(req.body.private) === "true";
+         // else throw new Error(`Private input malformed`);
       } catch (e) {
          const status = 400;
          return res.status(status).render("error", { title: "Error", error: e });
       }
 
-      priv = priv === "true" ? true : false; // priv to true if "true", false otherwiser
+       
 
       // add poem to poems collection
       let newPoem;
@@ -255,9 +256,9 @@ router
                xss(req?.body?.linkInput)
             );
          }
-         if (!!xss(req.body?.priv)) {
-            inputData.priv = validation.checkString(xss(req?.body?.priv));
-         }
+         // if (!!xss(req.body?.priv)) {
+         //    inputData.priv = validation.checkString(xss(req?.body?.priv));
+         // }
       } catch (e) {
          return res.status(400).render("error", { title: "Error", error: e });
       }

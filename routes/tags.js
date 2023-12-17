@@ -35,9 +35,9 @@ router.route("/createNewTag").post(async (req, res) => {
     //Validate here
     
     //Add to database
-    let UserID = req.body.taggingUserId;
-    let TagString = req.body.newTagString;
-    let PoemID = req.body.newTaggedPoem;
+    let UserID = xss(req?.body?.taggingUserId);
+    let TagString = xss(req?.body?.newTagString);
+    let PoemID = xss(req?.body?.newTaggedPoem);
     let newTag;
     if(PoemID !== ""){
         try{
@@ -63,7 +63,7 @@ router.route("/search/:searchString").get(async (req, res) => {
     //Validate here
     
     //Get search results
-    let searchString = req.params.searchString;
+    let searchString = xss(req?.params?.searchString);
     let foundTags;
     try{
         foundTags = await tags.searchTags(searchString);
@@ -81,8 +81,8 @@ router.route("/addTagToPoem").post(async (req, res) => {
     //Validate here
     
     //Add to database
-    let TagString = req.body.tagString;
-    let PoemID = req.body.taggedPoemId;
+    let TagString = xss(req?.body?.tagString);
+    let PoemID = xss(req?.body?.taggedPoemId);
     let updatedTag;
     try{
         updatedTag = await tags.addTagToPoem(TagString, PoemID);

@@ -85,7 +85,7 @@ router.route('/check-authentication')
     // GET /check-authentication
     .get(async (req, res) => {
         // If there is a user return a success, otherwise return an error
-        if (req.session.user) {
+        if (xss(req.session.user)) {
             res.status(200).json({authenticated: true});
         } else {
             res.status(200).json({authenticated: false});
