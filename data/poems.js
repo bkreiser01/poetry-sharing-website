@@ -464,6 +464,37 @@ const exportedMethods = {
       }
       return mostPopular;
    },
+
+   async addFavorite(poemId) {
+      const poemCollection = await poems();
+      let updatedPoem = await poemCollection.findOneAndUpdate(
+         {
+            _id: new ObjectId(poemID),
+         },
+         { $inc: { favoriteCount: 1 } },
+         { returnDocument: "after" }
+      );
+
+      if (!updatedPoem) throw new Error("addFavorite: could not add favorite");
+
+      return updatedPoem;
+   },
+
+   async removeFavorite(poemId) {
+      const poemCollection = await poems();
+      let updatedPoem = await poemCollection.findOneAndUpdate(
+         {
+            _id: new ObjectId(poemID),
+         },
+         { $inc: { favoriteCount: -1 } },
+         { returnDocument: "after" }
+      );
+
+      if (!updatedPoem)
+         throw new Error("removeFavorite: could not remove favorite");
+
+      return updatedPoem;
+   },
 };
 
 export default exportedMethods;
