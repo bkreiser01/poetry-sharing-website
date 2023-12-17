@@ -6,7 +6,7 @@
          <h1>{{poem.title}}</h1>
          <p>
             By:
-            <a href="/user/{{poem.userId}}">FIXME{{username}}</a>
+            <a href="/user/{{poem.userId}}">{{username}}</a>
          </p>
          {{#if poem.link}}
          Link to Reading: <a href="{{poem.link}}">{{poem.link}}</a>
@@ -17,13 +17,14 @@
    {{!-- TODO action buttons --}}
    <div class="poem-actions">
       <form id='addTagForm'>
-         <input type='text' id='TagString' name='TagString'>
+         <input type='text' id='TagString' name='TagString'
+            placeholder="Type a tag...">
          <input type='submit' value='Tag it!'>
+         <label id="error-tag" class="error"></label>
       </form>
-      <button type="button" id="SaveIt">Save it!</button>
-      <button type="button" id="LikeIt">Like it!</button>
+      <p id="poemId_" hidden>{{poemId_}}</p>
+      <button type="button" id="likeBtn">Like it!</button>
    </div>
-   <script type='module' src="../../public/js/poems/poemView.js"></script>
 
    <div class="poem-body">
       {{!-- TODO markdown render --}}
@@ -31,12 +32,13 @@
       {{> comment/comments-section}}
    </div>
 
-   <ol class="poem-tags">
-      {{#each poem.submittedTags as |tag|}}
-      {{!-- TODO AJAX for tag strings? --}}
-      <li class="poem-tag-container">{{tag.tagId}}</li>
-      {{/each}}
-   </ol>
+   <button type="button" id="showTagsBtn">Show Tags</button>
+   <div id="tag-view" hidden>
+      <p>Global Poem Tags</p>
+      <ul id="global-tags"></ul>
+      <p>My Poem Tags</p>
+      <ul id="user-tags"></ul>
+   </div>
 
    {{!-- TODO fix errors --}}
    <p class="error">{{error}}</p>
@@ -44,5 +46,5 @@
    {{#if isAuthor}}
    <a href="/"></a>
    {{/if}}
-
+   <script type='module' src="/public/js/poems/poemView.js"></script>
 </main>

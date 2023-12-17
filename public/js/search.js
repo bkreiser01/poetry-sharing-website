@@ -34,7 +34,7 @@ import validation from "/public/js/validation.js"
 
         if (!failed) {
             let url = `/search/${searchType}/${searchTerm}`
-            console.log(url)
+            //console.log(url)
 
             $.ajax({
                 url: url,
@@ -43,7 +43,7 @@ import validation from "/public/js/validation.js"
                     if (data.length == 0) {
                         error.text("No results found")
                     } else {
-                        console.log(data)
+                        //console.log(data)
                         for (let i = 0; i < data.length; i++) {
                             switch (searchType) {
                                 case "users":

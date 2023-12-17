@@ -6,12 +6,14 @@ import xss from "xss";
 // Local Imports
 import validation from "../helpers/validation.js";
 import tags from '../data/tags.js';
+import users from '../data/user.js'
 
 /*
 * Routes: /tags
 * /popular
 * /testing
 * /createNewTag
+* /search
 * /search/:searchString
 * /addTagToPoem
 * /:id
@@ -20,9 +22,6 @@ import tags from '../data/tags.js';
 
 router.route('/popular')
     .get(async (req, res) => {
-        //Route to display popular tags
-
-        //Get array of tag objects, sorted by number of associated poems
         try {
             let popularTags = await tags.getMostPopularTags();
             res.status(200).json(popularTags);
@@ -44,12 +43,13 @@ router.route("/createNewTag").post(async (req, res) => {
     //Validate here
 
     //Add to database
+    let UserID = req.body.taggingUserId;
     let TagString = req.body.newTagString;
     let PoemID = req.body.newTaggedPoem;
     let newTag;
     if(PoemID !== ""){
         try{
-            newTag = await tags.addTagToPoem(TagString, PoemID);
+            newTag = await users.addTagToPoem(UserID, TagString, PoemID);
         } catch (e) {
             console.log(e);
         }
@@ -116,30 +116,33 @@ router.route("/addTagToPoem").post(async (req, res) => {
 
 router.route('/:id')
     .get(async (req, res) => {
-        //Route to display poems associated with tag of given id
-
-        //Get tag object from id
-        let foundTag;
         try {
+            let foundTag;
             let tagId = validation.checkId(xss(req.params.id), "Tag id");
             foundTag = await tags.getTagById(tagId);
-        } catch (e) {
-            res.status(500).json({ error: e })
-        }
 
-        //Load tag page
-        res.status(200).json(foundTag);
+            res.status(200).render("tag", {
+                Title: "Tag",
+                tagString: foundTag.tagString,
+                tagId: foundTag._id
+            });
+        } catch (e) {
+            res.status(500).render("error", { error: e });
+        }
 });
 
-router.route('/searchById/:id')
+router.route('/info/:id')
     .get(async (req, res) => {
         try {
-            req.params.id = validation.checkId(xss(req.params.id), "tagId");
-            let tagData = await tags.getTagById(req.params.id);
-            return res.status(200).json(tagData)
+            let foundTag;
+            let tagId = validation.checkId(xss(req.params.id), "Tag id");
+            foundTag = await tags.getTagById(tagId);
+
+            res.status(200).json(foundTag);
         } catch (e) {
-            return res.status(500).json({ error: e.message })
+            res.status(500).json({ error: e });
         }
-})
+    });
+
 
 export default router;

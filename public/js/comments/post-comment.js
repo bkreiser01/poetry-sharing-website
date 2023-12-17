@@ -24,32 +24,28 @@ let validate = (data, func, err) => {
 (function ($) {
   let tagSelect = $("#tag-select");
   let poemId = $("#poemViewId")[0].innerText;
-  let tags;
 
-  // FIXME Load the tags into the select
   $.ajax({
     url: `/poems/getPoemById/${poemId}`,
     type: "GET",
     success: function (poem) {
       for (let tag of poem.submittedTags) {
         let tagId = tag.tagId;
-        let tagString = "[deleted]";
         $.ajax({
-          url: `/tags/searchById/${tagId}`, // here
+          url: `/tags/info/${tagId}`,
           type: "GET",
           success: function (tag) {
-            tagString = tag.tagString;
+            tagSelect.append(
+              $("<option>", {
+                value: tagId,
+                text: tag.tagString,
+              })
+            );
           },
           error: function (err) {
             console.error(err);
           },
         });
-        tagSelect.append(
-          $("<option>", {
-            value: tagId,
-            text: tagString,
-          })
-        );
       }
     },
     error: function (err) {
@@ -62,6 +58,9 @@ let validate = (data, func, err) => {
 
   let tagSelectError = $("#tag-select-error");
   let error = $("#error");
+  errored = false;
+
+  commentForm.reset();
 
   // Handle the form submission
   commentForm.submit(function (event) {
@@ -86,12 +85,12 @@ let validate = (data, func, err) => {
     };
 
     // FIXME can we actually import ObjectId to check ObjectIds client-side?
-    data.tagId = validate(data.tagId, validation.checkString, tagSelectError);
     data.commentString = validate(
       data.commentString,
       validation.checkBody,
       commentBodyError
     );
+    data.tagId = validate(data.tagId, validation.checkTag, tagSelectError);
     // FIXME validation might not be necessary as this will always be passed as valid id
     // data.poemId = validate(data.poemId, validation.checkString, error);
 
@@ -113,8 +112,8 @@ let validate = (data, func, err) => {
         }
       },
       error: function (err) {
-        console.error(e.responseJSON.error);
-        error.text(e.responseJSON.error);
+        console.error(err.responseJSON.error);
+        error.text(err.responseJSON.error);
       },
     });
   });

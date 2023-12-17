@@ -393,6 +393,42 @@ router.route('/following/:id')
         }
     })
 
+router.route('/favorite/:id')
+    .post(async (req, res) => {
+        try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
+            if (!req.session.user) {
+                return res.status(401).json({ error: "You must be logged in to favorite a poem" });
+            }
+
+            // Favorite the poem
+            let userData = await user.addFavorite(req.session.user._id, req.params.id);
+
+            // Return the user
+            return res.status(200).json(userData.favorites);
+        } catch (e) {
+            return res.status(500).json({ error: e.message });
+        }
+    })
+    .delete(async (req, res) => {
+        try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
+            if (!req.session.user) {
+                return res.status(401).json({ error: "You must be logged in to unfavorite a poem" });
+            }
+
+            // Unfavorite the poem
+            let userData = await user.deleteFavorite(req.session.user._id, req.params.id);
+
+            // Return the user
+            return res.status(200).json(userData.favorites);
+        } catch (e) {
+            return res.status(500).json({ error: e.message });
+        }
+    })
+
 router.route('/getHistory/:id')
     .get(async (req, res) => {
         try {
@@ -403,6 +439,22 @@ router.route('/getHistory/:id')
 
             // Return the user
             return res.status(200).json(userData.recentlyViewedPoemIds);
+        } catch (e) {
+            return res.status(500).json({ error: e.message });
+        }
+    })
+
+router.route('/addTagToPoem/:userId/:tagString/:poemId')
+    .post(async (req, res) => {
+        try {
+            let userId = validation.checkId(xss(req.params.userId), "userId")
+            let tagString = validation.checkString(xss(req.params.tagString), "tagString")
+            let poemId = validation.checkId(xss(req.params.poemId), "poemId")
+
+            await user.addTagToPoem(userId, tagString, poemId)
+
+            // Return the user
+            return res.status(200).json({success: "Tag added successfully"});
         } catch (e) {
             return res.status(500).json({ error: e.message });
         }

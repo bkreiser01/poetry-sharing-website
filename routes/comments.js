@@ -10,8 +10,11 @@ router
   .route("/poems/:poemId/comments")
   .get(async (req, res) => {
     try {
-      const comment = commentData.getAllCommentsFromPoem(req.params.poemId);
-      res.json(comment);
+      const comments = await commentData.getAllCommentsFromPoem(
+        req.params.poemId
+      );
+
+      res.status(200).json(comments);
     } catch (e) {
       res.status(404).json({ error: e.toString() });
     }
@@ -36,10 +39,11 @@ router
       let updatedPoem = await commentData.addCommentToPoem(
         req.session.user._id,
         data.tagId,
-        Date(Date.now()),
+        Date(Date.now()).toString(),
         data.commentString,
         req.params.poemId
       );
+      return res.status(200).json({ success: true });
     } catch (e) {
       return res.status(500).json({ error: e.message });
     }

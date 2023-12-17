@@ -1,5 +1,4 @@
 (function ($) {
-  let method = $("#method_name")[0].innerText;
   let poem_comments = $("#poem-comments");
   let poemId = $("#poemViewId")[0].innerText;
 
@@ -7,44 +6,55 @@
     url: `/poems/${poemId}/comments`,
     type: "GET",
     success: function (comments) {
-      for (let comment of comments) {
-        // In case we don't find the user or the tag, let's just assume it was deleted.
-        let username = "[deleted]";
-        let tagname = "[deleted]";
+      comments = comments.sort((a, b) => {
+        let dateA = new Date(a.timeCommented);
+        let dateB = new Date(b.timeCommented);
 
-        // Fetch the username
+        return dateB - dateA;
+      });
+      for (let comment of comments) {
+        // Let's assume that a user will never be deleted
         $.ajax({
           url: `/user/searchById/${comment.userId}`,
           type: "GET",
           success: function (user) {
-            username = user.username;
+            $.ajax({
+              url: `/tags/info/${comment.tagId}`,
+              type: "GET",
+              success: function (tag) {
+                poem_comments.append(`
+                <li class="poem-comment-container">
+                    <div class="poem-comment-author-info">
+                        <p>${user.username}</p>
+                        <p>${tag.tagString}</p>
+                    </div>
+                    <p class="comment-string">
+                        ${comment.commentString}
+                    </p>
+                </li>
+                `);
+              },
+              error: function (err) {
+                // The tag was deleted
+                poem_comments.append(`
+                <li class="poem-comment-container">
+                    <div class="poem-comment-author-info">
+                        <p>${user.username}</p>
+                        <p>[deleted]</p>
+                    </div>
+                    <p class="comment-string">
+                        ${comment.commentString}
+                    </p>
+                </li>
+                `);
+              },
+            });
           },
           error: function (err) {
+            // Ideally, here fetch the tag and set username to [deleted]
             console.error(err);
           },
         });
-
-        $.ajax({
-          url: `/tags/searchById/${comment.tagId}`,
-          type: "GET",
-          success: function (tag) {
-            tagname = tag.tagString;
-          },
-          error: function (err) {
-            console.error(err);
-          },
-        });
-        poem_comments.append(`
-            <li class="poem-comment-container">
-                <div class="poem-comment-author-info">
-                    <p>${username}</p>
-                    <p>${tagname}</p>
-                </div>
-                <p class="comment-string">
-                    ${comment.commentString}
-                </p>
-            </li>
-            `);
       }
     },
     error: function (err) {
