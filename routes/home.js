@@ -3,7 +3,6 @@ const router = Router();
 import { poemData, tagData, userData } from "../data/index.js";
 import validation from "../helpers/validation.js";
 import { ObjectId } from "mongodb";
-import markdown, { getCodeString } from "@wcj/markdown-to-html";
 import xss from "xss";
 
 router.route("/").get(async (req, res) => {
@@ -19,8 +18,6 @@ router.route("/").get(async (req, res) => {
 
   if (!userId) return res.redirect("/popular");
 
-  // TODO get the user's following ids
-  // TODO use the following ids to get the most recent poems then put them in order
   try {
     const user = await userData.getById(userId);
     const followingList = user.following;

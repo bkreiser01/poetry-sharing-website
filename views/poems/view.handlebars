@@ -33,7 +33,9 @@
 
    <div class="poem-body">
       {{!-- TODO markdown render --}}
-      <div class="poem-markdown">{{{poem.body}}}</div>
+      <div class="poem-markdown">
+         {{{poem.body}}}
+      </div>
 
       <ol class="poem-comments">
          <h2>Comments</h2>
@@ -55,7 +57,7 @@
          {{/each}}
       </ol>
    </div>
-   
+
    <button type="button" id="showTagsBtn">Show Tags</button>
    <div id="tag-view" hidden="">
       <p>Global Poem Tags</p>

@@ -1,16 +1,14 @@
 import validation from "/public/js/validation.js";
 
 (function ($) {
-   let form = $("#edit-poem-form"),
+   let form = $("#new-poem-form"),
       title_error = $("#title_error"),
       body_error = $("#body_error"),
       link_error = $("#link_error"),
-      success = $("#success"),
-      private_error = $("#private_error");
+      private_error = $("#private_error"),
+      success = $("#success");
 
    form.submit(function (event) {
-      event.preventDefault();
-
       let poemId = $("#poemId").text(),
          title = $("#title_input").val().trim(),
          body = $("#poem-body-area").val().trim(),
@@ -57,23 +55,7 @@ import validation from "/public/js/validation.js";
          data.priv = priv;
       }
 
-      if (!errors_exist) {
-         $.ajax({
-            url: `/poems/edit/${poemId}`,
-            method: "PATCH",
-            contentType: "application/json",
-            data: JSON.stringify(data),
-            success: function (data) {
-               console.log(data.success);
-               success.text(data.success);
-               window.location.href = "/user";
-            },
-            error: function (e) {
-               console.log(e);
-               // console.error(e.responseJSON.error);
-               // error.text(e.responseJSON.error);
-            },
-         });
-      }
+      if (!errors_exist) return true;
+      return false;
    });
 })(window.jQuery);

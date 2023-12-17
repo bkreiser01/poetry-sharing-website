@@ -5,8 +5,8 @@ const router = Router();
 import { poemData, tagData, userData } from "../data/index.js";
 import validation from "../helpers/validation.js";
 import { ObjectId } from "mongodb";
-import markdown, { getCodeString } from "@wcj/markdown-to-html";
 import xss from "xss";
+import { marked } from "marked";
 
 const checkIsAuthor = async (userId, poemId) => {
    const poem = await poemData.getPoemById(poemId);
@@ -21,7 +21,6 @@ router.route("/").get(async (req, res) => {
 router
    .route("/new")
    .get(async (req, res) => {
-      // TODO change this to be middleware based
       const userId = xss(req?.session?.user?._id);
 
       if (!userId) {
@@ -39,10 +38,6 @@ router
       const timeSubmitted = new Date();
       const userId = xss(req?.session?.user?._id);
 
-      // TODO change link to linkInput in handlebars
-
-      // Check the user is logged in
-      // TODO change to be middle ware based
       if (!xss(userId)) {
          const status = 401;
          return res.status(status).render("error", {
@@ -58,23 +53,16 @@ router
 
       // Validate input
       try {
-         title = validation.checkString(xss(req.body.title), "Title");
-         body = validation.checkString(xss(req.body.body), "Body");
+         title = validation.checkTitle(xss(req.body.title), "Title");
+         body = validation.checkBody(xss(req.body.body), "Body");
          if (xss(req.body.linkInput))
-            link = validation.checkString(xss(req.body.linkInput), "Link");
-         if (xss(req.body.private))
-            priv = validation.checkString(xss(req.body.private), "Private");
+            link = validation.checkUrl(xss(req.body.linkInput), "Link");
+         if (["true", "false"].includes(xss(req.body.private)))
+            priv = xss(req.body.private) === "true";
+         else throw new Error(`Private input malformed`);
       } catch (e) {
          const status = 400;
          return res.status(status).render("error", { title: "Error", error: e });
-
-         // TODO see if it makes sense to refill or if this should only be done on client side
-         /*
-         return res.render("poems/new", {
-            poem: { title: title, body: body, link: link },
-            errors: errors,
-         });
-         */
       }
 
       priv = priv === "true" ? true : false; // priv to true if "true", false otherwiser
@@ -122,12 +110,12 @@ router
 router
    .route("/:id")
    .get(async (req, res) => {
-      let safeId, poem, username;
+      let safeId, userId, poem, username;
 
       try {
          safeId = validation.checkId(xss(req.params.id), "id");
          poem = await poemData.getPoemById(safeId);
-         poem.body = markdown(poem.body);
+         poem.body = await marked.parse(poem.body, { breaks: true });
 
          // check that the user is loged in and add this poem to their recentlyViewed
       } catch (e) {
@@ -138,7 +126,7 @@ router
       }
 
       try {
-         const userId = xss(req?.session?.user?._id);
+         userId = xss(req?.session?.user?._id);
          if (!!userId) await userData.addRecentlyViewedPoem(userId, safeId);
       } catch (e) {
          // Error isn't critical so don't need to tell the user about it rly
@@ -153,18 +141,17 @@ router
          username = "User Not Found";
       }
 
-      // TODO button for editing
       let isAuthor = false;
       try {
-         isAuthor = await checkIsAuthor(xss(req?.session?.user?._id), safeId);
+         isAuthor = await checkIsAuthor(userId, safeId);
       } catch (error) {
          isAuthor = false;
       }
       try {
          return res.render("poems/view", {
             title: poem.title,
-            userId: req.session.user._id,
-            poemId_: poem._id,
+            userId: userId,
+            poemId_: poem._id.toString(),
             poem: poem,
             username: username,
             isAuthor: isAuthor,
@@ -174,10 +161,14 @@ router
       }
    })
    .delete(async (req, res) => {
-      // TODO check they're logged in and the author
       const userId = xss(req?.session?.user?._id);
       const safeId = validation.checkId(xss(req.params.id), "id");
 
+      if (!userId) {
+         return res.status(403).render("error", {
+            error: `You must be logged in to delete a poem`,
+         });
+      }
       if (!checkIsAuthor(userId, safeId)) {
          return res.status(403).render("error", {
             title: "Error",
@@ -201,7 +192,6 @@ router
 router
    .route("/edit/:id")
    .get(async (req, res) => {
-      // TODO check that the user is the author and if they are send them the edit page otherwise redirect
       let safeId, poem;
       const userId = xss(req?.session?.user?._id);
 
@@ -215,18 +205,11 @@ router
             .render("error", { title: "Error", error: "Poem could not be found" });
       }
 
-      // User is the author, send them the edit page
-      if (poem.userId.toString() === userId.toString()) {
-         return res.render("poems/edit", { title: "Edit Poem", poem: poem });
-      }
-
       // User is not the editor so redirect to view page
 
       return res.redirect(`/poems/${safeId}`);
    })
    .patch(async (req, res) => {
-      // TODO  check the user is the author then patch the data otherwise send them to error page
-
       let safeId, poem;
       let inputData = {};
       const userId = xss(req?.session?.user?._id);
@@ -241,8 +224,17 @@ router
             .render("error", { title: "Error", error: "Poem could not be found" });
       }
 
+      // TODO make sure new author check works
+
       // User is not the author so error (should never be reached)
-      if (poem.userId.toString() !== userId.toString()) {
+      // if (poem.userId.toString() !== userId.toString()) {
+      //    const status = 403;
+      //    return res
+      //       .status(status)
+      //       .render("error", { error: "You are not the author of this poem" });
+      // }
+
+      if (checkIsAuthor(userId, safeId)) {
          const status = 403;
          return res
             .status(status)
@@ -253,18 +245,18 @@ router
 
       try {
          if (!!xss(req?.body?.title) || xss(req?.body?.title) === "") {
-            inputData.title = validation.checkTitle(xss(req?.body?.title)); // TODO validate title
+            inputData.title = validation.checkTitle(xss(req?.body?.title));
          }
          if (!!xss(req?.body?.body)) {
-            inputData.body = validation.checkBody(xss(req?.body?.body)); // TODO validate body
+            inputData.body = validation.checkBody(xss(req?.body?.body));
          }
          if (!!xss(req?.body?.linkInput)) {
             inputData.linkInput = validation.checkUrl(
                xss(req?.body?.linkInput)
-            ); // TODO validate link
+            );
          }
          if (!!xss(req.body?.priv)) {
-            inputData.priv = validation.checkString(xss(req?.body?.priv)); // TODO validate private
+            inputData.priv = validation.checkString(xss(req?.body?.priv));
          }
       } catch (e) {
          return res.status(400).render("error", { title: "Error", error: e });

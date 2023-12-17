@@ -64,16 +64,16 @@ const exportedMethods = {
       return url;
    },
 
-  /**
-   * Validate the taggedPoem object
-   * 
-   * @param {Object} tp 
-   */
-  checkTaggedPoem(obj) {
-    // tagged poems must have 2 keys
-    if (Object.keys(obj).length != 3) {
-      throw new Error('A taggedPoem object must have 3 keys')
-    }
+   /**
+    * Validate the taggedPoem object
+    *
+    * @param {Object} tp
+    */
+   checkTaggedPoem(obj) {
+      // tagged poems must have 2 keys
+      if (Object.keys(obj).length != 3) {
+         throw new Error("A taggedPoem object must have 3 keys");
+      }
 
       // tagged poems must have the following keys
       //    poemId, tagIds
@@ -85,7 +85,7 @@ const exportedMethods = {
       }
 
       if (obj.tagIds.length > 3) {
-         throw new Error("You can only tag a poem 3 times!")
+         throw new Error("You can only tag a poem 3 times!");
       }
       // TODO: the object ID's inside the tagged poems should all be validated
       return obj;
@@ -167,7 +167,7 @@ const exportedMethods = {
       title = title.trim();
 
       // Title should be between 0-1000 chars
-      if (title === "") return title;
+      if (title === "") return "Untitled";
       if (title.length > 1000) {
          throw new Error("Title must be 1000 characters or less");
       }
