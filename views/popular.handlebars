@@ -1,4 +1,5 @@
 <main class="popular-container">
+   <h2>Popular Poems</h2>
    {{#if noPoems}}
    {{!-- If there aren't any poems in the website display this --}}
    <p>Apologies the site is devoid of poems or something went horribly wrong</p>
@@ -8,7 +9,7 @@
       {{#each poemList as |poem|}}
       <li class="homepage-poems-item">
          <div class="poem-header">
-            <div class="author-picture">{{this.username}} pp</div>
+            <img class="author-picture"src="/public/assets/profile-pic.jpg">
             <div class="poem-header-metadata">
                <a href="/poems/{{this._id}}"><h2>{{this.title}}</h2></a>
                <p>By: <a href="/user/{{this.userId}}">{{this.username}}</a></p>
