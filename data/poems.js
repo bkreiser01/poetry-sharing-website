@@ -28,6 +28,36 @@ import validation from "../helpers/validation.js";
 import userData from "./user.js";
 
 /**
+ * Change favoriteCount
+ * @param {string | ObjectId} poemId
+ * @param {number} modNum
+ * @returns updated poem Object
+ */
+const modFavorite = async (poemId, modNum) => {
+   poemId = validation.checkId(poemId);
+   const poemCollection = await poems();
+   const poem = await exportedMethods.getPoemById(poemId);
+
+   if (poem.favoriteCount + modNum < 0) {
+      return poem;
+   }
+
+   const funcName = modNum ? "addFavorite" : "removeFavorite";
+
+   let updatedPoem = await poemCollection.findOneAndUpdate(
+      {
+         _id: new ObjectId(poemId),
+      },
+      { $inc: { favoriteCount: modNum } },
+      { returnDocument: "after" }
+   );
+
+   if (!updatedPoem) throw new Error(`${funcName}: could not change favorite`);
+
+   return updatedPoem;
+};
+
+/**
  * Sets a poem's tagCount according to total of submittedTags
  * @param {string | ObjectId} poemId
  * @returns {Object} updated poem object
@@ -465,35 +495,24 @@ const exportedMethods = {
       return mostPopular;
    },
 
+   /**
+    * add 1 to the favoriteCount
+    * @param {string | ObjectId} poemId
+    * @returns updated poem Object
+    */
    async addFavorite(poemId) {
-      const poemCollection = await poems();
-      let updatedPoem = await poemCollection.findOneAndUpdate(
-         {
-            _id: new ObjectId(poemId),
-         },
-         { $inc: { favoriteCount: 1 } },
-         { returnDocument: "after" }
-      );
-
-      if (!updatedPoem) throw new Error("addFavorite: could not add favorite");
-
-      return updatedPoem;
+      poemId = validation.checkId(poemId);
+      return await modFavorite(poemId, 1);
    },
 
+   /**
+    * remove 1 from favoriteCount
+    * @param {string | ObjectId} poemId
+    * @returns updated poem Object
+    */
    async removeFavorite(poemId) {
-      const poemCollection = await poems();
-      let updatedPoem = await poemCollection.findOneAndUpdate(
-         {
-            _id: new ObjectId(poemId),
-         },
-         { $inc: { favoriteCount: -1 } },
-         { returnDocument: "after" }
-      );
-
-      if (!updatedPoem)
-         throw new Error("removeFavorite: could not remove favorite");
-
-      return updatedPoem;
+      poemId = validation.checkId(poemId);
+      return await modFavorite(poemId, -1);
    },
 };
 
@@ -501,6 +520,11 @@ export default exportedMethods;
 
 // import { dbConnection } from "../config/mongoConnection.js";
 // const db = await dbConnection();
+
+// console.log(await exportedMethods.addFavorite("657f3affb37d699ca54da449"));
+// console.log(await exportedMethods.addFavorite("657f3affb37d699ca54da449"));
+// console.log(await exportedMethods.addFavorite("657f3affb37d699ca54da449"));
+// console.log(await exportedMethods.removeFavorite("657f3affb37d699ca54da449"));
 
 // console.log(await exportedMethods.removePoem("657f28ffcf8a69b48e8e542f"));
 // console.log(

@@ -178,15 +178,14 @@ router
       const safeId = validation.checkId(xss(req.params.id), "id");
 
       if (!checkIsAuthor(userId, safeId)) {
-         return res
-            .status(403)
-            .render("error", {
-               error: `You must be the author of a poem to delete it`,
-            });
+         return res.status(403).render("error", {
+            error: `You must be the author of a poem to delete it`,
+         });
       }
 
       try {
          const poemInfo = await poemData.removePoem(safeId);
+         await userData.deletePoem(userId, safeId);
          await userData.deletePoemFromAllUsers(safeId);
          const tagInfo = await tagData.deletePoemFromAllTags(safeId);
       } catch (e) {
@@ -271,7 +270,7 @@ router
 
       try {
          const updatedPoem = await poemData.updatePoemPatch(safeId, inputData);
-         return res.redirect(`/poems/${safeId}`);
+         return res.redirect(200, `/poems/${safeId}`);
       } catch (e) {
          let status = 400;
          return res.status(status).render("error", { error: e.toString() });
