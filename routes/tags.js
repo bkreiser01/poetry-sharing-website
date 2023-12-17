@@ -6,6 +6,7 @@ import xss from "xss";
 // Local Imports
 import validation from "../helpers/validation.js";
 import tags from '../data/tags.js';
+import users from '../data/user.js'
 
 /*
 * Routes: /tags
@@ -45,12 +46,13 @@ router.route("/createNewTag").post(async (req, res) => {
     //Validate here
     
     //Add to database
+    let UserID = req.body.taggingUserId;
     let TagString = req.body.newTagString;
     let PoemID = req.body.newTaggedPoem;
     let newTag;
     if(PoemID !== ""){
         try{
-            newTag = await tags.addTagToPoem(TagString, PoemID);
+            newTag = await users.addTagToPoem(UserID, TagString, PoemID);
         } catch (e) {
             console.log(e);
         }
