@@ -12,6 +12,7 @@ import tags from '../data/tags.js';
 * /popular
 * /testing
 * /createNewTag
+* /search
 * /search/:searchString
 * /addTagToPoem
 * /:id
