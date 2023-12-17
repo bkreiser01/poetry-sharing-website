@@ -48,7 +48,7 @@
         success: function (tags) {
             for (let i=0; i<tags.length; i++) { 
                 $.ajax({
-                    url: `/tags/${tags[i]}`,
+                    url: `/tags/info/${tags[i]}`,
                     type: 'GET',
                     success: function (tag) {
                         globalTagsList.append(`<li><a href="/tags/${tag._id}">${tag.tagString}</a></li>`)

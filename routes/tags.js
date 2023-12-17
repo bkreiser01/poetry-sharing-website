@@ -22,9 +22,6 @@ import users from '../data/user.js'
 
 router.route('/popular')
     .get(async (req, res) => {
-        //Route to display popular tags
-
-        //Get array of tag objects, sorted by number of associated poems
         try {
             let popularTags = await tags.getMostPopularTags();
             res.status(200).json(popularTags);
