@@ -6,9 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "test": "jest",
-    "cov": "jest --coverage",
-    "pretty-cov": "jest --coverage --coverageDirectory='coverage'"
+    "seed": "node config/seed.js"
   },
   "repository": {
     "type": "git",
