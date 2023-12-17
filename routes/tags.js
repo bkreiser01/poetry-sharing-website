@@ -127,7 +127,7 @@ router.route('/:id')
                 tagId: foundTag._id
             });
         } catch (e) {
-            res.status(500).render("error", { error: e });
+            res.status(500).render("error", { title: "Error", error: e });
         }
 });
 
