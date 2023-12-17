@@ -35,10 +35,14 @@
     });
 
     $.ajax({
-        url: `/tags/popular`,
+        url: `/tags/info/popular`,
         type: 'GET',
         success: function (tags) {
-            for (let i=0; i<tags.length; i++) { 
+            let targetLength = tags.length;
+            if(tags.length > 3){
+                targetLength = 3;
+            }
+            for (let i = 0; i < targetLength; i++) { 
                 globalTagsList.append(`<li><a href="/tags/${tags[i]._id}">${tags[i].tagString}</a></li>`)
             }
         },
