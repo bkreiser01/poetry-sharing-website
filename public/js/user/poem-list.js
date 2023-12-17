@@ -1,6 +1,6 @@
 (function ($) {
     let method = $('#method_name')[0].innerText,
-    poems_list = $('#poems_list'),
+        poems_list = $('#poems_list'),
         searchId
     
     if ($('#userViewId').length != 0) {
