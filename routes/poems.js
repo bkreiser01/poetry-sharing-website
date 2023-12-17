@@ -71,7 +71,7 @@ router
             .render("error", { title: "Error", error: e });
       }
 
-      priv = priv === "true" ? true : false; // priv to true if "true", false otherwiser
+      // priv = false; // priv to true if "true", false otherwiser
 
       // add poem to poems collection
       let newPoem;
