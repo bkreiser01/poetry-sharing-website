@@ -84,6 +84,9 @@ const exportedMethods = {
          );
       }
 
+      if (obj.tagIds.length > 3) {
+         throw new Error("You can only tag a poem 3 times!")
+      }
       // TODO: the object ID's inside the tagged poems should all be validated
       return obj;
    },

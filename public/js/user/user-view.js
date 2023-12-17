@@ -3,7 +3,9 @@
         userId = $('#userId')[0].innerText,
         followUnfolowBtn = $('#followUnfollowBtn')
 
-
+    if (userViewId == userId) {
+        window.location.href = "/user"
+    }
     $.ajax({
         url: `/user/following/${userId}`,
         type: 'GET',
