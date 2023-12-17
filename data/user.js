@@ -613,7 +613,7 @@ const exportedMethods = {
 
     async deletePoemFromAllUsers(poemId) {
         // Check the Id and convert it to a string
-        poemId = checkId(poemId)
+        poemId = checkId(poemId).toString();
 
         await exportedMethods.deleteTaggedPoemForAllUsers(poemId);
         await exportedMethods.deleteFavoriteForAllUsers(poemId);
