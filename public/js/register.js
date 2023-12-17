@@ -62,6 +62,7 @@ let validate = (data, func, err) => {
             data.password = validate(data.password, validation.checkPassword, password_error)
             if (data.password_confirm != data.password) {
                 password_confirm_error.text('Passwords do not match')
+                errored = true
             }
             data.privacy = validate(data.privacy, validation.checkPrivacy, privacy_error)
 

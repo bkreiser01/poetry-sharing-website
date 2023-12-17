@@ -1,6 +1,7 @@
 (function ($) {
     let current_tagId = $('#current-tagid')[0].innerText,
-        tagList = $('#tag-list')
+        tagList = $('#tag-list'),
+        addedPoem = true;
 
     $.ajax({
         url: `/tags/info/${current_tagId}`,
@@ -16,14 +17,18 @@
                             if (poem.submittedTags[j].tagId == current_tagId) {
                                 timesTagged = poem.submittedTags[j].tagCount
                             }
-                        }   
-                        tagList.append(`<li><a href="/poems/${poem._id}">${poem.title}</a> - ${timesTagged}</li>`)
+                        }
+                        if(timesTagged > 0){
+                            tagList.append(`<li><a href="/poems/${poem._id}">${poem.title}</a> - ${timesTagged}</li>`);
+                            addedPoem = true;
+                        }
                     },
                     error: function (e) {
                         console.error(e);
                     }
                 });
             }
+            if(!addedPoem){tagList.append(`<li>No poems found</li>`);}
         },
         error: function (e) {
             console.error(e);

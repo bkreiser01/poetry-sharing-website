@@ -7,7 +7,6 @@ import xss from "xss";
 import validation from "../helpers/validation.js";
 import user from "../data/user.js";
 
-
 let userRender = async (userId, obj) => {
     let currentUser = await user.getById(userId._id)
     let accountAge = await user.calulcateAccountAge(currentUser._id)
@@ -396,14 +395,14 @@ router.route('/following/:id')
 router.route('/favorite/:id')
     .post(async (req, res) => {
         try {
-            req.params.id = validation.checkId(xss(req.params.id), "id")
+            let poemId = validation.checkId(xss(req.params.id), "id")
 
             if (!req.session.user) {
                 return res.status(401).json({ error: "You must be logged in to favorite a poem" });
             }
 
             // Favorite the poem
-            let userData = await user.addFavorite(req.session.user._id, req.params.id);
+            let userData = await user.addFavorite(req.session.user._id, poemId);
 
             // Return the user
             return res.status(200).json(userData.favorites);

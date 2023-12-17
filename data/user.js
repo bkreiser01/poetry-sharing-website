@@ -432,6 +432,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async addFavorite(id, poemId) {
+        await poemsData.addFavorite(poemId)
         return await addIdToUserField(id, poemId, "favorites")
     },
 
@@ -443,6 +444,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async deleteFavorite(id, poemId) {
+        await poemsData.removeFavorite(poemId)
         return await deleteIdFromUserField(id, poemId, "favorites")
     },
 

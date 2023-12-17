@@ -122,7 +122,7 @@ router.route('/:id')
             foundTag = await tags.getTagById(tagId);
 
             res.status(200).render("tag", { 
-                Title: "Tag",
+                title: "Tag",
                 tagString: foundTag.tagString,
                 tagId: foundTag._id
             });
