@@ -187,7 +187,7 @@ const exportedMethods = {
     */
    async removePoem(id) {
       id = validation.checkId(id, "Id");
-      const poem = this.getPoemById(id);
+      const poem = await this.getPoemById(id);
 
       if (!poem) {
          throw new Error("removePoem: could not get poem");
@@ -197,10 +197,10 @@ const exportedMethods = {
       const deletionInfo = await poemCollection.findOneAndDelete({
          _id: new ObjectId(id),
       });
-      if (deletionInfo.lastErrorObject.n === 0)
+      if (!deletionInfo)
          throw new Error(`removePoem: Could not delete poem with id of ${id}`);
 
-      return { ...deletionInfo.value, deleted: true };
+      return deletionInfo;
    },
 
    /**
@@ -240,7 +240,10 @@ const exportedMethods = {
       }
 
       if (updatedPoem.linkInput) {
-         updatedPoemData.link = validation.checkUrl(updatedPoem.linkInput, "Link");
+         updatedPoemData.link = validation.checkUrl(
+            updatedPoem.linkInput,
+            "Link"
+         );
       }
 
       if (updatedPoem.totalTagCount) {
@@ -271,8 +274,7 @@ const exportedMethods = {
          { returnDocument: "after" }
       );
 
-      if (!returnedPoem)
-         throw new Error("Could not update poem");
+      if (!returnedPoem) throw new Error("Could not update poem");
 
       return returnedPoem;
    },
@@ -468,6 +470,8 @@ export default exportedMethods;
 
 // import { dbConnection } from "../config/mongoConnection.js";
 // const db = await dbConnection();
+
+// console.log(await exportedMethods.removePoem("657f28ffcf8a69b48e8e542f"));
 // console.log(
 //    await exportedMethods.addTag(
 //       "657c908ab14912562bcc452b",
