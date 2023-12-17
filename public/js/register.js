@@ -28,7 +28,6 @@ let validate = (data, func, err) => {
         email_error = $('#email_error'),
         password_error = $('#password_error'),
         password_confirm_error = $('#password_confirm_error'),
-        privacy_error = $('#privacy_error'),
         error = $('#error')
 
 
@@ -38,14 +37,12 @@ let validate = (data, func, err) => {
             let username = $('#username_input'),
                 email = $('#email_input'),
                 password = $('#password_input'),
-                password_confirm = $('#password_confirm'),
-                privacy = $('#privacy_input')
+                password_confirm = $('#password_confirm')
 
             username_error.text('')
             email_error.text('')
             password_error.text('')
             password_confirm_error.text('')
-            privacy_error.text('')
             error.text('')
             errored = false
 
@@ -54,7 +51,7 @@ let validate = (data, func, err) => {
                 email: email.val(),
                 password: password.val(),
                 password_confirm: password_confirm.val(),
-                privacy: privacy.val()
+                privacy: "public"
             }
 
             data.username = validate(data.username, validation.checkUsername, username_error)
@@ -64,7 +61,6 @@ let validate = (data, func, err) => {
                 password_confirm_error.text('Passwords do not match')
                 errored = true
             }
-            data.privacy = validate(data.privacy, validation.checkPrivacy, privacy_error)
 
             if (errored) {
                 errored = false

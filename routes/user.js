@@ -45,7 +45,7 @@ let userRenderPublic = async (userId, obj) => {
 router.route('/')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "Your Account",
                 poems: true
             }));
@@ -57,7 +57,7 @@ router.route('/')
 router.route('/history')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "History",
                 history: true
             }));   
@@ -69,7 +69,7 @@ router.route('/history')
 router.route('/liked-poems')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "Liked Poems",
                 liked_poems: true
             }));   
@@ -81,7 +81,7 @@ router.route('/liked-poems')
 router.route('/tagged-poems')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "Tagged Poems",
                 tagged_poems: true
             }));   
@@ -93,7 +93,7 @@ router.route('/tagged-poems')
 router.route('/followers')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "Followers",
                 followers: true
             }));          
@@ -105,7 +105,7 @@ router.route('/followers')
 router.route('/following')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "Following",
                 following: true
             }));   
@@ -117,7 +117,7 @@ router.route('/following')
 router.route('/history')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "History",
                 methodName: "getHistory",
                 following: true
@@ -131,7 +131,7 @@ router.route('/history')
 router.route('/edit')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "Edit Profile",
                 edit: true
             }));   
@@ -180,7 +180,7 @@ router.route('/:id')
     .get(async (req, res) => {
         try {
             req.params.id = validation.checkId(xss(req.params.id), "id")
-            return res.render("user-view", await userRenderPublic(req.params.id, {
+            return res.render("users/user-view", await userRenderPublic(req.params.id, {
                 title: "Account",
                 userId: req.session.user._id,
                 userViewId: req.params.id,
@@ -196,7 +196,7 @@ router.route('/:id/followers')
     .get(async (req, res) => {
         try {
             req.params.id = validation.checkId(xss(req.params.id), "id")
-            return res.render("user-view", await userRenderPublic(req.params.id, {
+            return res.render("users/user-view", await userRenderPublic(req.params.id, {
                 title: "Followers",
                 userId: req.session.user._id,
                 userViewId: req.params.id,
@@ -211,7 +211,7 @@ router.route('/:id/following')
     .get(async (req, res) => {
         try {
             req.params.id = validation.checkId(xss(req.params.id), "id")
-            return res.render("user-view", await userRenderPublic(req.params.id, {
+            return res.render("users/user-view", await userRenderPublic(req.params.id, {
                 title: "Following",
                 userId: req.session.user._id,
                 userViewId: req.params.id,
@@ -226,11 +226,11 @@ router.route('/:id/tagged-poems')
     .get(async (req, res) => {
         try {
             req.params.id = validation.checkId(xss(req.params.id), "id")
-            return res.render("user-view", await userRenderPublic(req.params.id, {
+            return res.render("users/user-view", await userRenderPublic(req.params.id, {
                 title: "Tagged Poems",
                 userId: req.session.user._id,
                 userViewId: req.params.id,
-                tagged_oems: true
+                tagged_poems: true
             }));   
         } catch (e) {
             return res.status(404).render('error', { title: "Error", error: e.message });

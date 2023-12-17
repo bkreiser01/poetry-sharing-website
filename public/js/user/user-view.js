@@ -28,7 +28,7 @@
                 url: `/user/following/${userViewId}`,
                 type: 'POST',
                 success: (data) => {
-                    followUnfolowBtn[0].innerText = "Unfollow"
+                    window.location.reload()
                 },
                 error: function (err) {
                     console.error(err.responseJSON.error);
@@ -39,7 +39,7 @@
                 url: `/user/following/${userViewId}`,
                 type: 'DELETE',
                 success: (data) => {
-                    followUnfolowBtn[0].innerText = "Follow"
+                    window.location.reload()
                 },
                 error: function (err) {
                     console.error(err.responseJSON.error);

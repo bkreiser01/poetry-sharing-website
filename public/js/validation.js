@@ -145,7 +145,7 @@ const validationMethods = {
          obj.username = validationMethods.checkUsername(obj.username);
          obj.password = validationMethods.checkPassword(obj.password);
       } catch (e) {
-         throw new Error("Invalid login fields provided");
+         throw new Error("Invalid username or password");
       }
 
       return obj;
