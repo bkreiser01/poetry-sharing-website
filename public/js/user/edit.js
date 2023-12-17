@@ -65,6 +65,7 @@ import validation from '/public/js/validation.js';
             if (password != password_confirm) {
                 console.error('Passwords do not match')
                 password_confirm_error.text('Passwords do not match')
+                errors_exist = true
             }
             data.password = password
         }

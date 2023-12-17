@@ -469,7 +469,7 @@ const exportedMethods = {
       const poemCollection = await poems();
       let updatedPoem = await poemCollection.findOneAndUpdate(
          {
-            _id: new ObjectId(poemID),
+            _id: new ObjectId(poemId),
          },
          { $inc: { favoriteCount: 1 } },
          { returnDocument: "after" }
@@ -484,7 +484,7 @@ const exportedMethods = {
       const poemCollection = await poems();
       let updatedPoem = await poemCollection.findOneAndUpdate(
          {
-            _id: new ObjectId(poemID),
+            _id: new ObjectId(poemId),
          },
          { $inc: { favoriteCount: -1 } },
          { returnDocument: "after" }

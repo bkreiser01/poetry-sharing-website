@@ -34,7 +34,7 @@
         type: 'GET',
         success: function (tags) {
             for (let i=0; i<tags.length; i++) { 
-                favTagsList.append(`<li><a href="/tags/${tags[i]._id}">${tags[i].tagString}</a></li>`)
+                globalTagsList.append(`<li><a href="/tags/${tags[i]._id}">${tags[i].tagString}</a></li>`)
             }
         },
         error: function (e) {
@@ -51,7 +51,7 @@
                     url: `/tags/info/${tags[i]}`,
                     type: 'GET',
                     success: function (tag) {
-                        globalTagsList.append(`<li><a href="/tags/${tag._id}">${tag.tagString}</a></li>`)
+                        favTagsList.append(`<li><a href="/tags/${tag._id}">${tag.tagString}</a></li>`)
                     },
                     error: function (e) {
                         console.error(e);
