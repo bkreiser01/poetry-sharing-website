@@ -47,13 +47,14 @@ router.route("/").get(async (req, res) => {
     poemList = poemList.flat(Infinity);
     poemList = poemList.sort(poemSort);
     return res.render("homepage", {
+      title: "Homepage",
       noPoem: noPoem,
       poemList: poemList,
       showLeftColumn: true,
       showRightColumn: true,
     });
   } catch (e) {
-    return res.status(404).render("error", { error: e.toString() });
+    return res.status(404).render("error", { title: "Error", error: e.toString() });
   }
 });
 

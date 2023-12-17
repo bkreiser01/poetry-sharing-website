@@ -50,7 +50,7 @@ router.route('/')
                 poems: true
             }));
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -62,7 +62,7 @@ router.route('/history')
                 history: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -74,7 +74,7 @@ router.route('/liked-poems')
                 liked_poems: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -86,7 +86,7 @@ router.route('/tagged-poems')
                 tagged_poems: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -98,7 +98,7 @@ router.route('/followers')
                 followers: true
             }));          
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -110,7 +110,7 @@ router.route('/following')
                 following: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -123,7 +123,7 @@ router.route('/history')
                 following: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -136,7 +136,7 @@ router.route('/edit')
                 edit: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
     .patch(async (req, res) => {
@@ -187,7 +187,7 @@ router.route('/:id')
                 poems: true
             }));
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -203,7 +203,7 @@ router.route('/:id/followers')
                 followers: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -218,7 +218,7 @@ router.route('/:id/following')
                 following: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -233,7 +233,7 @@ router.route('/:id/tagged-poems')
                 tagged_poems: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
