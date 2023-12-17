@@ -230,7 +230,7 @@ router.route('/:id/tagged-poems')
                 title: "Tagged Poems",
                 userId: req.session.user._id,
                 userViewId: req.params.id,
-                tagged_oems: true
+                tagged_poems: true
             }));   
         } catch (e) {
             return res.status(404).render('error', { error: e.message });

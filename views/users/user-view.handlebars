@@ -1,20 +1,56 @@
-{{!-- login form --}}
-<main>
+<main class="user-container">
     <p id="userViewId" hidden="">{{userViewId}}</p>
-    <h2>{{username}}</h2>
-    <p>Account Age: {{account_age}}</p>
-    <p>Biography: {{bio}}</p>
+    <div class="user-header">
 
-    <button id="followUnfollowBtn"></button>
+        <img class="author-picture" src="/public/assets/profile-pic.jpg">
 
-    <h3>User Views</h3>
-    <ul>
-        <li><a href="/user/{{userViewId}}">Poems</a></li>
-        <li><a href="/user/{{userViewId}}/tagged-poems">Tagged Poems</a></li>
-        <li><a href="/user/{{userViewId}}/followers">Followers</a></li>
-        <li><a href="/user/{{userViewId}}/following">Following</a></li>
+        <div class="user-profile">
 
-    </ul>
+            <div class="user-info">
+
+                <div class="user-numbers">
+
+                    <h2>{{username}}</h2>
+                    <div class="user-social-info">
+                        <div class="user-follows">
+                            <a href="/user/{{userViewId}}/followers">Followers</a>
+                            <p id="follower_count"></p>
+                        </div>
+                        <div class="user-follows">
+                            <a href="/user/{{userViewId}}/following">Following</a>
+                            <p id="following_count"></p>
+                        </div>
+                        <button id="followUnfollowBtn"></button>
+                    </div>
+
+                    <div class="user-tag-info">
+                        <p>Favorite tags:</p>
+                        <ol id="fav-tags"></ol>
+                    </div>
+
+                    <div class="user-tag-info">
+                        <p>Global most tagged with:</p>
+                        <ol id="global-fav-tags"></ol>
+                    </div>
+
+                </div>
+
+                <div class="user-bio">
+                    <p>{{bio}}</p>
+                    <p class="date-string">Account Age: {{account_age}}</p>
+                </div>
+
+            </div>
+
+            <div class="user-actions">
+                <h2>Actions</h2>
+                <a href="/user/{{userViewId}}">{{username}}'s Poems</a>
+                <a href="/user/{{userViewId}}/tagged-poems">{{username}}'s Tagged Poems</a>
+            </div>
+
+        </div>
+
+    </div>
 
     {{#if poems}}
     {{> user/poems}}
@@ -33,4 +69,5 @@
     {{/if}}
 
     <script type='module' src="/public/js/user/user-view.js"></script>
+    <script type='module' src="/public/js/user/static.js"></script>
 </main>
