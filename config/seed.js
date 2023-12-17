@@ -1,366 +1,327 @@
-import * as connections from "./mongoConnection.js";
-import { poems, users, tags } from "./mongoCollections.js";
-import { ObjectId } from "mongodb";
+import { dbConnection } from "./mongoConnection.js";
 
-const john = new ObjectId("000000000000000000000000");
-const alice = new ObjectId("000000000000000000000001");
-const bob = new ObjectId("000000000000000000000002");
-const charlie = new ObjectId("000000000000000000000003");
+const db = await dbConnection();
 
-const poemid0 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa0");
-const poemid1 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa1");
-const poemid2 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa2");
-const poemid3 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa3");
-const poemid4 = new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa4");
+const users_db = await db.collection("users");
+const poems_db = await db.collection("poems");
+const tags_db = await db.collection("tags");
 
-const lol = new ObjectId("bbbbbbbbbbbbbbbbbbbbbbb0");
-const nice = new ObjectId("bbbbbbbbbbbbbbbbbbbbbbb1");
-const love = new ObjectId("bbbbbbbbbbbbbbbbbbbbbbb2");
-const fire = new ObjectId("bbbbbbbbbbbbbbbbbbbbbbb3");
+users_db.deleteMany({});
+poems_db.deleteMany({});
+tags_db.deleteMany({});
 
-export const seedUserData = [
-  {
-    _id: john,
-    username: "John Doe",
-    email: "jdoe@gmail.com",
-    hashedPassword: "$2a$08$XdvNkfdNIL8F8xsuIUeSbNOFgK0M0iV5HOskfVn7.PWncShU.O",
-    timeAccountMade:
-      "Mon Nov 13 2023 14:47:57 GMT-0500 (Eastern Standard Time)",
-    private: false,
-    bio: "I like to write poems!",
-    poemIds: [poemid0, poemid4],
-    taggedPoems: [poemid4],
-    tagsUsed: [lol],
-    favorites: [poemid1],
-    recentlyViewedPoemIds: [],
-    followers: [alice, bob, charlie],
-    following: [alice],
-  },
+import users from "../data/user.js";
+import poems from "../data/poems.js";
+import tags from "../data/tags.js";
 
-  {
-    _id: alice,
-    username: "Alice Smith",
-    email: "asmith@gmail.com",
-    hashedPassword: "$2a$08$XdvNkfdNIL8F8xsuIUeSbNOFgK0M0iV5HOskfVn7.PWncShU.O",
-    timeAccountMade:
-      "Mon Nov 13 2023 14:47:57 GMT-0500 (Eastern Standard Time)",
-    private: false,
-    bio: "I am Alice",
-    poemIds: [poemid1, poemid2],
-    taggedPoems: [
-      {
-        _id: new ObjectId("ddddddddddddddddddddddd0"),
-        poemId: poemid0,
-        tagIds: [lol, love],
-      },
-    ],
-    tagsUsed: [lol, love],
-    favorites: [poemid0],
-    recentlyViewedPoemIds: [],
-    followers: [john, bob, charlie],
-    following: [john],
-  },
+console.log("Creating Users");
 
-  {
-    _id: bob,
-    username: "Bob Smith",
-    email: "bsmith@gmail.com",
-    hashedPassword: "$2a$08$XdvNkfdNIL8F8xsuIUeSbNOFgK0M0iV5HOskfVn7.PWncShU.O",
-    timeAccountMade:
-      "Mon Nov 13 2023 14:47:57 GMT-0500 (Eastern Standard Time)",
-    private: false,
-    bio: "I am Bob",
-    poemIds: [],
-    taggedPoems: [
-      {
-        _id: new ObjectId("ddddddddddddddddddddddd1"),
-        poemId: poemid1,
-        tagIds: [nice],
-      },
-      {
-        _id: new ObjectId("ddddddddddddddddddddddd4"),
-        poemId: poemid3,
-        tagIds: [fire],
-      },
-      {
-        _id: new ObjectId("ddddddddddddddddddddddd5"),
-        poemId: poemid3,
-        tagIds: [lol],
-      },
-    ],
-    tagsUsed: [nice, fire, lol],
-    favorites: [poemid0, poemid1, poemid3],
-    recentlyViewedPoemIds: [],
-    followers: [charlie],
-    following: [john, alice, charlie],
-  },
+let bkrei_id = await users.addUser(
+   "bkreiser",
+   "bkreiser@stevens.edu",
+   "Password@01",
+   "public"
+);
 
-  {
-    _id: charlie,
-    username: "Charlie Smith",
-    email: "csmith@gmail.com",
-    hashedPassword: "$2a$08$XdvNkfdNIL8F8xsuIUeSbNOFgK0M0iV5HOskfVn7.PWncShU.O",
-    timeAccountMade:
-      "Mon Nov 13 2023 14:47:57 GMT-0500 (Eastern Standard Time)",
-    private: true,
-    bio: "I am Charlie",
-    poemIds: [poemid3],
-    taggedPoems: [
-      {
-        _id: new ObjectId("ddddddddddddddddddddddd2"),
-        poemId: poemid1,
-        tagIds: [nice],
-      },
-      {
-        _id: new ObjectId("ddddddddddddddddddddddd3"),
-        poemId: poemid3,
-        tagIds: [fire],
-      },
-    ],
-    tagsUsed: [nice, fire],
-    favorites: [poemid0, poemid3],
-    recentlyViewedPoemIds: [],
-    followers: [bob],
-    following: [john, alice, bob],
-  },
-];
+let rshag_id = await users.addUser(
+   "rshagawat",
+   "rshagawat@stevens.edu",
+   "Password@01",
+   "public"
+);
 
-export const seedPoemData = [
-  {
-    _id: poemid0,
-    timeSubmitted: "Mon Nov 13 2023 14:44:59 GMT-0500 (Eastern Standard Time)",
-    title: "Stopping by Woods on a Snowy Evening",
-    body: "Whose woods these are I think I know.\
-    His house is in the village though;\
-    He will not see me stopping here\
-    To watch his woods fill up with snow.",
-    userId: john,
-    link: "https://www.youtube.com/watch?v=1sWcq2-ZA5o",
-    submittedTags: [
-      {
-        _id: new ObjectId("ccccccccccccccccccccccc0"),
-        tagId: lol,
-        tagCount: 1, // alice
-      },
-      {
-        _id: new ObjectId("ccccccccccccccccccccccc1"),
-        tagId: love,
-        tagCount: 1, // alice
-      },
-    ],
-    totalTagCount: 2,
-    favoriteCount: 3, // alice, bob, charlie
-    comments: [
-      {
-        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee10"),
-        tagId: lol,
-        userId: alice,
-        timeCommented:
-          "Mon Nov 13 2023 14:58:40 GMT-0500 (Eastern Standard Time)",
-        commentString: "Wow this poem is laugh out loud funny!",
-        repliesTo: null,
-      },
-      {
-        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee11"),
-        tagId: lol,
-        userId: john,
-        timeCommented:
-          "Mon Nov 13 2023 15:01:28 GMT-0500 (Eastern Standard Time)",
-        commentString: "Thanks, it is funny lol",
-        repliesTo: new ObjectId("eeeeeeeeeeeeeeeeeeeeee10"),
-      },
-      {
-        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee12"),
-        tagId: lol,
-        userId: alice,
-        timeCommented:
-          "Mon Nov 13 2023 15:10:11 GMT-0500 (Eastern Standard Time)",
-        commentString: "Yeah that's why I commented lol!!!!!",
-        repliesTo: new ObjectId("eeeeeeeeeeeeeeeeeeeeee11"),
-      },
-      {
-        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee20"),
-        tagId: love,
-        userId: bob,
-        timeCommented:
-          "Mon Nov 14 2023 00:05:49 GMT-0500 (Eastern Standard Time)",
-        commentString: "Love this",
-        repliesTo: null,
-      },
-    ],
-    private: false,
-  },
+let jvasa_id = await users.addUser(
+   "jvasallo",
+   "jvasallo@stevens.edu",
+   "Password@01",
+   "public"
+);
 
-  {
-    _id: poemid1,
-    timeSubmitted: "Mon Nov 14 2023 14:44:59 GMT-0500 (Eastern Standard Time)",
-    title: "Test poem",
-    body: "This is a test",
-    userId: alice,
-    link: "https://www.youtube.com/watch?v=1sWcq2-ZA5o",
-    submittedTags: [
-      {
-        _id: new ObjectId("ccccccccccccccccccccccc2"),
-        tagId: nice,
-        tagCount: 2, // bob, charlie
-      },
-    ],
-    totalTagCount: 2,
-    favoriteCount: 2, // john, bob
-    comments: [
-      {
-        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee30"),
-        tagId: nice,
-        userId: bob,
-        timeCommented:
-          "Mon Nov 14 2023 15:05:49 GMT-0500 (Eastern Standard Time)",
-        commentString: "It's a nice first!",
-        repliesTo: null,
-      },
-      {
-        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee31"),
-        tagId: nice,
-        userId: alice,
-        timeCommented:
-          "Mon Nov 14 2023 15:11:12 GMT-0500 (Eastern Standard Time)",
-        commentString: "thx bob",
-        repliesTo: new ObjectId("eeeeeeeeeeeeeeeeeeeeee30"),
-      },
-    ],
-    private: false,
-  },
+let ahuet_id = await users.addUser(
+   "ahuet",
+   "ahuet@stevens.edu",
+   "Password@01",
+   "public"
+);
 
-  {
-    _id: poemid2,
-    timeSubmitted: "Mon Nov 15 2023 14:44:59 GMT-0500 (Eastern Standard Time)",
-    title: "Another One",
-    body: "Lorem ipsum dolor",
-    userId: alice,
-    link: "",
-    submittedTags: [],
-    totalTagCount: 0,
-    favoriteCount: 0,
-    comments: [],
-    private: true,
-  },
+let jdoe_id = await users.addUser(
+   "jdoe",
+   "jdoe@gmail.com",
+   "Password@01",
+   "public"
+);
 
-  {
-    _id: poemid3,
-    timeSubmitted: "Mon Nov 16 2023 14:44:59 GMT-0500 (Eastern Standard Time)",
-    title: "My first poem",
-    body: "Had to write at least one",
-    userId: charlie,
-    link: "",
-    submittedTags: [
-      {
-        _id: new ObjectId("ccccccccccccccccccccccc3"),
-        tagId: fire,
-        tagCount: 2, // charlie, bob
-      },
-      {
-        _id: new ObjectId("ccccccccccccccccccccccc4"),
-        tagId: lol,
-        tagCount: 1, // bob
-      },
-    ],
-    totalTagCount: 3,
-    favoriteCount: 2, // bob, charlie
-    comments: [
-      {
-        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee40"),
-        tagId: fire,
-        userId: bob,
-        timeCommented:
-          "Mon Nov 14 2023 15:05:49 GMT-0500 (Eastern Standard Time)",
-        commentString: "Let's go charlie :fire:",
-        repliesTo: null,
-      },
-      {
-        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee41"),
-        tagId: fire,
-        userId: charlie,
-        timeCommented:
-          "Mon Nov 14 2023 15:11:12 GMT-0500 (Eastern Standard Time)",
-        commentString: "The first of many!",
-        repliesTo: new ObjectId("eeeeeeeeeeeeeeeeeeeeee40"),
-      },
-    ],
-    private: false,
-  },
-  {
-    _id: poemid4,
-    timeSubmitted: "Mon Nov 17 2023 14:44:59 GMT-0500 (Eastern Standard Time)",
-    title: "No debate in the comments",
-    body: "This only has top-level comments",
-    userId: alice,
-    link: "",
-    submittedTags: [
-      {
-        _id: new ObjectId("ccccccccccccccccccccccc5"),
-        tagId: lol,
-        tagCount: 1, // John
-      },
-    ],
-    totalTagCount: 1,
-    favoriteCount: 0,
-    comments: [
-      {
-        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee50"),
-        tagId: lol,
-        userId: bob,
-        timeCommented:
-          "Mon Nov 18 2023 15:05:49 GMT-0500 (Eastern Standard Time)",
-        commentString: "Top-level 1",
-        repliesTo: null,
-      },
-      {
-        _id: new ObjectId("eeeeeeeeeeeeeeeeeeeeee60"),
-        tagId: lol,
-        userId: charlie,
-        timeCommented:
-          "Mon Nov 18 2023 15:11:12 GMT-0500 (Eastern Standard Time)",
-        commentString: "Top-level 2",
-        repliesTo: null,
-      },
-    ],
-  },
-];
+let jsmith_id = await users.addUser(
+   "jsmith",
+   "jsmith@yahoo.com",
+   "Password@01",
+   "private"
+);
 
-export const seedTagData = [
-  {
-    _id: lol,
-    tagString: "LOL",
-    taggedPoemsId: [poemid0, poemid3, poemid4],
-  },
-  {
-    _id: nice,
-    tagString: "nice",
-    taggedPoemsId: [poemid1],
-  },
-  {
-    _id: love,
-    tagString: "love",
-    taggedPoemsId: [poemid0],
-  },
-  {
-    _id: fire,
-    tagString: "fire",
-    taggedPoemsId: [poemid3],
-  },
-];
+console.log("Creating Poems");
+let p1 = await poems.addPoem(
+   new Date(),
+   "A Blessing",
+   "Just off the highway to Rochester, Minnesota,\nTwilight bounds softly forth on the grass.\nAnd the eyes of those two Indian ponies\nDarken with kindness.\nThey have come gladly out of the willows\nTo welcome my friend and me.\nWe step over the barbed wire into the pasture\nWhere they have been grazing all day, alone.\nThey ripple tensely, they can hardly contain their happiness\nThat we have come.\nThey bow shyly as wet swans. They love each other.\nThere is no loneliness like theirs.\nAt home once more,\nThey begin munching the young tufts of spring in the darkness.\nI would like to hold the slenderer one in my arms,\nFor she has walked over to me\nAnd nuzzled my left hand.\nShe is black and white,\nHer mane falls wild on her forehead,\nAnd the light breeze moves me to caress her long ear\nThat is delicate as the skin over a girl’s wrist.\nSuddenly I realize\nThat if I stepped out of my body I would break\nInto blossom.",
+   bkrei_id.toString(),
+   "https://www.poetryfoundation.org/poems/46481/a-blessing",
+   false
+);
 
-export const seedDb = async () => {
-  const db = await connections.dbConnection();
-  await db.dropDatabase();
+let p2 = await poems.addPoem(
+   new Date(),
+   "Poem 2",
+   "This is poem 2",
+   bkrei_id.toString(),
+   "",
+   false
+);
 
-  const poemCollection = await poems();
-  const userCollection = await users();
-  const tagCollection = await tags();
+let p3 = await poems.addPoem(
+   new Date(),
+   "Poem 3",
+   "This is poem 3",
+   bkrei_id.toString(),
+   "",
+   false
+);
 
-  await poemCollection.insertMany(seedPoemData);
-  await userCollection.insertMany(seedUserData);
-  await tagCollection.insertMany(seedTagData);
-};
+let p4 = await poems.addPoem(
+   new Date(),
+   "Poem 4",
+   "This is poem 4",
+   bkrei_id.toString(),
+   "",
+   false
+);
 
-await seedDb();
-await connections.closeConnection();
+let p5 = await poems.addPoem(
+   new Date(),
+   "Poem 5",
+   "This is poem 5",
+   bkrei_id.toString(),
+   "",
+   false
+);
+
+let p6 = await poems.addPoem(
+   new Date(),
+   "Poem 6",
+   "This is poem 6",
+   rshag_id.toString(),
+   "",
+   false
+);
+
+let p7 = await poems.addPoem(
+   new Date(),
+   "Poem 7",
+   "This is poem 7",
+   rshag_id.toString(),
+   "",
+   false
+);
+
+let p8 = await poems.addPoem(
+   new Date(),
+   "Poem 8",
+   "This is poem 8",
+   rshag_id.toString(),
+   "",
+   false
+);
+
+let p9 = await poems.addPoem(
+   new Date(),
+   "Poem 9",
+   "This is poem 9",
+   rshag_id.toString(),
+   "",
+   false
+);
+
+let p10 = await poems.addPoem(
+   new Date(),
+   "Poem 10",
+   "This is poem 10",
+   rshag_id.toString(),
+   "",
+   false
+);
+
+let p11 = await poems.addPoem(
+   new Date(),
+   "Poem 11",
+   "This is poem 11",
+   ahuet_id.toString(),
+   "",
+   false
+);
+
+let p12 = await poems.addPoem(
+   new Date(),
+   "Poem 12",
+   "This is poem 12",
+   ahuet_id.toString(),
+   "",
+   false
+);
+
+let p13 = await poems.addPoem(
+   new Date(),
+   "Poem 13",
+   "This is poem 13",
+   ahuet_id.toString(),
+   "",
+   false
+);
+
+let p14 = await poems.addPoem(
+   new Date(),
+   "Poem 14",
+   "This is poem 14",
+   ahuet_id.toString(),
+   "",
+   false
+);
+
+let p15 = await poems.addPoem(
+   new Date(),
+   "Poem 15",
+   "This is poem 15",
+   ahuet_id.toString(),
+   "",
+   false
+);
+
+let p16 = await poems.addPoem(
+   new Date(),
+   "Poem 16",
+   "This is poem 16",
+   jvasa_id.toString(),
+   "",
+   false
+);
+
+let p17 = await poems.addPoem(
+   new Date(),
+   "Poem 17",
+   "This is poem 17",
+   jvasa_id.toString(),
+   "",
+   false
+);
+
+let p18 = await poems.addPoem(
+   new Date(),
+   "Poem 18",
+   "This is poem 18",
+   jvasa_id.toString(),
+   "",
+   false
+);
+
+let p19 = await poems.addPoem(
+   new Date(),
+   "Poem 19",
+   "This is poem 19",
+   jvasa_id.toString(),
+   "",
+   false
+);
+
+let p20 = await poems.addPoem(
+   new Date(),
+   "Poem 20",
+   "This is poem 20",
+   jvasa_id.toString(),
+   "",
+   false
+);
+
+console.log("Creating Tags");
+let t1 = await tags.createNewTag("nice");
+t1 = (await tags.getTagById(t1)).tagString;
+let t2 = await tags.createNewTag("happy");
+t2 = (await tags.getTagById(t2)).tagString;
+let t3 = await tags.createNewTag("sad");
+t3 = (await tags.getTagById(t3)).tagString;
+let t4 = await tags.createNewTag("funny");
+t4 = (await tags.getTagById(t4)).tagString;
+let t5 = await tags.createNewTag("scary");
+t5 = (await tags.getTagById(t5)).tagString;
+
+console.log("Populate User Bios");
+await users.updateBio(
+   bkrei_id,
+   "My name is Brandon! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology."
+);
+await users.updateBio(
+   rshag_id,
+   "My name is Roger! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology."
+);
+await users.updateBio(
+   jvasa_id,
+   "My name is Joe! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology."
+);
+await users.updateBio(
+   ahuet_id,
+   "My name is Adrien! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology."
+);
+
+console.log("Populate user tagged poems");
+await users.addTagToPoem(bkrei_id, t2, p6._id.toString());
+await users.addTagToPoem(bkrei_id, t2, p7._id.toString());
+await users.addTagToPoem(bkrei_id, t2, p8._id.toString());
+
+await users.addTagToPoem(bkrei_id, t1, p1._id.toString());
+await users.addTagToPoem(bkrei_id, t1, p2._id.toString());
+await users.addTagToPoem(bkrei_id, t1, p3._id.toString());
+await users.addTagToPoem(bkrei_id, t1, p4._id.toString());
+await users.addTagToPoem(bkrei_id, t1, p5._id.toString());
+
+await users.addTagToPoem(rshag_id, t2, p6._id.toString());
+await users.addTagToPoem(rshag_id, t2, p7._id.toString());
+await users.addTagToPoem(rshag_id, t2, p8._id.toString());
+await users.addTagToPoem(rshag_id, t2, p9._id.toString());
+await users.addTagToPoem(ahuet_id, t3, p10._id.toString());
+await users.addTagToPoem(ahuet_id, t3, p11._id.toString());
+await users.addTagToPoem(ahuet_id, t3, p12._id.toString());
+await users.addTagToPoem(jvasa_id, t4, p13._id.toString());
+await users.addTagToPoem(jvasa_id, t4, p14._id.toString());
+
+console.log("Populate user favorites");
+await users.addFavorite(bkrei_id, p1._id.toString());
+await users.addFavorite(bkrei_id, p2._id.toString());
+await users.addFavorite(rshag_id, p3._id.toString());
+await users.addFavorite(rshag_id, p4._id.toString());
+await users.addFavorite(jvasa_id, p5._id.toString());
+await users.addFavorite(jvasa_id, p6._id.toString());
+await users.addFavorite(ahuet_id, p7._id.toString());
+
+console.log("Populate user recently viewed");
+await users.addRecentlyViewedPoem(bkrei_id, p8._id.toString());
+await users.addRecentlyViewedPoem(bkrei_id, p9._id.toString());
+await users.addRecentlyViewedPoem(rshag_id, p10._id.toString());
+await users.addRecentlyViewedPoem(rshag_id, p11._id.toString());
+await users.addRecentlyViewedPoem(jvasa_id, p12._id.toString());
+await users.addRecentlyViewedPoem(jvasa_id, p13._id.toString());
+await users.addRecentlyViewedPoem(ahuet_id, p14._id.toString());
+await users.addRecentlyViewedPoem(ahuet_id, p15._id.toString());
+
+console.log("Populate user following");
+await users.addFollowing(bkrei_id, rshag_id);
+await users.addFollowing(bkrei_id, jvasa_id);
+await users.addFollowing(rshag_id, jsmith_id);
+await users.addFollowing(rshag_id, bkrei_id);
+await users.addFollowing(ahuet_id, jvasa_id);
+await users.addFollowing(ahuet_id, jdoe_id);
+await users.addFollowing(jvasa_id, jsmith_id);
+await users.addFollowing(jvasa_id, ahuet_id);
+await users.addFollowing(jdoe_id, jvasa_id);
+await users.addFollowing(jdoe_id, jsmith_id);
+await users.addFollowing(jsmith_id, ahuet_id);
+await users.addFollowing(jsmith_id, jvasa_id);
+
+console.log("Done!");
+process.exit();

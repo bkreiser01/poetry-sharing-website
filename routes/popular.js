@@ -3,7 +3,6 @@ const router = Router();
 import { poemData, tagData, userData } from "../data/index.js";
 import validation from "../helpers/validation.js";
 import { ObjectId } from "mongodb";
-import markdown, { getCodeString } from "@wcj/markdown-to-html";
 import xss from "xss";
 
 router.route("/").get(async (req, res) => {
@@ -27,12 +26,18 @@ router.route("/").get(async (req, res) => {
          })
       );
    } catch (e) {
-      return res.status(404).render("error", { error: e.toString() });
+      return res.status(404).render("error", { title: "Error", error: e.toString() });
    }
 
    if (poemList.length <= 0) noPoem = true;
 
-   return res.render("popular", { poemList: poemList, noPoem: noPoem });
+   return res.render("popular", { 
+      title: "Popular Poems",
+      poemList: poemList,
+      noPoem: noPoem,
+      showLeftColumn: true,
+      showRightColumn: true
+   });
 });
 
 export default router;

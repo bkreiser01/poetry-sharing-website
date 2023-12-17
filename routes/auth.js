@@ -11,7 +11,7 @@ router.route('/login')
 
   // GET /login
   .get(async (req, res) => {
-    res.status(200).render("login", { layout: "no_session", title: "Login" });
+    res.status(200).render("auth/login", { layout: "no_session", title: "Login" });
   })
 
   // POST /login
@@ -42,7 +42,7 @@ router.route('/register')
   .get(async (req, res) => {
     res
       .status(200)
-      .render("register", { layout: "no_session", title: "Register" });
+      .render("auth/register", { layout: "no_session", title: "Register" });
   })
 
   // POST /register
@@ -76,7 +76,7 @@ router.route('/logout')
     // If there is a user destroy the session and render the logout page,
     // otherwise redirect to the login page
     req.session.destroy();
-    res.status(200).render("logout", { title: "Logout" })
+    res.status(200).render("auth/logout", { title: "Logout" })
   });
 
 

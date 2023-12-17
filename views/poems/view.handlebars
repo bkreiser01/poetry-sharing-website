@@ -1,7 +1,7 @@
 <main class="poem-container">
    <p id="poemViewId" hidden>{{poem._id}}</p>
    <div class="poem-header">
-      <div class="author-picture">author pp</div>
+      <img class="author-picture"src="/public/assets/profile-pic.jpg">
       <div class="poem-header-metadata">
          <h1>{{poem.title}}</h1>
          <p>
@@ -20,10 +20,17 @@
          <input type='text' id='TagString' name='TagString'
             placeholder="Type a tag...">
          <input type='submit' value='Tag it!'>
-         <label id="error-tag" class="error"></label>
+         <p id="error-tag" class="error"></p>
       </form>
       <p id="poemId_" hidden>{{poemId_}}</p>
       <button type="button" id="likeBtn">Like it!</button>
+
+      {{#if isAuthor}}
+      <a href="/poems/edit/{{poem._id}}">
+         <button type="button" id="EditIt">Edit it!</button>
+      </a>
+      {{/if}}
+
    </div>
 
    <div class="poem-body">

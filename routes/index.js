@@ -1,5 +1,4 @@
 // Amalgamate routes here!
-import routes from "./routing.js";
 import auth from "./auth.js";
 import user from "./user.js";
 import home from "./home.js";
@@ -10,7 +9,6 @@ import tags from "./tags.js";
 import search from "./search.js"
 
 const constructorMethod = (app) => {
-   app.use("/", routes);
    app.use("/", auth);
    app.use("/", home);
    app.use("/user", user);

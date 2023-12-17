@@ -432,6 +432,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async addFavorite(id, poemId) {
+        await poemsData.addFavorite(poemId)
         return await addIdToUserField(id, poemId, "favorites")
     },
 
@@ -443,6 +444,7 @@ const exportedMethods = {
      * @returns the updated user object
      */
     async deleteFavorite(id, poemId) {
+        await poemsData.removeFavorite(poemId)
         return await deleteIdFromUserField(id, poemId, "favorites")
     },
 
@@ -611,11 +613,11 @@ const exportedMethods = {
 
     async deletePoemFromAllUsers(poemId) {
         // Check the Id and convert it to a string
-        poemId = checkId(poemId)
+        poemId = checkId(poemId).toString();
 
         await exportedMethods.deleteTaggedPoemForAllUsers(poemId);
         await exportedMethods.deleteFavoriteForAllUsers(poemId);
-        await exportedMethods.eleteRecentlyViewedPoemForAllUsers(poemId);
+        await exportedMethods.deleteRecentlyViewedPoemForAllUsers(poemId);
     },
 
     /**
@@ -626,9 +628,9 @@ const exportedMethods = {
      * @param {string|ObjectId} poemId 
      */
     async addTagToPoem(userId, tagName, poemId) {
-        userId = checkId(userId)
-        tagName = validation.checkTagString(tagName)
-        poemId = checkId(poemId)
+        userId = checkId(userId);
+        tagName = validation.checkTagString(tagName, "Tag name");
+        poemId = checkId(poemId);
 
         // Make sure the global tags has the poemID
         let addedTag;

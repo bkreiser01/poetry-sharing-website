@@ -7,7 +7,7 @@ import validation from '/public/js/validation.js';
         password_error = $('#password_error'),
         password_confirm_error = $('#password_confirm_error'),
         bio_error = $('#bio_error'),
-        error = $('#error'),
+        error = $('#error-edit'),
         success = $('#success')
 
     form.submit(function (event) {
@@ -65,6 +65,7 @@ import validation from '/public/js/validation.js';
             if (password != password_confirm) {
                 console.error('Passwords do not match')
                 password_confirm_error.text('Passwords do not match')
+                errors_exist = true
             }
             data.password = password
         }

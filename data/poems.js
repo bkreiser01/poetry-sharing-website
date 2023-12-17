@@ -28,6 +28,36 @@ import validation from "../helpers/validation.js";
 import userData from "./user.js";
 
 /**
+ * Change favoriteCount
+ * @param {string | ObjectId} poemId
+ * @param {number} modNum
+ * @returns updated poem Object
+ */
+const modFavorite = async (poemId, modNum) => {
+   poemId = validation.checkId(poemId);
+   const poemCollection = await poems();
+   const poem = await exportedMethods.getPoemById(poemId);
+
+   if (poem.favoriteCount + modNum < 0) {
+      return poem;
+   }
+
+   const funcName = modNum ? "addFavorite" : "removeFavorite";
+
+   let updatedPoem = await poemCollection.findOneAndUpdate(
+      {
+         _id: new ObjectId(poemId),
+      },
+      { $inc: { favoriteCount: modNum } },
+      { returnDocument: "after" }
+   );
+
+   if (!updatedPoem) throw new Error(`${funcName}: could not change favorite`);
+
+   return updatedPoem;
+};
+
+/**
  * Sets a poem's tagCount according to total of submittedTags
  * @param {string | ObjectId} poemId
  * @returns {Object} updated poem object
@@ -96,13 +126,15 @@ const exportedMethods = {
       priv
    ) {
       timeSubmitted = validation.checkDate(timeSubmitted, "timeSubmitted");
-      title = validation.checkString(title.trim(), "title");
-      body = validation.checkString(body.trim(), "body");
+      title = validation.checkTitle(title.trim(), "title");
+      body = validation.checkBody(body.trim(), "body");
       userId = validation.checkId(userId.trim(), "userId");
       if (!!link.trim()) {
          link = validation.checkUrl(link.trim(), "link");
       }
       priv = validation.checkBool(priv, "priv");
+
+      if (title === "") title = "Untitled";
 
       const newPoem = {
          timeSubmitted: timeSubmitted,
@@ -187,7 +219,7 @@ const exportedMethods = {
     */
    async removePoem(id) {
       id = validation.checkId(id, "Id");
-      const poem = this.getPoemById(id);
+      const poem = await this.getPoemById(id);
 
       if (!poem) {
          throw new Error("removePoem: could not get poem");
@@ -197,10 +229,10 @@ const exportedMethods = {
       const deletionInfo = await poemCollection.findOneAndDelete({
          _id: new ObjectId(id),
       });
-      if (deletionInfo.lastErrorObject.n === 0)
+      if (!deletionInfo)
          throw new Error(`removePoem: Could not delete poem with id of ${id}`);
 
-      return { ...deletionInfo.value, deleted: true };
+      return deletionInfo;
    },
 
    /**
@@ -210,12 +242,16 @@ const exportedMethods = {
     * @returns
     */
    async updatePoemPatch(id, updatedPoem) {
-      // TODO validate as checking if there is a field
       id = validation.checkId(id, "Id");
+      if (!updatedPoem) throw new Error("No new poem data supplied");
+      if (typeof updatedPoem !== "object")
+         throw new Error("updatedPoem must be of type 'object'");
 
       const updatedPoemData = {};
       if (updatedPoem.timeSubmitted) {
-         updatedPoemData.timeSubmitted = updatedPoem.timeSubmitted; // TODO replace with validation
+         updatedPoemData.timeSubmitted = validation.checkDate(
+            updatedPoem.timeSubmitted
+         );
       }
 
       if (updatedPoem.title) {
@@ -240,7 +276,10 @@ const exportedMethods = {
       }
 
       if (updatedPoem.linkInput) {
-         updatedPoemData.link = validation.checkUrl(updatedPoem.linkInput, "Link");
+         updatedPoemData.link = validation.checkUrl(
+            updatedPoem.linkInput,
+            "Link"
+         );
       }
 
       if (updatedPoem.totalTagCount) {
@@ -271,8 +310,7 @@ const exportedMethods = {
          { returnDocument: "after" }
       );
 
-      if (!returnedPoem)
-         throw new Error("Could not update poem");
+      if (!returnedPoem) throw new Error("Could not update poem");
 
       return returnedPoem;
    },
@@ -284,8 +322,6 @@ const exportedMethods = {
     * @param {string | ObjectId} tagId
     */
    async addTag(poemId, tagId) {
-      // TODO check that the tag exists in tags collection atleast in routing
-
       poemId = validation.checkId(poemId, "PoemId");
       tagId = validation.checkId(tagId, "TagId");
       const poemCollection = await poems();
@@ -462,12 +498,39 @@ const exportedMethods = {
       }
       return mostPopular;
    },
+
+   /**
+    * add 1 to the favoriteCount
+    * @param {string | ObjectId} poemId
+    * @returns updated poem Object
+    */
+   async addFavorite(poemId) {
+      poemId = validation.checkId(poemId);
+      return await modFavorite(poemId, 1);
+   },
+
+   /**
+    * remove 1 from favoriteCount
+    * @param {string | ObjectId} poemId
+    * @returns updated poem Object
+    */
+   async removeFavorite(poemId) {
+      poemId = validation.checkId(poemId);
+      return await modFavorite(poemId, -1);
+   },
 };
 
 export default exportedMethods;
 
 // import { dbConnection } from "../config/mongoConnection.js";
 // const db = await dbConnection();
+
+// console.log(await exportedMethods.addFavorite("657f3affb37d699ca54da449"));
+// console.log(await exportedMethods.addFavorite("657f3affb37d699ca54da449"));
+// console.log(await exportedMethods.addFavorite("657f3affb37d699ca54da449"));
+// console.log(await exportedMethods.removeFavorite("657f3affb37d699ca54da449"));
+
+// console.log(await exportedMethods.removePoem("657f28ffcf8a69b48e8e542f"));
 // console.log(
 //    await exportedMethods.addTag(
 //       "657c908ab14912562bcc452b",

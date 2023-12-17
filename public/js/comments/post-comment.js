@@ -60,7 +60,7 @@ let validate = (data, func, err) => {
   let error = $("#error");
   errored = false;
 
-  commentForm.reset();
+  commentForm[0].reset();
 
   // Handle the form submission
   commentForm.submit(function (event) {

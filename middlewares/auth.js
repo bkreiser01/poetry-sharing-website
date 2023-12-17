@@ -19,12 +19,13 @@ const exports = {
             return res.redirect('/');
         }
 
-        // if (!req.session.user && 
-        //     req.originalUrl != '/login' && 
-        //     req.originalUrl != '/register'
-        // ) {
-        //     return res.redirect('/login');
-        // }
+        // Prevent an unauthenticated user from accessing the dashboard
+        if (!req.session.user && 
+            req.originalUrl != '/login' && 
+            req.originalUrl != '/register'
+        ) {
+            return res.redirect('/login');
+        }
 
         next();
     },

@@ -1,9 +1,8 @@
 <main class="user-container">
+    <p id="userViewId" hidden="">{{userViewId}}</p>
     <div class="user-header">
 
-        <div class="author-picture user-picture">
-            {{username}}
-        </div>
+        <img class="author-picture" src="/public/assets/profile-pic.jpg">
 
         <div class="user-profile">
 
@@ -14,26 +13,22 @@
                     <h2>{{username}}</h2>
                     <div class="user-social-info">
                         <div class="user-follows">
-                            <a href="/user/followers">Followers</a>
-                            {{!-- TODO AJAX here --}}
+                            <a href="/user/{{userViewId}}/followers">Followers</a>
                             <p id="follower_count"></p>
                         </div>
                         <div class="user-follows">
-                            <a href="/user/following">Following</a>
-                            {{!-- TODO AJAX here --}}
+                            <a href="/user/{{userViewId}}/following">Following</a>
                             <p id="following_count"></p>
                         </div>
-
+                        <button id="followUnfollowBtn"></button>
                     </div>
 
                     <div class="user-tag-info">
-                        {{!-- TODO AJAX here --}}
                         <p>Favorite tags:</p>
                         <ol id="fav-tags"></ol>
                     </div>
 
                     <div class="user-tag-info">
-                        {{!-- TODO AJAX here --}}
                         <p>Global most tagged with:</p>
                         <ol id="global-fav-tags"></ol>
                     </div>
@@ -49,10 +44,8 @@
 
             <div class="user-actions">
                 <h2>Actions</h2>
-                <a href="/user/history">History</a>
-                <a href="/user/liked-poems">Liked Poems</a>
-                <a href="/user/tagged-poems">Tagged Poems</a>
-                <a href="/user/edit">Edit Profile</a>
+                <a href="/user/{{userViewId}}">{{username}}'s Poems</a>
+                <a href="/user/{{userViewId}}/tagged-poems">{{username}}'s Tagged Poems</a>
             </div>
 
         </div>
@@ -63,29 +56,18 @@
     {{> user/poems}}
     {{/if}}
 
-    {{#if history}}
-    {{> user/history}}
-    {{/if}}
-
-    {{#if liked_poems}}
-    {{> user/liked-poems}}
-    {{/if}}
-
     {{#if tagged_poems}}
     {{> user/tagged-poems}}
     {{/if}}
 
     {{#if followers}}
     {{> user/followers}}
-    {{/if}}
+    {{/if}} 
 
     {{#if following}}
     {{> user/following}}
     {{/if}}
 
-    {{#if edit}}
-    {{> user/edit}}
-    {{/if}}
-
+    <script type='module' src="/public/js/user/user-view.js"></script>
     <script type='module' src="/public/js/user/static.js"></script>
 </main>
