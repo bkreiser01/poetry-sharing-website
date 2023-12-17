@@ -11,7 +11,11 @@ router.route('/login')
 
   // GET /login
   .get(async (req, res) => {
-    res.status(200).render("auth/login", { layout: "no_session", title: "Login" });
+    try {
+      res.status(200).render("auth/login", { layout: "no_session", title: "Login" });
+    } catch (e) {
+      return res.status(500).render("error", { error: e.message });
+    }
   })
 
   // POST /login
@@ -40,9 +44,13 @@ router.route('/register')
 
   // GET /register
   .get(async (req, res) => {
-    res
-      .status(200)
-      .render("auth/register", { layout: "no_session", title: "Register" });
+    try {
+      return res.status(200).render("auth/register", {
+        layout: "no_session",
+        title: "Register" });
+    } catch (e) {
+      return res.status(500).render("error", { error: e.message });
+    }
   })
 
   // POST /register
@@ -75,8 +83,12 @@ router.route('/logout')
   .get(async (req, res) => {
     // If there is a user destroy the session and render the logout page,
     // otherwise redirect to the login page
-    req.session.destroy();
-    res.status(200).render("auth/logout", { title: "Logout" })
+    try {
+      req.session.destroy();
+      res.status(200).render("auth/logout", { title: "Logout" })
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
   });
 
 
