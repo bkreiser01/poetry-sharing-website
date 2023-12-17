@@ -7,29 +7,6 @@ import validation from "/public/js/validation.js";
       link_error = $("#link_error"),
       success = $("#success"),
       private_error = $("#private_error");
-   let deleteButton = $("#delete-poem");
-
-   const deletionSuccess = (data, status) => {
-      // console.log(data); //DEBUG
-      // console.log(`DATA: ${data}`);
-      if (status === 200) {
-         success.text("Deletion Successful!");
-         form.empty();
-         form.append(`$(<a href="/">Return to Homepage</a>)`);
-      }
-   };
-
-   deleteButton.on("click", (event) => {
-      const poemId = $("#poemId").text();
-      const title = $("#title_input").val().trim();
-      if (confirm(`Are you sure you want to delete ${title}`)) {
-         const ajaxReq = $.ajax(`/poems/${poemId}`, { type: "DELETE" });
-         ajaxReq.success((data) => {
-            window.location.href = "/user";
-         });
-         ajaxReq.error((e) => console.log(e));
-      }
-   });
 
    form.submit(function (event) {
       event.preventDefault();

@@ -22,6 +22,13 @@
       </form>
       <p id="poemId_" hidden="">{{poemId_}}</p>
       <button type="button" id="likeBtn">Like it!</button>
+
+      {{#if isAuthor}}
+      <a href="/poems/edit/{{poem._id}}">
+         <button type="button" id="EditIt">Edit it!</button>
+      </a>
+      {{/if}}
+
    </div>
 
    <div class="poem-body">
