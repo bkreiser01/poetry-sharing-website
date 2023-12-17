@@ -89,7 +89,7 @@ const validationMethods = {
     * @returns the valid privacy string
     */
    checkPrivacy(privacy) {
-      privacy = validationMethods.checkString(privacy, "privacy");
+      privacy = validationMethods.checkString(privacy, "privacy setting");
 
       // Privacy is either public or private
       if (privacy != "public" && privacy != "private") {
