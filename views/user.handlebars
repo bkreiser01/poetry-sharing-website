@@ -15,29 +15,27 @@
                     <div class="user-social-info">
                         <div class="user-follows">
                             <a href="/user/followers">Followers</a>
+                            {{!-- TODO AJAX here --}}
                             <p>nb_followers</p>
                         </div>
                         <div class="user-follows">
                             <a href="/user/following">Following</a>
+                            {{!-- TODO AJAX here --}}
                             <p>nb_following</p>
                         </div>
 
                     </div>
 
                     <div class="user-tag-info">
-                        <p>Favorite tag:</p>
-                        <div class="tag-info">
-                            <p>tagName</p>
-                            <p>tagCount</p>
-                        </div>
+                        {{!-- TODO AJAX here --}}
+                        <p>Favorite tags:</p>
+                        <ol id="fav-tags"></ol>
                     </div>
 
                     <div class="user-tag-info">
+                        {{!-- TODO AJAX here --}}
                         <p>Most tagged with:</p>
-                        <div class="tag-info">
-                            <p>tagName</p>
-                            <p>tagCount</p>
-                        </div>
+                        <ol id="global-fav-tags"></ol>
                     </div>
 
                 </div>
@@ -58,7 +56,9 @@
         </div>
 
     </div>
+    {{> user/tags}}
 
+    <h3>User Views</h3>
     <ul>
         <li><a href="/user/edit">Edit Profile</a></li>
     </ul>

@@ -21,13 +21,7 @@ let validate = (data, func, err) => {
 }
 
 (function($) {
-    // General form elements
-    let loginForm = $('#register_form'),
-        username = $('#username_input'),
-        email = $('#email_input'),
-        password = $('#password_input'),
-        password_confirm = $('#password_confirm'),
-        privacy = $('#privacy_input')
+    let loginForm = $('#register_form')
     
     // Form errors
     let username_error = $('#username_error'),
@@ -40,6 +34,13 @@ let validate = (data, func, err) => {
 
         loginForm.submit(function (event) {
             event.preventDefault()
+
+            let username = $('#username_input'),
+                email = $('#email_input'),
+                password = $('#password_input'),
+                password_confirm = $('#password_confirm'),
+                privacy = $('#privacy_input')
+
             username_error.text('')
             email_error.text('')
             password_error.text('')

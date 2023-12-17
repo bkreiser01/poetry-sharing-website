@@ -1,15 +1,25 @@
 <div id="user_edit">
-    <form action="/user/edit" method="post">
+    <h3>Edit Profile</h3>
+    <form id="user_edit_form">
+        <label id="success" class="success"></label><br>
         <label for="username_input">Username</label>
-        <input type="text" name="username_input" id="username_input" value="{{username}}"/> <br>
+        <input type="text" name="username_input" id="username_input" placeholder="{{username}}"/>
+        <label id="username_error" class="error"></label><br>
         <label for="email_input">Email</label>
-        <input type="text" name="email_input" id="email_input" value="{{email}}"/><br>
+        <input type="text" name="email_input" id="email_input" placeholder="{{email}}"/>
+        <label id="email_error" class="error"></label><br>
         <label for="password_input">Password</label>
-        <input type="password" name="password_input" id="password_input"/> <br>
+        <input type="password" name="password_input" id="password_input"/>
+        <label id="password_error" class="error"></label><br>
         <label for="password_confirm">Password Confirm</label>
-        <input type="password" name="password_confirm" id="password_confirm"/> <br>
+        <input type="password" name="password_confirm" id="password_confirm"/>
+        <label id="password_confirm_error" class="error"></label><br>
         <label for="bio">Biography</label>
-        <textarea name="bio" id="bio">{{bio}}</textarea>
+        <textarea name="bio" id="bio" placeholder="{{bio}}"></textarea>
+        <label id="bio_error" class="error"></label><br>
+        <label id="error" class="error"></label><br>
         <input type="submit" value="Save" />
     </form>
+
+    <script type='module' src="/public/js/user/edit.js"></script>
 </div>

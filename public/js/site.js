@@ -2,6 +2,7 @@
     let login_logout_option = $('#login-logout'),
         user_account = $('#user-account');
 
+
     // Check if the user is logged in
     $.ajax({
         url: '/check-authentication',

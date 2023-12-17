@@ -33,9 +33,11 @@ import bcrypt from 'bcryptjs';
 import { users } from '../config/mongoCollections.js'
 import validation from '../helpers/validation.js'
 import mongo from '../helpers/mongo.js'
+import tagsData from './tags.js';
+import poemsData from './poems.js';
 
 let userCollection = await users();
-const saltRounds = 16;
+const saltRounds = 1;
 
 /**
  * Local helper function to handle id checks
@@ -117,7 +119,12 @@ const exportedMethods = {
      */
     async getById(id) {
         id = checkId(id)
-        return await userCollection.findOne({ _id: new ObjectId(id) });
+        let foundUser = await userCollection.findOne({ _id: new ObjectId(id) })
+
+        if (!foundUser) {
+            throw new Error(`No user with id '${id}'!`)
+        }
+        return foundUser;
     },
 
     /**
@@ -141,7 +148,7 @@ const exportedMethods = {
         }
         
         // Validate all inputs
-        username = validation.checkUsername(username)
+        username = validation.checkUsername(username).toLowerCase()
         email = validation.checkEmail(email)
         password = validation.checkPassword(password)
         privacy = validation.checkPrivacy(privacy)
@@ -161,7 +168,7 @@ const exportedMethods = {
             username: username,
             email: email,
             hashedPassword: password,
-            timeAccountMade: new Date().toUTCString(),
+            timeAccountMade: new Date(),
             private: (privacy == "private"),
             bio: "",
             poemIds: [],
@@ -568,7 +575,7 @@ const exportedMethods = {
      */
     async login(username, password) {
         // Validate the username and password
-        username = validation.checkUsername(username)
+        username = validation.checkUsername(username).toLowerCase()
         password = validation.checkPassword(password)
 
         // Get the user by username
@@ -609,13 +616,66 @@ const exportedMethods = {
         await exportedMethods.deleteTaggedPoemForAllUsers(poemId);
         await exportedMethods.deleteFavoriteForAllUsers(poemId);
         await exportedMethods.eleteRecentlyViewedPoemForAllUsers(poemId);
+    },
+
+    /**
+     * Add a tag to a poem
+     * 
+     * @param {string|ObjectId} userId 
+     * @param {string} tagName 
+     * @param {string|ObjectId} poemId 
+     */
+    async addTagToPoem(userId, tagName, poemId) {
+        userId = checkId(userId)
+        tagName = validation.checkTagString(tagName)
+        poemId = checkId(poemId)
+
+        // Make sure the global tags has the poemID
+        let addedTag;
+        try {
+            addedTag = await tagsData.addTagToPoem(tagName, poemId.toString())
+        } catch (e) {
+            addedTag = await tagsData.getTagByName(tagName)
+        }
+
+        let taggedPoemObject = {}
+
+        // See if the poem already had tags by the user
+        let user = await exportedMethods.getById(userId)
+        let alreadyExisted = false
+        for(let i = 0; i < user.taggedPoems.length; i++) { 
+            if(user.taggedPoems[i].poemId.toString() == poemId.toString()) {
+                taggedPoemObject = user.taggedPoems[i]
+                alreadyExisted = true
+                break;
+            }
+        }
+
+        if (Object.keys(taggedPoemObject).length == 0) {
+            taggedPoemObject = {
+                _id: new ObjectId(),
+                poemId: new ObjectId(poemId),
+                tagIds: [addedTag._id]
+            }
+        } else {
+            if (idIsIn(addedTag._id, taggedPoemObject.tagIds)) {
+                throw new Error("Poem already has that tag!")
+            }
+
+            taggedPoemObject.tagIds.push(addedTag._id)
+        }
+
+        // Add the tagged poem to the user
+        if (alreadyExisted) {
+            // Delete the old tagged poem because of poor planning
+            user = await exportedMethods.deleteTaggedPoem(userId, taggedPoemObject._id)
+        }
+        user = await exportedMethods.addTaggedPoem(userId, taggedPoemObject)
+
+
+        // Make sure poems data is updated
+        await poemsData.addTag(poemId.toString(), addedTag._id.toString())
+        return user
     }
 }
 export default exportedMethods;
-
-// console.log(await exportedMethods.addUser(
-//     "bkreiser",
-//     "bkreiser@duck.com",
-//     "Password@01",
-//     "public"
-// ))

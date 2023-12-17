@@ -1,10 +1,16 @@
 (function ($) {
-    let userId = $('#userId')[0].innerText,
-        method = $('#method_name')[0].innerText,
-        poems_list = $('#poems_list')
+    let method = $('#method_name')[0].innerText,
+    poems_list = $('#poems_list'),
+        searchId
+    
+    if ($('#userViewId').length != 0) {
+        searchId = $('#userViewId')[0].innerText
+    } else {
+        searchId = $('#userId')[0].innerText
+    }
 
     $.ajax({
-        url: `/user/${method}/${userId}`,
+        url: `/user/${method}/${searchId}`,
         type: 'GET',
         success: function (users) {
             for (let i=0; i<users.length; i++) { 
@@ -12,16 +18,16 @@
                     url: `/poems/getPoemById/${users[i]}`,
                     type: 'GET',
                     success: function (poem) {
-                        poems_list.append(`<li><a href="/poem/${poem._id}">${poem.title}</a></li>`)
+                        poems_list.append(`<li><a href="/poems/${poem._id}">${poem.title}</a></li>`)
                     },
                     error: function (err) {
-                        console.log(err);
+                        console.error(err);
                     }
                 });
             }
         },
         error: function (err) {
-            console.log(err);
+            console.error(err);
         }
     });
 }(window.jQuery))

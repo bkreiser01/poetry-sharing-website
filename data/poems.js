@@ -57,6 +57,8 @@ let setTotalTagCount = async (poemId) => {
    return updatedPoem;
 };
 
+import users from "./user.js";
+
 const exportedMethods = {
    /**
     * Get a poem by it's ID
@@ -139,8 +141,6 @@ const exportedMethods = {
       if (!updatedUser) {
          throw new Error("poems/addPoem: could not add to author poem list");
       }
-
-      console.log(gotPoem);
 
       return gotPoem;
    },
@@ -239,12 +239,8 @@ const exportedMethods = {
          );
       }
 
-      if (updatedPoem.link) {
-         updatedPoemData.link = validation.checkUrl(updatedPoem.link, "Link");
-      }
-
-      if (updatedPoem.submittedTags) {
-         updatedPoemData.submittedTags = updatedPoem.submittedTags; // TODO replace with validation
+      if (updatedPoem.linkInput) {
+         updatedPoemData.link = validation.checkUrl(updatedPoem.linkInput, "Link");
       }
 
       if (updatedPoem.totalTagCount) {
@@ -261,10 +257,6 @@ const exportedMethods = {
          );
       }
 
-      if (updatedPoem.comments) {
-         updatedPoemData.comments = updatedPoem.comments; // TODO replace with validation
-      }
-
       if (updatedPoem.private) {
          updatedPoemData.private = validation.checkBool(
             updatedPoem.private,
@@ -273,15 +265,16 @@ const exportedMethods = {
       }
 
       const poemCollection = await poems();
-      let newPoem = await poemCollection.findOneAndUpdate(
+      let returnedPoem = await poemCollection.findOneAndUpdate(
          { _id: new ObjectId(id) },
          { $set: updatedPoemData },
          { returnDocument: "after" }
       );
-      if (newPoem.lastErrorObject.n === 0)
-         throw [404, `Could not update the poem with id ${id}`];
 
-      return newPoem.value;
+      if (!returnedPoem)
+         throw new Error("Could not update poem");
+
+      return returnedPoem;
    },
 
    /**

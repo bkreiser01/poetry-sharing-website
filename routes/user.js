@@ -1,13 +1,15 @@
 // Package Imports
 import { Router } from "express";
 const router = Router();
+import xss from "xss";
 
 // Local Imports
 import validation from "../helpers/validation.js";
 import user from "../data/user.js";
 
 
-let userRender = async (currentUser, obj) => {
+let userRender = async (userId, obj) => {
+    let currentUser = await user.getById(userId._id)
     let accountAge = await user.calulcateAccountAge(currentUser._id)
     let defaultParams = {
         layout: "default",
@@ -18,6 +20,7 @@ let userRender = async (currentUser, obj) => {
             accountAge.months + " Month(s) " +
             accountAge.days + " Day(s)",
         bio: currentUser.bio,
+        email:currentUser.email,
     }
     return {...defaultParams, ...obj}
 }
@@ -28,7 +31,6 @@ let userRenderPublic = async (userId, obj) => {
     let defaultParams = {
         layout: "default",
         title: `${userData.username}'s ${obj.title}`,
-        userId: userId,
         username: userData.username,
         account_age: 
             accountAge.years + " Year(s) " +
@@ -138,12 +140,51 @@ router.route('/edit')
             return res.status(404).render('error', { error: e.message });
         }
     })
+    .patch(async (req, res) => {
+        try {
+            let userData
+
+            if (req.body.username != undefined) {
+                req.body.username = validation.checkUsername(xss(req.body.username), "username")
+                userData = await user.updateUsername(req.session.user._id, req.body.username)
+                req.session.user.username = req.body.username
+            }
+
+            if (req.body.email != undefined) {
+                req.body.email = validation.checkEmail(xss(req.body.email), "email")
+                userData = await user.updateEmail(req.session.user._id, req.body.email)
+                req.session.user.email = req.body.email
+            }
+
+            if (req.body.password != undefined) {
+                req.body.password = validation.checkPassword(xss(req.body.password), "password")
+                userData = await user.updatePassword(req.session.user._id, req.body.password)
+            }
+
+            if (req.body.bio != undefined) {
+                req.body.bio = validation.checkString(xss(req.body.bio), "bio")
+                userData = await user.updateBio(req.session.user._id, req.body.bio)
+                req.session.user.bio = req.body.bio
+            }
+
+            if (userData == undefined) {
+                return res.status(200).json({ success: "No fields were updated" });
+            }
+            return res.status(200).json({ success: "User updated successfully" });
+
+        } catch (e) {
+            return res.status(500).json({ error: e.message });
+        } 
+    })
 
 router.route('/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
             return res.render("user-view", await userRenderPublic(req.params.id, {
                 title: "Account",
+                userId: req.session.user._id,
+                userViewId: req.params.id,
                 poems: true
             }));
         } catch (e) {
@@ -155,8 +196,11 @@ router.route('/:id/followers')
 
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
             return res.render("user-view", await userRenderPublic(req.params.id, {
                 title: "Followers",
+                userId: req.session.user._id,
+                userViewId: req.params.id,
                 followers: true
             }));   
         } catch (e) {
@@ -167,8 +211,11 @@ router.route('/:id/followers')
 router.route('/:id/following')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
             return res.render("user-view", await userRenderPublic(req.params.id, {
                 title: "Following",
+                userId: req.session.user._id,
+                userViewId: req.params.id,
                 following: true
             }));   
         } catch (e) {
@@ -176,10 +223,27 @@ router.route('/:id/following')
         }
     })
 
-//Public User Routes
+router.route('/:id/tagged-poems')
+    .get(async (req, res) => {
+        try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+            return res.render("user-view", await userRenderPublic(req.params.id, {
+                title: "Tagged Poems",
+                userId: req.session.user._id,
+                userViewId: req.params.id,
+                tagged_oems: true
+            }));   
+        } catch (e) {
+            return res.status(404).render('error', { error: e.message });
+        }
+    })
+
+
 router.route('/searchByUsername/:username')
     .get(async (req, res) => {
         try {
+            req.params.username = validation.checkUsername(xss(req.params.username), "username")
+
             // Get the user
             let userData = await user.searchByUsername(req.params.username);
 
@@ -193,6 +257,8 @@ router.route('/searchByUsername/:username')
 router.route('/searchById/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             // Get the user
             let userData = await user.getById(req.params.id);
 
@@ -208,6 +274,8 @@ router.route('/searchById/:id')
 router.route('/getPoems/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             // Get the user
             let userData = await user.getById(req.params.id);
 
@@ -221,6 +289,8 @@ router.route('/getPoems/:id')
 router.route('/getLikedPoems/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             // Get the user
             let userData = await user.getById(req.params.id);
 
@@ -234,6 +304,8 @@ router.route('/getLikedPoems/:id')
 router.route('/getTaggedPoems/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             // Get the user
             let userData = await user.getById(req.params.id);
 
@@ -247,6 +319,8 @@ router.route('/getTaggedPoems/:id')
 router.route('/getFollowers/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             // Get the user
             let userData = await user.getById(req.params.id);
 
@@ -257,11 +331,47 @@ router.route('/getFollowers/:id')
         }
     })
 
-router.route('/getFollowing/:id')
+router.route('/following/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
             // Get the user
             let userData = await user.getById(req.params.id);
+
+            // Return the user
+            return res.status(200).json(userData.following);
+        } catch (e) {
+            return res.status(500).json({ error: e.message });
+        }
+    })
+    .post(async (req, res) => {
+        try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
+            if (!req.session.user) {
+                return res.status(401).json({ error: "You must be logged in to follow a user" });
+            }
+
+            // Follow the user
+            let userData = await user.addFollowing(req.session.user._id, req.params.id);
+
+            // Return the user
+            return res.status(200).json(userData.following);
+        } catch (e) {
+            return res.status(500).json({ error: e.message });
+        }
+    })
+    .delete(async (req, res) => {
+        try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+
+            if (!req.session.user) {
+                return res.status(401).json({ error: "You must be logged in to unfollow a user" });
+            }
+
+            // Unfollow the user
+            let userData = await user.deleteFollowing(req.session.user._id, req.params.id);
 
             // Return the user
             return res.status(200).json(userData.following);
@@ -273,6 +383,8 @@ router.route('/getFollowing/:id')
 router.route('/getHistory/:id')
     .get(async (req, res) => {
         try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+            
             // Get the user
             let userData = await user.getById(req.params.id);
 
@@ -281,19 +393,5 @@ router.route('/getHistory/:id')
         } catch (e) {
             return res.status(500).json({ error: e.message });
         }
-    })
-
-//Private User Routes. MUST BE AUTHENTICATED TO USE!!!
-router.route('/delete')
-    .delete(async (req, res) => {
-        try {
-            // Delete the user
-            let userData = await user.deleteUser(req.session.user._id);
-
-            // Log the user out
-            return res.redirect('/logout')
-        } catch (e) {
-            return res.status(500).json({ error: e.message });
-        }   
     })
 export default router
