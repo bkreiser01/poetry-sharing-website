@@ -71,7 +71,7 @@ router
             .render("error", { title: "Error", error: e });
       }
 
-      priv = priv === "true" ? true : false; // priv to true if "true", false otherwiser
+      // priv = false; // priv to true if "true", false otherwiser
 
       // add poem to poems collection
       let newPoem;
@@ -220,7 +220,10 @@ router
       }
 
       if (checkIsAuthor(userId, safeId)) {
-         return res.render("poems/edit", { poem: poem });
+         return res.render("poems/edit", {
+            title: `Edit ${poem.title}`,
+            poem: poem,
+         });
       }
 
       // User is not the editor so redirect to view page

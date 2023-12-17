@@ -98,3 +98,14 @@ import validation from "/public/js/validation.js";
       }
    });
 })(window.jQuery);
+
+
+$(window).on("load", function () {
+
+   let removeInvalidHTML = () => {
+      $("div").removeAttr("cm-not-content");
+      $("span").removeAttr("cm-text");
+      $("textarea").removeAttr("autocorrect");
+   };
+   removeInvalidHTML();
+});
