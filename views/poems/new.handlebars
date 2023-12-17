@@ -1,38 +1,33 @@
 <main class="write-poem-container">
    <h2>Write a new poem</h2>
+
    <form action="/poems/new" method="POST" class="new-poem-form" id="new-poem-form">
       <div class="new-poem-title">
-         <label for="title">
+         <label for="title_input">
             {{!-- Title: --}}
-            <input type="text" name="title" placeholder="Poem Title" value="{{poem.title}}" class="full-width-input">
+            <input type="text" name="title" id="title_input" placeholder="Poem Title" value="{{poem.title}}" class="full-width-input">
          </label>
-         <span></span>
+         <span id="title_error" class="error"></span><br>
       </div>
 
       <div class="new-poem-body">
-
-         <label for="body">
+         <span id="body_error" class="error"></span><br>
+         <label for="poem-body-area">
             {{!-- Body: --}}
             <textarea name="body" placeholder="Write your poem here!" id="poem-body-area">{{poem.body}}</textarea>
          </label>
       </div>
 
       <div class="new-poem-others">
-         <label for="link">
+         <label for="reading-link">
             Link to reading
             <input type="url" name="link" id="reading-link" value="{{poem.link}}">
          </label>
-         <label for="private">
-            Visibility:
-            <select name="private" value="on" id="private-checkbox">
-               <option value="false">Public</option>
-               <option value="true">Private</option>
-            </select>
-         </label>
+         <span id="link_error" class="error"></span><br>
       </div>
 
       <div class="new-poem-submit">
-         <button type="submit" id="submit-poem-button">Submit Poem</button>
+         <input type="submit" id="submit-poem-button" value="Submit Poem"></input>
       </div>
 
    </form>
@@ -42,4 +37,5 @@
    <script>
       const easyMDE = new EasyMDE({ element: document.getElementById('poem-body-area') });
    </script>
+   <script type='module' src="/public/js/poems/new-poem.js"></script>
 </main>

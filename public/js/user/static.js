@@ -3,7 +3,12 @@
         globalTagsList = $('#global-fav-tags'),
         follower_count = $('#follower_count')[0],
         following_count = $('#following_count')[0],
-        userId = $('#userId')[0].innerText
+        userId = $('#userId')[0].innerText,
+        ViewedUserId = $('#userViewId').text();
+
+        if(ViewedUserId == ""){
+            ViewedUserId = userId;
+        }
 
     
 
@@ -30,10 +35,14 @@
     });
 
     $.ajax({
-        url: `/tags/popular`,
+        url: `/tags/info/popular`,
         type: 'GET',
         success: function (tags) {
-            for (let i=0; i<tags.length; i++) { 
+            let targetLength = tags.length;
+            if(tags.length > 3){
+                targetLength = 3;
+            }
+            for (let i = 0; i < targetLength; i++) { 
                 globalTagsList.append(`<li><a href="/tags/${tags[i]._id}">${tags[i].tagString}</a></li>`)
             }
         },
@@ -43,7 +52,7 @@
     });
 
     $.ajax({
-        url: `/user/${userId}/favorite-tags`,
+        url: `/user/${ViewedUserId}/favorite-tags`,
         type: 'GET',
         success: function (tags) {
             for (let i=0; i<tags.length; i++) { 

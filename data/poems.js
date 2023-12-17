@@ -126,13 +126,15 @@ const exportedMethods = {
       priv
    ) {
       timeSubmitted = validation.checkDate(timeSubmitted, "timeSubmitted");
-      title = validation.checkString(title.trim(), "title");
-      body = validation.checkString(body.trim(), "body");
+      title = validation.checkTitle(title.trim(), "title");
+      body = validation.checkBody(body.trim(), "body");
       userId = validation.checkId(userId.trim(), "userId");
       if (!!link.trim()) {
          link = validation.checkUrl(link.trim(), "link");
       }
       priv = validation.checkBool(priv, "priv");
+
+      if (title === "") title = "Untitled";
 
       const newPoem = {
          timeSubmitted: timeSubmitted,
@@ -240,12 +242,16 @@ const exportedMethods = {
     * @returns
     */
    async updatePoemPatch(id, updatedPoem) {
-      // TODO validate as checking if there is a field
       id = validation.checkId(id, "Id");
+      if (!updatedPoem) throw new Error("No new poem data supplied");
+      if (typeof updatedPoem !== "object")
+         throw new Error("updatedPoem must be of type 'object'");
 
       const updatedPoemData = {};
       if (updatedPoem.timeSubmitted) {
-         updatedPoemData.timeSubmitted = updatedPoem.timeSubmitted; // TODO replace with validation
+         updatedPoemData.timeSubmitted = validation.checkDate(
+            updatedPoem.timeSubmitted
+         );
       }
 
       if (updatedPoem.title) {
@@ -316,8 +322,6 @@ const exportedMethods = {
     * @param {string | ObjectId} tagId
     */
    async addTag(poemId, tagId) {
-      // TODO check that the tag exists in tags collection atleast in routing
-
       poemId = validation.checkId(poemId, "PoemId");
       tagId = validation.checkId(tagId, "TagId");
       const poemCollection = await poems();

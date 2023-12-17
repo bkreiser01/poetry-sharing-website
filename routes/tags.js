@@ -11,16 +11,26 @@ import users from '../data/user.js'
 /*
 * Routes: /tags
 * /popular
-* /testing
+* /info/popular
 * /createNewTag
-* /search
 * /search/:searchString
 * /addTagToPoem
 * /:id
+* /info/:id
 */
 
 
 router.route('/popular')
+    .get(async (req, res) => {
+        try {
+            let popularTags = await tags.getMostPopularTags();
+            res.status(200).render("tags/popular", { title: "Popular Tags", popularTags: popularTags });
+        } catch (e) {
+            res.status(500).json({ error: e });
+        }
+}); 
+
+router.route('/info/popular')
     .get(async (req, res) => {
         try {
             let popularTags = await tags.getMostPopularTags();
@@ -33,11 +43,11 @@ router.route('/popular')
 router.route("/createNewTag").post(async (req, res) => {
     //Route to add new tag to the database
     //Validate here
-    
+
     //Add to database
-    let UserID = req.body.taggingUserId;
-    let TagString = req.body.newTagString;
-    let PoemID = req.body.newTaggedPoem;
+    let UserID = xss(req?.body?.taggingUserId);
+    let TagString = xss(req?.body?.newTagString);
+    let PoemID = xss(req?.body?.newTaggedPoem);
     let newTag;
     if(PoemID !== ""){
         try{
@@ -52,7 +62,7 @@ router.route("/createNewTag").post(async (req, res) => {
             console.log(e);
         }
     }
-    
+
     //Return newly created tag object
     return newTag;
 });
@@ -61,9 +71,9 @@ router.route("/createNewTag").post(async (req, res) => {
 router.route("/search/:searchString").get(async (req, res) => {
     //Route to search for tags in the database
     //Validate here
-    
+
     //Get search results
-    let searchString = req.params.searchString;
+    let searchString = xss(req?.params?.searchString);
     let foundTags;
     try{
         foundTags = await tags.searchTags(searchString);
@@ -74,15 +84,15 @@ router.route("/search/:searchString").get(async (req, res) => {
     //Load search result page
     res.status(200).render("tags/search", { title: "Tag Search", foundTags: foundTags });
 });
-    
+
 
 router.route("/addTagToPoem").post(async (req, res) => {
     //Route to add tag to poem
     //Validate here
-    
+
     //Add to database
-    let TagString = req.body.tagString;
-    let PoemID = req.body.taggedPoemId;
+    let TagString = xss(req?.body?.tagString);
+    let PoemID = xss(req?.body?.taggedPoemId);
     let updatedTag;
     try{
         updatedTag = await tags.addTagToPoem(TagString, PoemID);
@@ -102,7 +112,7 @@ router.route('/:id')
             let tagId = validation.checkId(xss(req.params.id), "Tag id");
             foundTag = await tags.getTagById(tagId);
 
-            res.status(200).render("tags/view", { 
+            res.status(200).render("tags/view", {
                 Title: "Tag",
                 tagString: foundTag.tagString,
                 tagId: foundTag._id
