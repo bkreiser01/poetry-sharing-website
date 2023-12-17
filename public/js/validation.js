@@ -75,8 +75,17 @@ const validationMethods = {
      * 3) At least one number
      * 4) At least one special character @$!%*?&
      */
+    let pound = false
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
-      throw new Error('Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character')
+      for (let i = 0; i < password.length; i++) {
+         if (password[i] == "#") {
+            pound = true
+         }
+      }
+
+      if (!pound) {
+         throw new Error('Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character')
+      }
     }
 
       return password;
@@ -172,7 +181,7 @@ const validationMethods = {
 
    /**
     * Validate body
-    * @param {string} body
+    * @param {string} body 
     * @returns validated body string
     */
    checkBody(body) {
@@ -187,7 +196,7 @@ const validationMethods = {
 
    /**
     * Validate a url
-    * @param {string} linkStr
+    * @param {string} linkStr 
     * @returns validated url string
     */
    checkUrl(linkStr) {
@@ -199,20 +208,6 @@ const validationMethods = {
          throw new Error(`Link must be a valid url`);
       }
    },
-
-   /**
-    * Validate a selected tag
-    * @param {string} tagStr
-    * @returns validated selected tag
-    */
-      checkTag(tagStr) {
-         try {
-            tagStr = validationMethods.checkString(tagStr, "tag");
-         } catch (e) {
-            throw new Error(`You must select a tag`)
-         }
-         return tagStr;
-      },
 };
 
 export default validationMethods;
