@@ -220,7 +220,10 @@ router
       }
 
       if (checkIsAuthor(userId, safeId)) {
-         return res.render("poems/edit", { poem: poem });
+         return res.render("poems/edit", {
+            title: `Edit ${poem.title}`,
+            poem: poem,
+         });
       }
 
       // User is not the editor so redirect to view page

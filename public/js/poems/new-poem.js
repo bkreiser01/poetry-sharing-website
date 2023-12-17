@@ -13,7 +13,7 @@ import validation from "/public/js/validation.js";
          title = $("#title_input").val().trim(),
          body = $("#poem-body-area").val().trim(),
          linkInput = $("#reading-link").val().trim();
-         // priv = $("#private-checkbox").val();
+      // priv = $("#private-checkbox").val();
 
       let errors_exist = false;
       title_error.text("");
@@ -59,3 +59,13 @@ import validation from "/public/js/validation.js";
       return false;
    });
 })(window.jQuery);
+
+$(window).on("load", function () {
+
+   let removeInvalidHTML = () => {
+      $("div").removeAttr("cm-not-content");
+      $("span").removeAttr("cm-text");
+      $("textarea").removeAttr("autocorrect");
+   };
+   removeInvalidHTML();
+});

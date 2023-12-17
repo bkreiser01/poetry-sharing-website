@@ -5,17 +5,15 @@
       <div class="new-poem-title">
          <label for="title_input">
             {{!-- Title: --}}
-            <input type="text" name="title" id="title_input" placeholder="Poem Title" value="{{poem.title}}" class="full-width-input">
+            <input type="text" name="title" id="title_input" placeholder="Poem Title" value="{{poem.title}}"
+               class="full-width-input">
          </label>
          <span id="title_error" class="error"></span><br>
       </div>
 
       <div class="new-poem-body">
          <span id="body_error" class="error"></span><br>
-         <label for="poem-body-area">
-            {{!-- Body: --}}
-            <textarea name="body" placeholder="Write your poem here!" id="poem-body-area">{{poem.body}}</textarea>
-         </label>
+         <textarea name="body" placeholder="Write your poem here!" id="poem-body-area">{{poem.body}}</textarea>
       </div>
 
       <div class="new-poem-others">
