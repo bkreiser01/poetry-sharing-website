@@ -12,10 +12,14 @@
     $.ajax({
         url: `/user/${method}/${searchId}`,
         type: 'GET',
-        success: function (users) {
-            for (let i=0; i<users.length; i++) { 
+        success: function (poems) {
+            for (let i=0; i < poems.length; i++) { 
+                // this is a special case for the taggedpoems
+                if (typeof poems[i] === 'object') {
+                    poems[i] = poems[i].poemId
+                }
                 $.ajax({
-                    url: `/poems/getPoemById/${users[i]}`,
+                    url: `/poems/getPoemById/${poems[i]}`,
                     type: 'GET',
                     success: function (poem) {
                         poems_list.append(`<li><a href="/poems/${poem._id}">${poem.title}</a></li>`)

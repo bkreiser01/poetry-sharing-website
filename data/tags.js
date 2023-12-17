@@ -118,10 +118,9 @@ const exportedMethods = {
       //Validation
       tagString = validation.checkTagString(tagString, "Tag string");
       poemId = validation.checkId(poemId, "Poem id");
-
+      
       //Check if tag already exists
       let existingTag;
-      let createdTag;
       try{
          existingTag = await this.getTagByName(tagString);
       } catch (e){
@@ -216,7 +215,7 @@ const exportedMethods = {
          tagData[i] = currentTag
       }
 
-      return tagData.sort((a, b) => b.taggedPoemsId.length - a.taggedPoemsId.length);
+      return tagData.sort((a, b) => b.taggedPoemsId.length - a.taggedPoemsId.length).splice(0, 3);
    }
 };
 
