@@ -12,7 +12,7 @@ import tags from '../data/tags.js';
 * /popular
 * /testing
 * /createNewTag
-* /search
+* /search/:searchString
 * /addTagToPoem
 * /:id
 */
@@ -24,7 +24,7 @@ router.route('/popular')
 
         //Get array of tag objects, sorted by number of associated poems
         try {
-            let popularTags = await tagsData.getMostPopularTags();
+            let popularTags = await tags.getMostPopularTags();
             res.status(200).json(popularTags);
         } catch (e) {
             res.status(500).json({ error: e });
@@ -35,7 +35,7 @@ router.route('/popular')
 router.route("/testing")
     .get(async (req, res) => {
         //Route for testing tags
-        res.status(200).render("tagTest", { title: "Testing Tags" });
+        res.status(200).render("tags/testing", { title: "Testing Tags" });
 });
     
 
@@ -65,21 +65,33 @@ router.route("/createNewTag").post(async (req, res) => {
     return newTag;
 });
     
-
 router.route("/search").post(async (req, res) => {
     //Route to search for tags in the database
     //Validate here
+
+    //Set URL
+    let URL = "search/".concat(req.body.searchString);
+
+    //Redirect to search result page
+    res.redirect(URL);
+});
+
+
+router.route("/search/:searchString").get(async (req, res) => {
+    //Route to search for tags in the database
+    //Validate here
     
-    //Search for tag
-    let TagString = req.body.SearchTagString;
-    let FoundTag;
+    //Get search results
+    let searchString = req.params.searchString;
+    let foundTags;
     try{
-        FoundTag = await tags.getTagByName(TagString);
+        foundTags = await tags.searchTags(searchString);
     } catch (e) {
         console.log(e);
     }
 
     //Load search result page
+    res.status(200).render("tags/search", { title: "Tag Search", foundTags: foundTags });
 });
     
 
@@ -107,13 +119,16 @@ router.route('/:id')
         //Route to display poems associated with tag of given id
 
         //Get tag object from id
+        let foundTag;
         try {
-            req.params.id = validation.checkId(xss(req.params.id), "Tag id")
-            let tag = await tagsData.getTagById(req.params.id)
-            res.status(200).json(tag);
+            let tagId = validation.checkId(xss(req.params.id), "Tag id");
+            foundTag = await tags.getTagById(tagId);
         } catch (e) {
             res.status(500).json({ error: e })
         }
+
+        //Load tag page
+        res.status(200).json(foundTag);
 });
 
 

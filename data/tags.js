@@ -17,6 +17,9 @@
  * getTagByName:
  * Return tag object associated with given name string
  * 
+ * searchTags:
+ * Return array of tag objects that contain the given search string as part of the tagString
+ * 
  * createNewTag:
  * Create new tag and return its id (does not associate this tag with any poems)
  * 
@@ -75,6 +78,28 @@ const exportedMethods = {
       if (!foundTag) throw new Error("getTagByName: Tag not found");
 
       return foundTag;
+   },
+
+
+
+   /**
+    * Return array of tag objects that contain the given search string as part of the tagString
+    * @param {string} searchString
+    * @returns {Array.<Object>}
+   */
+   async searchTags(searchString) {
+      //Validation
+      searchString = validation.checkTagString(searchString, "Search string");
+
+      //Get tags
+      let foundTags = [];
+      foundTags.push(await tagCollection.find({ tagString: { $regex: searchString, $options: 'i' } }).toArray())
+      foundTags = foundTags.flat(Infinity)
+
+
+      //foundTags = await tagCollection.findOne({ tagString: tagString });
+
+      return foundTags;
    },
 
 
