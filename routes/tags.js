@@ -28,7 +28,7 @@ router.route('/popular')
         } catch (e) {
             res.status(500).json({ error: e });
         }
-});
+}); 
 
 router.route('/info/popular')
     .get(async (req, res) => {

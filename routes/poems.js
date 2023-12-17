@@ -49,7 +49,10 @@ router
 
       // Check the user submitted data
       if (!xss(req.body)) {
-         return res.render("poems/new", { title: "New Poem", error: "No input provided" });
+         return res.render("poems/new", {
+            title: "New Poem",
+            error: "No input provided",
+         });
       }
 
       // Validate input
@@ -63,10 +66,12 @@ router
          // else throw new Error(`Private input malformed`);
       } catch (e) {
          const status = 400;
-         return res.status(status).render("error", { title: "Error", error: e });
+         return res
+            .status(status)
+            .render("error", { title: "Error", error: e });
       }
 
-       
+      priv = priv === "true" ? true : false; // priv to true if "true", false otherwiser
 
       // add poem to poems collection
       let newPoem;
@@ -84,7 +89,9 @@ router
          }
       } catch (e) {
          const status = 400;
-         return res.status(status).render("error", { title: "Error", error: e });
+         return res
+            .status(status)
+            .render("error", { title: "Error", error: e });
       }
 
       // Add poem to user.poemIds
@@ -98,7 +105,9 @@ router
          }
       } catch (e) {
          const status = 400;
-         return res.status(status).render("error", { title: "Error", error: e });
+         return res
+            .status(status)
+            .render("error", { title: "Error", error: e });
       }
 
       // only redirect if everything is added successfully
@@ -121,9 +130,10 @@ router
          // check that the user is loged in and add this poem to their recentlyViewed
       } catch (e) {
          const status = 404;
-         return res
-            .status(status)
-            .render("error", { title: "Error", error: "Poem could not be found" });
+         return res.status(status).render("error", {
+            title: "Error",
+            error: "Poem could not be found",
+         });
       }
 
       try {
@@ -184,7 +194,9 @@ router
          const tagInfo = await tagData.deletePoemFromAllTags(safeId);
       } catch (e) {
          const status = 400;
-         return res.status(status).render("error", { title: "Error", error: e.message });
+         return res
+            .status(status)
+            .render("error", { title: "Error", error: e.message });
       }
 
       return res.redirect(200, "/user");
@@ -201,13 +213,17 @@ router
          poem = await poemData.getPoemById(safeId);
       } catch (e) {
          const status = 404;
-         return res
-            .status(status)
-            .render("error", { title: "Error", error: "Poem could not be found" });
+         return res.status(status).render("error", {
+            title: "Error",
+            error: "Poem could not be found",
+         });
+      }
+
+      if (checkIsAuthor(userId, safeId)) {
+         return res.render("poems/edit", { poem: poem });
       }
 
       // User is not the editor so redirect to view page
-
       return res.redirect(`/poems/${safeId}`);
    })
    .patch(async (req, res) => {
@@ -220,9 +236,10 @@ router
          poem = await poemData.getPoemById(safeId);
       } catch (e) {
          const status = 404;
-         return res
-            .status(status)
-            .render("error", { title: "Error", error: "Poem could not be found" });
+         return res.status(status).render("error", {
+            title: "Error",
+            error: "Poem could not be found",
+         });
       }
 
       // TODO make sure new author check works
@@ -235,11 +252,12 @@ router
       //       .render("error", { error: "You are not the author of this poem" });
       // }
 
-      if (checkIsAuthor(userId, safeId)) {
+      if (!checkIsAuthor(userId, safeId)) {
          const status = 403;
-         return res
-            .status(status)
-            .render("error", { title: "Error", error: "You are not the author of this poem" });
+         return res.status(status).render("error", {
+            title: "Error",
+            error: "You are not the author of this poem",
+         });
       }
 
       //  user is logged in and the author
@@ -268,7 +286,9 @@ router
          return res.redirect(200, `/poems/${safeId}`);
       } catch (e) {
          let status = 400;
-         return res.status(status).render("error", { title: "Error", error: e.toString() });
+         return res
+            .status(status)
+            .render("error", { title: "Error", error: e.toString() });
       }
    });
 
