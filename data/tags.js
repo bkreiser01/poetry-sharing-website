@@ -212,11 +212,9 @@ const exportedMethods = {
          let currentTag = await exportedMethods.getTagById(tagData[i].toString())
          tagData[i] = currentTag
       }
+
       tagData = tagData.sort((a, b) => b.taggedPoemsId.length - a.taggedPoemsId.length).splice(0, 3)
 
-      for (let i in tagData) {
-         tagData[i] = tagData[i]._id
-      }
       return tagData;
    }
 };

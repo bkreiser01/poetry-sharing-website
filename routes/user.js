@@ -329,7 +329,7 @@ router.route('/getTaggedPoems/:id')
         }
     })
 
-router.route('/getFollowers/:id')
+router.route('/followers/:id')
     .get(async (req, res) => {
         try {
             req.params.id = validation.checkId(xss(req.params.id), "id")
