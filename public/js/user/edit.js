@@ -7,6 +7,7 @@ import validation from '/public/js/validation.js';
         password_error = $('#password_error'),
         password_confirm_error = $('#password_confirm_error'),
         bio_error = $('#bio_error'),
+        profilePic_error = $('#profilePic_error'),
         error = $('#error-edit'),
         success = $('#success')
 
@@ -18,7 +19,7 @@ import validation from '/public/js/validation.js';
             password = $('#password_input').val(),
             password_confirm = $('#password_confirm').val(),
             bio = $('#bio').val().trim(),
-            submit = $('#submit')
+            profilePic = $('#profilePic_input').val().trim()
 
         let errors_exist = false
         username_error.text('')
@@ -26,6 +27,7 @@ import validation from '/public/js/validation.js';
         password_error.text('')
         password_confirm_error.text('')
         bio_error.text('')
+        profilePic_error.text('')
         error.text('')
         success.text('')
 
@@ -77,6 +79,17 @@ import validation from '/public/js/validation.js';
             } catch (e) {
                 console.error(e.message)
                 bio_error.text(e.message)
+                errors_exist = true
+            }
+        }
+
+        if (profilePic != "") {
+            try {
+                profilePic = validation.checkUrl(profilePic)
+                data.profilePicture = profilePic
+            } catch (e) {
+                console.error(e.message)
+                profilePic_error.text(e.message)
                 errors_exist = true
             }
         }

@@ -231,97 +231,88 @@ let p19 = await poems.addPoem(
 );
 
 let p20 = await poems.addPoem(
-   new Date(),
-   "Poem 20",
-   "This is poem 20",
-   jvasa_id.toString(),
-   "",
-   false
-);
+    new Date(),
+    "Poem 20",
+    "This is poem 20",
+    jvasa_id.toString(),
+    "",
+    false
+)
 
-console.log("Creating Tags");
-let t1 = await tags.createNewTag("nice");
-t1 = (await tags.getTagById(t1)).tagString;
-let t2 = await tags.createNewTag("happy");
-t2 = (await tags.getTagById(t2)).tagString;
-let t3 = await tags.createNewTag("sad");
-t3 = (await tags.getTagById(t3)).tagString;
-let t4 = await tags.createNewTag("funny");
-t4 = (await tags.getTagById(t4)).tagString;
-let t5 = await tags.createNewTag("scary");
-t5 = (await tags.getTagById(t5)).tagString;
+console.log("Creating Tags")
+let t1 = await tags.createNewTag("nice")
+t1 = (await tags.getTagById(t1)).tagString
+let t2 = await tags.createNewTag("happy")
+t2 = (await tags.getTagById(t2)).tagString
+let t3 = await tags.createNewTag("sad")
+t3 = (await tags.getTagById(t3)).tagString
+let t4 = await tags.createNewTag("funny")
+t4 = (await tags.getTagById(t4)).tagString
+let t5 = await tags.createNewTag("scary")
+t5 = (await tags.getTagById(t5)).tagString
 
-console.log("Populate User Bios");
-await users.updateBio(
-   bkrei_id,
-   "My name is Brandon! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology."
-);
-await users.updateBio(
-   rshag_id,
-   "My name is Roger! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology."
-);
-await users.updateBio(
-   jvasa_id,
-   "My name is Joe! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology."
-);
-await users.updateBio(
-   ahuet_id,
-   "My name is Adrien! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology."
-);
+console.log("Populate Profile Pictures")
+await users.updateProfilePicture(bkrei_id, "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.istockphoto.com%2Fvectors%2Fwhite-cat-wearing-sunglasses-eyeglasses-shining-lenses-cute-cartoon-vector-id1048770966%3Fk%3D6%26m%3D1048770966%26s%3D170667a%26w%3D0%26h%3D_0Cf7aD3ebVMRhywRlIxcgSeoCpyRtiWfemmkJ6Z32Q%3D&f=1&nofb=1&ipt=c06ad6dfdbc0deb1725e3146263ec25209f156892ec16561a40f8cc86a3c31be&ipo=images")
 
-console.log("Populate user tagged poems");
-await users.addTagToPoem(bkrei_id, t2, p6._id.toString());
-await users.addTagToPoem(bkrei_id, t2, p7._id.toString());
-await users.addTagToPoem(bkrei_id, t2, p8._id.toString());
+console.log("Populate User Bios")
+await users.updateBio(bkrei_id, "My name is Brandon! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology.")
+await users.updateBio(rshag_id, "My name is Roger! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology.")
+await users.updateBio(jvasa_id, "My name is Joe! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology.")
+await users.updateBio(ahuet_id, "My name is Adrien! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology.")
 
-await users.addTagToPoem(bkrei_id, t1, p1._id.toString());
-await users.addTagToPoem(bkrei_id, t1, p2._id.toString());
-await users.addTagToPoem(bkrei_id, t1, p3._id.toString());
-await users.addTagToPoem(bkrei_id, t1, p4._id.toString());
-await users.addTagToPoem(bkrei_id, t1, p5._id.toString());
+console.log("Populate user tagged poems")
+await users.addTagToPoem(bkrei_id, t2, p6._id.toString())
+await users.addTagToPoem(bkrei_id, t2, p7._id.toString())
+await users.addTagToPoem(bkrei_id, t2, p8._id.toString())
 
-await users.addTagToPoem(rshag_id, t2, p6._id.toString());
-await users.addTagToPoem(rshag_id, t2, p7._id.toString());
-await users.addTagToPoem(rshag_id, t2, p8._id.toString());
-await users.addTagToPoem(rshag_id, t2, p9._id.toString());
-await users.addTagToPoem(ahuet_id, t3, p10._id.toString());
-await users.addTagToPoem(ahuet_id, t3, p11._id.toString());
-await users.addTagToPoem(ahuet_id, t3, p12._id.toString());
-await users.addTagToPoem(jvasa_id, t4, p13._id.toString());
-await users.addTagToPoem(jvasa_id, t4, p14._id.toString());
+await users.addTagToPoem(bkrei_id, t1, p1._id.toString())
+await users.addTagToPoem(bkrei_id, t1, p2._id.toString())
+await users.addTagToPoem(bkrei_id, t1, p3._id.toString())
+await users.addTagToPoem(bkrei_id, t1, p4._id.toString())
+await users.addTagToPoem(bkrei_id, t1, p5._id.toString())
 
-console.log("Populate user favorites");
-await users.addFavorite(bkrei_id, p1._id.toString());
-await users.addFavorite(bkrei_id, p2._id.toString());
-await users.addFavorite(rshag_id, p3._id.toString());
-await users.addFavorite(rshag_id, p4._id.toString());
-await users.addFavorite(jvasa_id, p5._id.toString());
-await users.addFavorite(jvasa_id, p6._id.toString());
-await users.addFavorite(ahuet_id, p7._id.toString());
 
-console.log("Populate user recently viewed");
-await users.addRecentlyViewedPoem(bkrei_id, p8._id.toString());
-await users.addRecentlyViewedPoem(bkrei_id, p9._id.toString());
-await users.addRecentlyViewedPoem(rshag_id, p10._id.toString());
-await users.addRecentlyViewedPoem(rshag_id, p11._id.toString());
-await users.addRecentlyViewedPoem(jvasa_id, p12._id.toString());
-await users.addRecentlyViewedPoem(jvasa_id, p13._id.toString());
-await users.addRecentlyViewedPoem(ahuet_id, p14._id.toString());
-await users.addRecentlyViewedPoem(ahuet_id, p15._id.toString());
+await users.addTagToPoem(rshag_id, t2, p6._id.toString())
+await users.addTagToPoem(rshag_id, t2, p7._id.toString())
+await users.addTagToPoem(rshag_id, t2, p8._id.toString())
+await users.addTagToPoem(rshag_id, t2, p9._id.toString())
+await users.addTagToPoem(ahuet_id, t3, p10._id.toString())
+await users.addTagToPoem(ahuet_id, t3, p11._id.toString())
+await users.addTagToPoem(ahuet_id, t3, p12._id.toString())
+await users.addTagToPoem(jvasa_id, t4, p13._id.toString())
+await users.addTagToPoem(jvasa_id, t4, p14._id.toString())
 
-console.log("Populate user following");
-await users.addFollowing(bkrei_id, rshag_id);
-await users.addFollowing(bkrei_id, jvasa_id);
-await users.addFollowing(rshag_id, jsmith_id);
-await users.addFollowing(rshag_id, bkrei_id);
-await users.addFollowing(ahuet_id, jvasa_id);
-await users.addFollowing(ahuet_id, jdoe_id);
-await users.addFollowing(jvasa_id, jsmith_id);
-await users.addFollowing(jvasa_id, ahuet_id);
-await users.addFollowing(jdoe_id, jvasa_id);
-await users.addFollowing(jdoe_id, jsmith_id);
-await users.addFollowing(jsmith_id, ahuet_id);
-await users.addFollowing(jsmith_id, jvasa_id);
+console.log("Populate user favorites")
+await users.addFavorite(bkrei_id, p1._id.toString())
+await users.addFavorite(bkrei_id, p2._id.toString())
+await users.addFavorite(rshag_id, p3._id.toString())
+await users.addFavorite(rshag_id, p4._id.toString())
+await users.addFavorite(jvasa_id, p5._id.toString())
+await users.addFavorite(jvasa_id, p6._id.toString())
+await users.addFavorite(ahuet_id, p7._id.toString())
 
-console.log("Done!");
-process.exit();
+console.log("Populate user recently viewed")
+await users.addRecentlyViewedPoem(bkrei_id, p8._id.toString())
+await users.addRecentlyViewedPoem(bkrei_id, p9._id.toString())
+await users.addRecentlyViewedPoem(rshag_id, p10._id.toString())
+await users.addRecentlyViewedPoem(rshag_id, p11._id.toString())
+await users.addRecentlyViewedPoem(jvasa_id, p12._id.toString())
+await users.addRecentlyViewedPoem(jvasa_id, p13._id.toString())
+await users.addRecentlyViewedPoem(ahuet_id, p14._id.toString())
+await users.addRecentlyViewedPoem(ahuet_id, p15._id.toString())
+
+console.log("Populate user following")
+await users.addFollowing(bkrei_id, rshag_id)
+await users.addFollowing(bkrei_id, jvasa_id)
+await users.addFollowing(rshag_id, jsmith_id)
+await users.addFollowing(rshag_id, bkrei_id)
+await users.addFollowing(ahuet_id, jvasa_id)
+await users.addFollowing(ahuet_id, jdoe_id)
+await users.addFollowing(jvasa_id, jsmith_id)
+await users.addFollowing(jvasa_id, ahuet_id)
+await users.addFollowing(jdoe_id, jvasa_id)
+await users.addFollowing(jdoe_id, jsmith_id)
+await users.addFollowing(jsmith_id, ahuet_id)
+await users.addFollowing(jsmith_id, jvasa_id)
+
+console.log("Done!")

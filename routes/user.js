@@ -19,6 +19,7 @@ let userRender = async (userId, obj) => {
             accountAge.months + " Month(s) " +
             accountAge.days + " Day(s)",
         bio: currentUser.bio,
+        profilePicture: currentUser.profilePicture,
         email:currentUser.email,
     }
     return {...defaultParams, ...obj}
@@ -36,6 +37,7 @@ let userRenderPublic = async (userId, obj) => {
             accountAge.months + " Month(s) " +
             accountAge.days + " Day(s)",
         bio: userData.bio,
+        profilePicture: userData.profilePicture,
     }
     delete obj.title
     return {...defaultParams, ...obj}
@@ -164,6 +166,12 @@ router.route('/edit')
                 req.body.bio = validation.checkString(xss(req.body.bio), "bio")
                 userData = await user.updateBio(req.session.user._id, req.body.bio)
                 req.session.user.bio = req.body.bio
+            }
+
+            if (req.body.profilePicture != undefined) {
+                req.body.profilePicture = validation.checkUrl(xss(req.body.profilePicture), "profilePicture")
+                userData = await user.updateProfilePicture(req.session.user._id, req.body.profilePicture)
+                req.session.user.profilePicture = req.body.profilePicture
             }
 
             if (userData == undefined) {
@@ -323,6 +331,25 @@ router.route('/getTaggedPoems/:id')
 
             // Return the user
             return res.status(200).json(userData.taggedPoems);
+        } catch (e) {
+            return res.status(500).json({ error: e.message });
+        }
+    })
+
+router.route('/getProfilePic/:username')
+    .get(async (req, res) => {
+        try {
+            let username = validation.checkUsername(xss(req.params.username), "username")
+
+            // Get the user
+            let userData = await user.searchByUsername(username);
+
+            if (userData.length == 0 || userData[0].username != username) {
+                return res.status(404).json({ error: "User not found" });
+            }
+
+            // Return the user
+            return res.status(200).json({profile_pic_link : userData[0].profilePicture});
         } catch (e) {
             return res.status(500).json({ error: e.message });
         }

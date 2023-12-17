@@ -37,12 +37,12 @@ import tagsData from './tags.js';
 import poemsData from './poems.js';
 
 let userCollection = await users();
-const saltRounds = 1;
+const saltRounds = 10;
 
 /**
  * Local helper function to handle id checks
  * 
- * @param {*} id - An ObjectId as either a string or the ObjectId itself
+ * @param {string|ObjectId} id - An ObjectId as either a string or the ObjectId itself
  * @returns the given ObjectId
  */
 let checkId = (id) => {
@@ -171,6 +171,7 @@ const exportedMethods = {
             timeAccountMade: new Date(),
             private: (privacy == "private"),
             bio: "",
+            profilePicture: "http://localhost:3000/public/assets/profile-pic.jpg",
             poemIds: [],
             taggedPoems: [],
             tagsUsed: [],
@@ -307,7 +308,15 @@ const exportedMethods = {
 
         return await updateUser(user._id, user)
     },
+    async updateProfilePicture(id, newProfilePicture) {
+        newProfilePicture = validation.checkUrl(newProfilePicture)
 
+        let user = await exportedMethods.getById(id)
+        user.profilePicture = newProfilePicture
+
+        console.log(user.profilePicture)
+        return await updateUser(user._id, user)
+    },
     /**
      *  Adds a poem to the user with the given ObjectId
      * 
