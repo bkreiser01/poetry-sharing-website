@@ -45,7 +45,7 @@ router.route("/tags/:searchTerm")
   .get(async (req, res) => {
     try {
         let searchTerm = validation.checkString(xss(req.params.searchTerm), "searchTerm");
-        let tagList = await tagData.searchTagByName(searchTerm);
+        let tagList = await tagData.searchTags(searchTerm);
         return res.status(200).json(tagList);
     } catch (e) {
         return res.status(500).json({ error: e.toString() });
