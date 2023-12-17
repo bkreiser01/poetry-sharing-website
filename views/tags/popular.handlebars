@@ -1,0 +1,10 @@
+{{!-- Page for displaying popular tags --}}
+<main>
+    <p id="current-tagid"hidden="">{{tagId}}</p>
+    <h2>Popular Tags:</h2>
+    <ol id="tag-list">
+        {{#each popularTags}}
+            <li><a href="/tags/{{_id}}">{{tagString}}</a></li>
+        {{/each}}
+    </ol>
+</main>
