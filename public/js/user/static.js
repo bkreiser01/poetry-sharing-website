@@ -4,7 +4,11 @@
         follower_count = $('#follower_count')[0],
         following_count = $('#following_count')[0],
         userId = $('#userId')[0].innerText,
-        ViewedUserId = $('#userViewId')[0].innerText;
+        ViewedUserId = $('#userViewId').text();
+
+        if(ViewedUserId == ""){
+            ViewedUserId = userId;
+        }
 
     
 
