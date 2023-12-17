@@ -1,4 +1,5 @@
 <main class="poem-container">
+   <p id="poemViewId" hidden>{{poem._id}}</p>
    <div class="poem-header">
       <div class="author-picture">author pp</div>
       <div class="poem-header-metadata">
@@ -27,26 +28,7 @@
    <div class="poem-body">
       {{!-- TODO markdown render --}}
       <div class="poem-markdown">{{{poem.body}}}</div>
-
-      <ol class="poem-comments">
-         <h2>Comments</h2>
-         {{#each poem.comments as |comment|}}
-         {{!-- TODO Only top-level comments, AJAX for comment replies? or
-         partial? --}}
-         {{#unless comment.repliesTo}}
-         {{!-- TODO AJAX for comment author? --}}
-         <li class="poem-comment-container">
-            <div class="poem-comment-author-info">
-               <p>{{comment.userId}}</p>
-               <p>{{comment.tagId}}</p>
-            </div>
-            <p class="comment-string">
-               {{{comment.commentString}}}
-            </p>
-         </li>
-         {{/unless}}
-         {{/each}}
-      </ol>
+      {{> comment/comments-section}}
    </div>
 
    <ol class="poem-tags">

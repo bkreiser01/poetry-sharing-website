@@ -118,14 +118,14 @@ footer {
     padding: 15px;
 }
 
-.poem-comments {
+#poem-comments {
     flex: 1;
     overflow-y: auto; /* Makes the comment window scrollable if necessary*/
     padding: 0;
     margin: 0;
 }
 
-.poem-comments h2 {
+#poem-comments h2 {
     text-align: center;
     margin: 0;
 }
