@@ -118,16 +118,38 @@ footer {
     padding: 15px;
 }
 
-.poem-comments {
+#poem-comment-section {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.poem-comments-container {
     flex: 1;
     overflow-y: auto; /* Makes the comment window scrollable if necessary*/
     padding: 0;
     margin: 0;
+    min-width: 0;
+    max-height: 100%;
 }
 
-.poem-comments h2 {
+#poem-comments h2 {
     text-align: center;
     margin: 0;
+}
+
+#post-comment-form {
+    display: flex;
+    flex-direction: row;
+    padding: 0 20px;
+}
+
+#tag-select {
+    margin: 0 20px
+}
+
+#post-comment-form button {
+    margin: 0 20px;
 }
 
 .poem-comment-container {

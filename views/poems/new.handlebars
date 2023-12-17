@@ -1,6 +1,6 @@
 <main class="write-poem-container">
    <h2>Write a new poem</h2>
-   <form action="/poems/new" method="POST" class="new-poem-form" id="new-poem-form">
+
    <form action="/poems/new" method="POST" class="new-poem-form" id="new-poem-form">
       <div class="new-poem-title">
          <label for="title_input">
@@ -24,8 +24,6 @@
             <input type="url" name="link" id="reading-link" value="{{poem.link}}">
          </label>
          <span id="link_error" class="error"></span><br>
-         
-         <span id="private_error" class="error"></span><br>
       </div>
 
       <div class="new-poem-submit">
