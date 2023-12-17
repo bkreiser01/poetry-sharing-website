@@ -26,12 +26,18 @@ router.route("/").get(async (req, res) => {
          })
       );
    } catch (e) {
-      return res.status(404).render("error", { error: e.toString() });
+      return res.status(404).render("error", { title: "Error", error: e.toString() });
    }
 
    if (poemList.length <= 0) noPoem = true;
 
-   return res.render("popular", { title: "Popular Poems", poemList: poemList, noPoem: noPoem });
+   return res.render("popular", { 
+      title: "Popular Poems",
+      poemList: poemList,
+      noPoem: noPoem,
+      showLeftColumn: true,
+      showRightColumn: true
+   });
 });
 
 export default router;

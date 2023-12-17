@@ -628,9 +628,9 @@ const exportedMethods = {
      * @param {string|ObjectId} poemId 
      */
     async addTagToPoem(userId, tagName, poemId) {
-        userId = checkId(userId)
-        tagName = validation.checkTagString(tagName)
-        poemId = checkId(poemId)
+        userId = checkId(userId);
+        tagName = validation.checkTagString(tagName, "Tag name");
+        poemId = checkId(poemId);
 
         // Make sure the global tags has the poemID
         let addedTag;

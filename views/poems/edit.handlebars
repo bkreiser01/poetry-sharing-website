@@ -5,22 +5,22 @@
       <label for="title_input">Title: </label>
       <input type="text" name="title" id="title_input" placeholder="Poem Title" value="{{poem.title}}"
          class="full-width-input">
-      <span id="title_error" class="error"></span><br>
+      <p id="title_error" class="error"></p><br>
 
       <label for="poem-body-area">Body: </label>
       <textarea name="body" placeholder="Write your poem here!" id="poem-body-area">{{poem.body}}</textarea>
-      <span id="body_error" class="error"></span><br>
+      <p id="body_error" class="error"></p><br>
 
       <label for="reading-link">Link to reading:</label>
       <input type="url" name="linkInput" id="reading-link" value="{{poem.link}}">
-      <span id="link_error" class="error"></span><br>
+      <p id="link_error" class="error"></p><br>
 
       <label for="private-checkbox"> Visibility: </label>
       <select name="private" value="on" id="private-checkbox">
          <option value="false">Public</option>
          <option value="true">Private</option>
       </select>
-      <span id="private_error" class="error"></span><br>
+      <p id="private_error" class="error"></p><br>
       <input type="submit" value="Save"></input>
    </form>
 

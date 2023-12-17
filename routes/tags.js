@@ -28,15 +28,7 @@ router.route('/popular')
         } catch (e) {
             res.status(500).json({ error: e });
         }
-});
-
-
-router.route("/testing")
-    .get(async (req, res) => {
-        //Route for testing tags
-        res.status(200).render("tags/testing", { title: "Testing Tags" });
-});
-    
+}); 
 
 router.route("/createNewTag").post(async (req, res) => {
     //Route to add new tag to the database
@@ -63,17 +55,6 @@ router.route("/createNewTag").post(async (req, res) => {
     
     //Return newly created tag object
     return newTag;
-});
-    
-router.route("/search").post(async (req, res) => {
-    //Route to search for tags in the database
-    //Validate here
-
-    //Set URL
-    let URL = "search/".concat(req.body.searchString);
-
-    //Redirect to search result page
-    res.redirect(URL);
 });
 
 
@@ -121,13 +102,13 @@ router.route('/:id')
             let tagId = validation.checkId(xss(req.params.id), "Tag id");
             foundTag = await tags.getTagById(tagId);
 
-            res.status(200).render("tag", { 
-                title: "Tag",
+            res.status(200).render("tags/view", { 
+                Title: "Tag",
                 tagString: foundTag.tagString,
                 tagId: foundTag._id
             });
         } catch (e) {
-            res.status(500).render("error", { error: e });
+            res.status(500).render("error", { title: "Error", error: e });
         }
 });
 

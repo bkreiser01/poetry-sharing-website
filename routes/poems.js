@@ -41,13 +41,14 @@ router
       if (!xss(userId)) {
          const status = 401;
          return res.status(status).render("error", {
+            title: "Error",
             error: "You must be logged in to submit a poem",
          });
       }
 
       // Check the user submitted data
       if (!xss(req.body)) {
-         return res.render("poems/new", { error: "No input provided" });
+         return res.render("poems/new", { title: "New Poem", error: "No input provided" });
       }
 
       // Validate input
@@ -61,7 +62,7 @@ router
          else throw new Error(`Private input malformed`);
       } catch (e) {
          const status = 400;
-         return res.status(status).render("error", { error: e });
+         return res.status(status).render("error", { title: "Error", error: e });
       }
 
       priv = priv === "true" ? true : false; // priv to true if "true", false otherwiser
@@ -82,7 +83,7 @@ router
          }
       } catch (e) {
          const status = 400;
-         return res.status(status).render("error", { error: e });
+         return res.status(status).render("error", { title: "Error", error: e });
       }
 
       // Add poem to user.poemIds
@@ -96,7 +97,7 @@ router
          }
       } catch (e) {
          const status = 400;
-         return res.status(status).render("error", { error: e });
+         return res.status(status).render("error", { title: "Error", error: e });
       }
 
       // only redirect if everything is added successfully
@@ -121,7 +122,7 @@ router
          const status = 404;
          return res
             .status(status)
-            .render("error", { error: "Poem could not be found" });
+            .render("error", { title: "Error", error: "Poem could not be found" });
       }
 
       try {
@@ -156,7 +157,7 @@ router
             isAuthor: isAuthor,
          });
       } catch (e) {
-         return res.status(500).render("error", { error: e });
+         return res.status(500).render("error", { title: "Error", error: e });
       }
    })
    .delete(async (req, res) => {
@@ -170,6 +171,7 @@ router
       }
       if (!checkIsAuthor(userId, safeId)) {
          return res.status(403).render("error", {
+            title: "Error",
             error: `You must be the author of a poem to delete it`,
          });
       }
@@ -181,7 +183,7 @@ router
          const tagInfo = await tagData.deletePoemFromAllTags(safeId);
       } catch (e) {
          const status = 400;
-         return res.status(status).render("error", { error: e.message });
+         return res.status(status).render("error", { title: "Error", error: e.message });
       }
 
       return res.redirect(200, "/user");
@@ -200,7 +202,7 @@ router
          const status = 404;
          return res
             .status(status)
-            .render("error", { error: "Poem could not be found" });
+            .render("error", { title: "Error", error: "Poem could not be found" });
       }
 
       // User is not the editor so redirect to view page
@@ -219,7 +221,7 @@ router
          const status = 404;
          return res
             .status(status)
-            .render("error", { error: "Poem could not be found" });
+            .render("error", { title: "Error", error: "Poem could not be found" });
       }
 
       // TODO make sure new author check works
@@ -236,7 +238,7 @@ router
          const status = 403;
          return res
             .status(status)
-            .render("error", { error: "You are not the author of this poem" });
+            .render("error", { title: "Error", error: "You are not the author of this poem" });
       }
 
       //  user is logged in and the author
@@ -257,7 +259,7 @@ router
             inputData.priv = validation.checkString(xss(req?.body?.priv));
          }
       } catch (e) {
-         return res.status(400).render("error", { error: e });
+         return res.status(400).render("error", { title: "Error", error: e });
       }
 
       try {
@@ -265,7 +267,7 @@ router
          return res.redirect(200, `/poems/${safeId}`);
       } catch (e) {
          let status = 400;
-         return res.status(status).render("error", { error: e.toString() });
+         return res.status(status).render("error", { title: "Error", error: e.toString() });
       }
    });
 

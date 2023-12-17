@@ -45,85 +45,85 @@ let userRenderPublic = async (userId, obj) => {
 router.route('/')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "Your Account",
                 poems: true
             }));
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
 router.route('/history')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "History",
                 history: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
 router.route('/liked-poems')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "Liked Poems",
                 liked_poems: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
 router.route('/tagged-poems')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "Tagged Poems",
                 tagged_poems: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
 router.route('/followers')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "Followers",
                 followers: true
             }));          
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
 router.route('/following')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "Following",
                 following: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
 router.route('/history')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "History",
                 methodName: "getHistory",
                 following: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -131,12 +131,12 @@ router.route('/history')
 router.route('/edit')
     .get(async (req, res) => {
         try {
-            return res.render("user", await userRender(req.session.user, {
+            return res.render("users/current-user", await userRender(req.session.user, {
                 title: "Edit Profile",
                 edit: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
     .patch(async (req, res) => {
@@ -180,14 +180,14 @@ router.route('/:id')
     .get(async (req, res) => {
         try {
             req.params.id = validation.checkId(xss(req.params.id), "id")
-            return res.render("user-view", await userRenderPublic(req.params.id, {
+            return res.render("users/user-view", await userRenderPublic(req.params.id, {
                 title: "Account",
                 userId: req.session.user._id,
                 userViewId: req.params.id,
                 poems: true
             }));
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -196,14 +196,14 @@ router.route('/:id/followers')
     .get(async (req, res) => {
         try {
             req.params.id = validation.checkId(xss(req.params.id), "id")
-            return res.render("user-view", await userRenderPublic(req.params.id, {
+            return res.render("users/user-view", await userRenderPublic(req.params.id, {
                 title: "Followers",
                 userId: req.session.user._id,
                 userViewId: req.params.id,
                 followers: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -211,14 +211,14 @@ router.route('/:id/following')
     .get(async (req, res) => {
         try {
             req.params.id = validation.checkId(xss(req.params.id), "id")
-            return res.render("user-view", await userRenderPublic(req.params.id, {
+            return res.render("users/user-view", await userRenderPublic(req.params.id, {
                 title: "Following",
                 userId: req.session.user._id,
                 userViewId: req.params.id,
                 following: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
@@ -226,14 +226,14 @@ router.route('/:id/tagged-poems')
     .get(async (req, res) => {
         try {
             req.params.id = validation.checkId(xss(req.params.id), "id")
-            return res.render("user-view", await userRenderPublic(req.params.id, {
+            return res.render("users/user-view", await userRenderPublic(req.params.id, {
                 title: "Tagged Poems",
                 userId: req.session.user._id,
                 userViewId: req.params.id,
-                tagged_oems: true
+                tagged_poems: true
             }));   
         } catch (e) {
-            return res.status(404).render('error', { error: e.message });
+            return res.status(404).render('error', { title: "Error", error: e.message });
         }
     })
 
