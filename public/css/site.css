@@ -107,7 +107,7 @@ footer {
 .poem-body {
     display: flex;
     flex-direction: row;
-    height: 350px;
+    min-height: 350px;
 }
 
 .poem-markdown {

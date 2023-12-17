@@ -3,7 +3,6 @@ const router = Router();
 import { poemData, tagData, userData } from "../data/index.js";
 import validation from "../helpers/validation.js";
 import { ObjectId } from "mongodb";
-import markdown, { getCodeString } from "@wcj/markdown-to-html";
 import xss from "xss";
 
 router.route("/").get(async (req, res) => {

@@ -242,12 +242,16 @@ const exportedMethods = {
     * @returns
     */
    async updatePoemPatch(id, updatedPoem) {
-      // TODO validate as checking if there is a field
       id = validation.checkId(id, "Id");
+      if (!updatedPoem) throw new Error("No new poem data supplied");
+      if (typeof updatedPoem !== "object")
+         throw new Error("updatedPoem must be of type 'object'");
 
       const updatedPoemData = {};
       if (updatedPoem.timeSubmitted) {
-         updatedPoemData.timeSubmitted = updatedPoem.timeSubmitted; // TODO replace with validation
+         updatedPoemData.timeSubmitted = validation.checkDate(
+            updatedPoem.timeSubmitted
+         );
       }
 
       if (updatedPoem.title) {
@@ -318,8 +322,6 @@ const exportedMethods = {
     * @param {string | ObjectId} tagId
     */
    async addTag(poemId, tagId) {
-      // TODO check that the tag exists in tags collection atleast in routing
-
       poemId = validation.checkId(poemId, "PoemId");
       tagId = validation.checkId(tagId, "TagId");
       const poemCollection = await poems();
