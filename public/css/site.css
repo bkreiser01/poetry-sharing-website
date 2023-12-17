@@ -264,6 +264,8 @@ footer {
 
 .user-numbers * {
     padding: 0 10px;
+}
+
 .error {
     color: red;
 }

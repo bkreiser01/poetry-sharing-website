@@ -676,6 +676,29 @@ const exportedMethods = {
         // Make sure poems data is updated
         await poemsData.addTag(poemId.toString(), addedTag._id.toString())
         return user
+    },
+
+    /**
+     *  Get a list of the favorite tags of a user
+     * 
+     * @param {string|ObjectId} userId 
+     */
+    async getFavoriteTags(userId) {
+        userId = checkId(userId)
+
+        let user = await exportedMethods.getById(userId)
+        let tagIds = []
+
+        for (let i = 0; i < user.taggedPoems.length; i++) {
+            tagIds = tagIds.concat(user.taggedPoems[i].tagIds)
+        }
+        const frequencyMap = tagIds.reduce((map, item) => {
+            const key = item.toString(); // Convert ObjectId to string for comparison
+            map[key] = (map[key] || 0) + 1;
+            return map;
+        }, {});
+        return Object.keys(frequencyMap).sort((a, b) => frequencyMap[b.toString()] - frequencyMap[a.toString()]).splice(0,3)
     }
 }
-export default exportedMethods;
+
+export default exportedMethods

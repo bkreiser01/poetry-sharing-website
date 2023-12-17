@@ -238,6 +238,19 @@ router.route('/:id/tagged-poems')
         }
     })
 
+router.route('/:id/favorite-tags')
+    .get(async (req, res) => {
+        try {
+            req.params.id = validation.checkId(xss(req.params.id), "id")
+            let favTags = await user.getFavoriteTags(req.params.id);
+            res.status(200).json(favTags);
+        } catch (e) {
+            res.status(500).render("error", {
+                title: "Error",
+                error: e,
+            });
+        }
+    })
 
 router.route('/searchByUsername/:username')
     .get(async (req, res) => {
@@ -316,7 +329,7 @@ router.route('/getTaggedPoems/:id')
         }
     })
 
-router.route('/getFollowers/:id')
+router.route('/followers/:id')
     .get(async (req, res) => {
         try {
             req.params.id = validation.checkId(xss(req.params.id), "id")

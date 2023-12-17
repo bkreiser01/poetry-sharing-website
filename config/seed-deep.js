@@ -242,11 +242,16 @@ let p20 = await poems.addPoem(
 )
 
 console.log("Creating Tags")
-let t1 = await tags.createNewTag("scary")
+let t1 = await tags.createNewTag("nice")
+t1 = (await tags.getTagById(t1)).tagString
 let t2 = await tags.createNewTag("happy")
+t2 = (await tags.getTagById(t2)).tagString
 let t3 = await tags.createNewTag("sad")
+t3 = (await tags.getTagById(t3)).tagString
 let t4 = await tags.createNewTag("funny")
-let t5 = await tags.createNewTag("cheerful")
+t4 = (await tags.getTagById(t4)).tagString
+let t5 = await tags.createNewTag("scary")
+t5 = (await tags.getTagById(t5)).tagString
 
 console.log("Populate User Bios")
 await users.updateBio(bkrei_id, "My name is Brandon! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology.")
@@ -255,6 +260,26 @@ await users.updateBio(jvasa_id, "My name is Joe! I like to write poems and read 
 await users.updateBio(ahuet_id, "My name is Adrien! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology.")
 
 console.log("Populate user tagged poems")
+await users.addTagToPoem(bkrei_id, t2, p6._id.toString())
+await users.addTagToPoem(bkrei_id, t2, p7._id.toString())
+await users.addTagToPoem(bkrei_id, t2, p8._id.toString())
+
+await users.addTagToPoem(bkrei_id, t1, p1._id.toString())
+await users.addTagToPoem(bkrei_id, t1, p2._id.toString())
+await users.addTagToPoem(bkrei_id, t1, p3._id.toString())
+await users.addTagToPoem(bkrei_id, t1, p4._id.toString())
+await users.addTagToPoem(bkrei_id, t1, p5._id.toString())
+
+
+await users.addTagToPoem(rshag_id, t2, p6._id.toString())
+await users.addTagToPoem(rshag_id, t2, p7._id.toString())
+await users.addTagToPoem(rshag_id, t2, p8._id.toString())
+await users.addTagToPoem(rshag_id, t2, p9._id.toString())
+await users.addTagToPoem(ahuet_id, t3, p10._id.toString())
+await users.addTagToPoem(ahuet_id, t3, p11._id.toString())
+await users.addTagToPoem(ahuet_id, t3, p12._id.toString())
+await users.addTagToPoem(jvasa_id, t4, p13._id.toString())
+await users.addTagToPoem(jvasa_id, t4, p14._id.toString())
 
 console.log("Populate user favorites")
 await users.addFavorite(bkrei_id, p1._id.toString())
