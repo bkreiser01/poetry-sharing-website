@@ -15,16 +15,25 @@
  * Return tag object associated with given id
  *
  * getTagByName:
- * Return a tag object associated with given name string
+ * Return tag object associated with given name string
+ * 
+ * searchTags:
+ * Return array of tag objects that contain the given search string as part of the tagString
  * 
  * createNewTag:
- * Create a new tag and return its id (does not associate this tag with any poems)
+ * Create new tag and return its id (does not associate this tag with any poems)
  * 
  * addTagToPoem:
- * Update data to associate a poem with a tag
+ * Update data to associate a poem with a tag by tag string, and return the tag object
+ * 
+ * addTagByIdToPoem:
+ * Update data to associate a poem with a tag by tag id, and return the tag object
  * 
  * deletePoemFromAllTags:
  * Delete a poem from all tags
+ * 
+ * getMostPopularTags:
+ * Return array of tag objects, sorted by number of poems the tag is applied to
 */
 
 import { tags } from "../config/mongoCollections.js";
@@ -74,6 +83,28 @@ const exportedMethods = {
 
 
    /**
+    * Return array of tag objects that contain the given search string as part of the tagString
+    * @param {string} searchString
+    * @returns {Array.<Object>}
+   */
+   async searchTags(searchString) {
+      //Validation
+      searchString = validation.checkTagString(searchString, "Search string");
+
+      //Get tags
+      let foundTags = [];
+      foundTags.push(await tagCollection.find({ tagString: { $regex: searchString, $options: 'i' } }).toArray())
+      foundTags = foundTags.flat(Infinity)
+
+
+      //foundTags = await tagCollection.findOne({ tagString: tagString });
+
+      return foundTags;
+   },
+
+
+
+   /**
     * Create a new tag and return its id (does not associate this tag with any poems)
     * 
     * @param {string} tagString
@@ -109,7 +140,7 @@ const exportedMethods = {
 
 
    /**
-    * Update data to associate a poem with a tag
+    * Update data to associate a poem with a tag by tag string, and return the tag object
     * 
     * @param {string} tagString
     * @param {string} poemId
@@ -118,10 +149,9 @@ const exportedMethods = {
       //Validation
       tagString = validation.checkTagString(tagString, "Tag string");
       poemId = validation.checkId(poemId, "Poem id");
-
+      
       //Check if tag already exists
       let existingTag;
-      let createdTag;
       try{
          existingTag = await this.getTagByName(tagString);
       } catch (e){
@@ -134,7 +164,7 @@ const exportedMethods = {
          existingTag = await this.getTagById(createdTag);
       }
 
-      //Check if poem is alrady associated with tag
+      //Check if poem is already associated with tag
       let poemsArray = existingTag.taggedPoemsId;
       for(let i = 0; i < poemsArray.length; i++){
          if(poemsArray[i] == poemId){
@@ -154,35 +184,34 @@ const exportedMethods = {
    },
 
 
+
+   /**
+    * Update data to associate a poem with a tag by tag id, and return the tag object
+    * @param {string} tagId
+    * @param {string} poemId
+    * @returns
+   */
    async addTagByIdToPoem(tagId, poemId) {
       //Validation
       tagId = validation.checkId(tagId, "Tag id");
       poemId = validation.checkId(poemId, "Poem id");
 
-      let tagName = (await this.getTagById(tagId)).tagString
+      //Check if tag already exists
+      let existingTag;
+      try{
+         existingTag = await this.getTagById(tagId);
+      } catch (e){
+         if(e.message !== "getTagById: Tag not found") throw e;
+      }
 
-      return await this.addTagToPoem(tagName, poemId)
-   },
+      //If tag does not exist, error
+      if (!existingTag) throw new Error("addTagByIdToPoem: Invalid tag id");
 
-   /**
-    * DEPRECATED: DO NOT USE
-    * Search for a tag using its name string
-    * @param {string} searchStr
-    * @returns {Array.<Object>}
-   */
-   async searchTagByName(searchStr) {
-      searchStr = validation.checkString(searchStr);
+      //Add tag to poem by name
+      let tagName = existingTag.tagString;
+      let updatedTag = await this.addTagToPoem(tagName, poemId);
 
-      const tagCollection = await tags();
-      let retVal = [];
-      retVal.push(
-         await tagCollection
-            .find({ tagString: { $regex: searchStr, $options: "i" } })
-            .toArray()
-      );
-      retVal = retVal.flat(Infinity);
-
-      return retVal;
+      return updatedTag;
    },
 
 
@@ -208,15 +237,24 @@ const exportedMethods = {
       return deletedPoem;
    },
 
+
+   /**
+    * Return array of tag objects, sorted by number of poems the tag is applied to
+   */
    async getMostPopularTags() {
+      //Get tag ids
       let tagData = await tagCollection.distinct('_id')
 
+      //Get tag objects from id
       for (let i = 0; i < tagData.length; i++) {
          let currentTag = await exportedMethods.getTagById(tagData[i].toString())
          tagData[i] = currentTag
       }
 
-      return tagData.sort((a, b) => b.taggedPoemsId.length - a.taggedPoemsId.length);
+      //Sort tag objects by number of associated poems
+      tagData = tagData.sort((a, b) => b.taggedPoemsId.length - a.taggedPoemsId.length).splice(0, 3)
+
+      return tagData;
    }
 };
 
