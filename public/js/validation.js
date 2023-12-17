@@ -196,7 +196,7 @@ const validationMethods = {
          const url = new URL(linkStr);
          return linkStr;
       } catch (e) {
-         throw new Error(`Reading link must be a valid url`);
+         throw new Error(`Link must be a valid url`);
       }
    },
 };

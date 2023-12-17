@@ -253,6 +253,9 @@ t4 = (await tags.getTagById(t4)).tagString
 let t5 = await tags.createNewTag("scary")
 t5 = (await tags.getTagById(t5)).tagString
 
+console.log("Populate Profile Pictures")
+await users.updateProfilePicture(bkrei_id, "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.istockphoto.com%2Fvectors%2Fwhite-cat-wearing-sunglasses-eyeglasses-shining-lenses-cute-cartoon-vector-id1048770966%3Fk%3D6%26m%3D1048770966%26s%3D170667a%26w%3D0%26h%3D_0Cf7aD3ebVMRhywRlIxcgSeoCpyRtiWfemmkJ6Z32Q%3D&f=1&nofb=1&ipt=c06ad6dfdbc0deb1725e3146263ec25209f156892ec16561a40f8cc86a3c31be&ipo=images")
+
 console.log("Populate User Bios")
 await users.updateBio(bkrei_id, "My name is Brandon! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology.")
 await users.updateBio(rshag_id, "My name is Roger! I like to write poems and read poems. I also like to play video games and watch movies. I am a senior at Stevens Institute of Technology.")
