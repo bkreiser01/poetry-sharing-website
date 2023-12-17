@@ -23,7 +23,7 @@ import validation from './validation.js';
 
         //AJAX call to update tag data
         $.ajax({
-            url: '/AddTagToPoem',
+            url: '/addTagToPoem',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),
