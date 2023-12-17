@@ -1,18 +1,65 @@
-{{!-- login form --}}
-<main>
-    <h2>{{username}}</h2>
-    <p>Account Age: {{account_age}}</p>
-    <p>Biography: {{bio}}</p>
+<main class="user-container">
+    <div class="user-header">
+
+        <div class="author-picture user-picture">
+            {{username}}
+        </div>
+
+        <div class="user-profile">
+
+            <div class="user-info">
+
+                <div class="user-numbers">
+
+                    <h2>{{username}}</h2>
+                    <div class="user-social-info">
+                        <div class="user-follows">
+                            <a href="/user/followers">Followers</a>
+                            {{!-- TODO AJAX here --}}
+                            <p>nb_followers</p>
+                        </div>
+                        <div class="user-follows">
+                            <a href="/user/following">Following</a>
+                            {{!-- TODO AJAX here --}}
+                            <p>nb_following</p>
+                        </div>
+
+                    </div>
+
+                    <div class="user-tag-info">
+                        {{!-- TODO AJAX here --}}
+                        <p>Favorite tags:</p>
+                        <ol id="fav-tags"></ol>
+                    </div>
+
+                    <div class="user-tag-info">
+                        {{!-- TODO AJAX here --}}
+                        <p>Most tagged with:</p>
+                        <ol id="global-fav-tags"></ol>
+                    </div>
+
+                </div>
+
+                <div class="user-bio">
+                    <p>{{bio}}</p>
+                    <p class="date-string">Account Age: {{account_age}}</p>
+                </div>
+
+            </div>
+
+            <div class="user-actions">
+                <a href="/user/history">History</a>
+                <a href="/user/liked-poems">Liked Poems</a>
+                <a href="/user/tagged-poems">Tagged Poems</a>
+            </div>
+
+        </div>
+
+    </div>
     {{> user/tags}}
 
     <h3>User Views</h3>
     <ul>
-        <li><a href="/user">Poems</a></li>
-        <li><a href="/user/liked-poems">Liked Poems</a></li>
-        <li><a href="/user/tagged-poems">Tagged Poems</a></li>
-        <li><a href="/user/followers">Followers</a></li>
-        <li><a href="/user/following">Following</a></li>
-        <li><a href="/user/history">History</a></li>
         <li><a href="/user/edit">Edit Profile</a></li>
     </ul>
 

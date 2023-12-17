@@ -152,6 +152,118 @@ footer {
     margin-left: 25px
 }
 
+.homepage-container ul {
+    padding-left: 100px;
+}
+
+.homepage-poems {
+    list-style-type: none;
+    padding: 0 100px
+}
+
+.homepage-poems-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.nb-tags {
+    padding-right: 100px;
+    line-height: 100px;
+}
+
+.homepage-poems-item .author-picture {
+    display: block;
+    height: 92px;
+    width: 92px;
+    border: 1px solid black;
+    margin-right: 20px;
+    border-radius: 100%;
+    text-align: center;
+}
+
+.write-poem-container {
+    padding: 5px;
+    padding-bottom: 20px;
+}
+
+#new-poem-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.full-width-input {
+    display: flex;
+    box-sizing: border-box;
+    border-style: solid;
+    border-radius: 3px;
+	min-height: 3em;
+	margin: 20px 0;
+	width: 100%;
+    padding: 5px 10px;
+}
+
+#reading-link {
+    width: 400px;
+    margin-right: 25px;
+}
+
+.new-poem-others {
+    display: flex;
+    justify-content:flex-start;
+}
+
+.new-poem-submit {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#submit-poem-button {
+    width: 25%;
+
+}
+
+.user-container {
+    padding: 10px;
+}
+
+.user-picture {
+    width: 256px;
+    height: 256px;
+}
+
+.user-header,
+.user-profile,
+.user-numbers,
+.user-social-info,
+.user-tag-info {
+    display: flex;
+    flex-direction: row;
+}
+
+.user-info,
+.user-actions,
+.user-follows,
+.tag-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info {
+    padding-right: 20px;
+}
+
+.user-numbers {
+    justify-content: space-between;
+}
+
+.date-string {
+    font-style: italic;
+}
+
+.user-numbers * {
+    padding: 0 10px;
 .error {
     color: red;
 }
