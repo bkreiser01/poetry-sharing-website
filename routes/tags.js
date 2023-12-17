@@ -37,12 +37,12 @@ router.route("/testing")
         //Route for testing tags
         res.status(200).render("tags/testing", { title: "Testing Tags" });
 });
-    
+
 
 router.route("/createNewTag").post(async (req, res) => {
     //Route to add new tag to the database
     //Validate here
-    
+
     //Add to database
     let TagString = req.body.newTagString;
     let PoemID = req.body.newTaggedPoem;
@@ -60,11 +60,11 @@ router.route("/createNewTag").post(async (req, res) => {
             console.log(e);
         }
     }
-    
+
     //Return newly created tag object
     return newTag;
 });
-    
+
 router.route("/search").post(async (req, res) => {
     //Route to search for tags in the database
     //Validate here
@@ -80,7 +80,7 @@ router.route("/search").post(async (req, res) => {
 router.route("/search/:searchString").get(async (req, res) => {
     //Route to search for tags in the database
     //Validate here
-    
+
     //Get search results
     let searchString = req.params.searchString;
     let foundTags;
@@ -93,12 +93,12 @@ router.route("/search/:searchString").get(async (req, res) => {
     //Load search result page
     res.status(200).render("tags/search", { title: "Tag Search", foundTags: foundTags });
 });
-    
+
 
 router.route("/addTagToPoem").post(async (req, res) => {
     //Route to add tag to poem
     //Validate here
-    
+
     //Add to database
     let TagString = req.body.tagString;
     let PoemID = req.body.taggedPoemId;
@@ -131,5 +131,15 @@ router.route('/:id')
         res.status(200).json(foundTag);
 });
 
+router.route('/searchById/:id')
+    .get(async (req, res) => {
+        try {
+            req.params.id = validation.checkId(xss(req.params.id), "tagId");
+            let tagData = await tags.getTagById(req.params.id);
+            return res.status(200).json(tagData)
+        } catch (e) {
+            return res.status(500).json({ error: e.message })
+        }
+})
 
 export default router;
