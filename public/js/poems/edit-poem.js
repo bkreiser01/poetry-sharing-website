@@ -81,21 +81,19 @@ import validation from "/public/js/validation.js";
       }
 
       if (!errors_exist) {
-         $.ajax({
+         const ajaxReq = $.ajax({
             url: `/poems/edit/${poemId}`,
             method: "PATCH",
             contentType: "application/json",
             data: JSON.stringify(data),
-            success: function (data) {
-               console.log(data.success);
-               success.text(data.success);
-               window.location.href = "/user";
-            },
-            error: function (e) {
-               console.log(e);
-               // console.error(e.responseJSON.error);
-               // error.text(e.responseJSON.error);
-            },
+         });
+         ajaxReq.success((data, status) => {
+            console.log(data.success);
+            success.text(data.success);
+            window.location.href = `/poems/${poemId}`;
+         });
+         ajaxReq.error((e) => {
+            console.log(e);
          });
       }
    });
