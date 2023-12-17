@@ -11,12 +11,11 @@ import users from '../data/user.js'
 /*
 * Routes: /tags
 * /popular
-* /testing
 * /createNewTag
-* /search
 * /search/:searchString
 * /addTagToPoem
 * /:id
+* /info/:id
 */
 
 
@@ -24,7 +23,7 @@ router.route('/popular')
     .get(async (req, res) => {
         try {
             let popularTags = await tags.getMostPopularTags();
-            res.status(200).json(popularTags);
+            res.status(200).render("tags/popular", { title: "Popular Tags", popularTags: popularTags });
         } catch (e) {
             res.status(500).json({ error: e });
         }

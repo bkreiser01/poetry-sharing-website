@@ -252,7 +252,7 @@ const exportedMethods = {
       }
 
       //Sort tag objects by number of associated poems
-      tagData = tagData.sort((a, b) => b.taggedPoemsId.length - a.taggedPoemsId.length).splice(0, 3)
+      tagData = tagData.sort((a, b) => b.taggedPoemsId.length - a.taggedPoemsId.length).splice(0, 20);
 
       return tagData;
    }
