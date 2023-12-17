@@ -25,6 +25,8 @@ router
 
       res.render("poems/new", {
          title: "New Poem",
+         showLeftColumn: true,
+         showRightColumn: true,
       });
    })
    .post(async (req, res) => {
@@ -61,7 +63,7 @@ router
          return res.status(status).render("error", { error: e });
 
          // TODO see if it makes sense to refill or if this should only be done on client side
-         /* 
+         /*
          return res.render("poems/new", {
             poem: { title: title, body: body, link: link },
             errors: errors,

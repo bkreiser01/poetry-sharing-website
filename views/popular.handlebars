@@ -1,22 +1,21 @@
-<main>
-   <div>
-      {{#if noPoems}}
-      {{!-- If there aren't any poems in the website display this --}}
-      <p>Apologies the site is devoid of poems or something went horribly wrong</p>
-      {{else}}
-      {{!-- If there are poems, do the functionality --}}
-      <h1>Popular Poems</h1>
-      <ul>
-         {{#each poemList}}
-         <li>
-            <a href="/poems/{{this._id}}">{{this.title}}</a>
-            <span>By:</span>
-            <a href="/user/{{this.userId}}">{{this.username}}</a>
-         </li>
-         {{/each}}
-      </ul>
-      {{/if}}
-
-
-   </div>
+<main class="popular-container">
+   {{#if noPoems}}
+   {{!-- If there aren't any poems in the website display this --}}
+   <p>Apologies the site is devoid of poems or something went horribly wrong</p>
+   {{else}}
+   {{!-- If there are poems, do the functionality --}}
+   <ul class="homepage-poems">
+      {{#each poemList as |poem|}}
+      <li class="homepage-poems-item">
+         <div class="poem-header">
+            <div class="author-picture">{{this.username}} pp</div>
+            <div class="poem-header-metadata">
+               <a href="/poems/{{this._id}}"><h2>{{this.title}}</h2></a>
+               <p>By: <a href="/user/{{this.userId}}">{{this.username}}</a></p>
+            </div>
+         </div>
+      </li>
+      {{/each}}
+   </ul>
+   {{/if}}
 </main>
