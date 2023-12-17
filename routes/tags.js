@@ -119,20 +119,33 @@ router.route("/addTagToPoem").post(async (req, res) => {
 
 router.route('/:id')
     .get(async (req, res) => {
-        //Route to display poems associated with tag of given id
-
-        //Get tag object from id
-        let foundTag;
         try {
+            let foundTag;
             let tagId = validation.checkId(xss(req.params.id), "Tag id");
             foundTag = await tags.getTagById(tagId);
-        } catch (e) {
-            res.status(500).json({ error: e })
-        }
 
-        //Load tag page
-        res.status(200).json(foundTag);
+            res.status(200).render("tag", { 
+                Title: "Tag",
+                tagString: foundTag.tagString,
+                tagId: foundTag._id
+            });
+        } catch (e) {
+            res.status(500).render("error", { error: e });
+        }
 });
+
+router.route('/info/:id')
+    .get(async (req, res) => {
+        try {
+            let foundTag;
+            let tagId = validation.checkId(xss(req.params.id), "Tag id");
+            foundTag = await tags.getTagById(tagId);
+
+            res.status(200).json(foundTag);
+        } catch (e) {
+            res.status(500).json({ error: e });
+        }
+    });
 
 
 export default router;

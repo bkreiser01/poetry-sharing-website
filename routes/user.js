@@ -443,4 +443,20 @@ router.route('/getHistory/:id')
             return res.status(500).json({ error: e.message });
         }
     })
+
+router.route('/addTagToPoem/:userId/:tagString/:poemId')
+    .post(async (req, res) => {
+        try {
+            let userId = validation.checkId(xss(req.params.userId), "userId")
+            let tagString = validation.checkString(xss(req.params.tagString), "tagString")
+            let poemId = validation.checkId(xss(req.params.poemId), "poemId")
+
+            await user.addTagToPoem(userId, tagString, poemId)
+
+            // Return the user
+            return res.status(200).json({success: "Tag added successfully"});
+        } catch (e) {
+            return res.status(500).json({ error: e.message });
+        }
+    })
 export default router

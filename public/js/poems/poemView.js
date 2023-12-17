@@ -1,17 +1,18 @@
 //Handle tag, save, and like functionality on poem view page
+import validation from '/public/js/validation.js';
+
 (function($) {
     let TagForm = $('#addTagForm'),
         likeBtn = $('#likeBtn'),
         userId = $('#userId')[0].innerText,
-        poemId_ = $('#poemId_')[0].innerText
+        poemId_ = $('#poemId_')[0].innerText,
+        tagString = $('#TagString'),
+        error = $('#error-tag')
 
     $.ajax({
         url: `/user/getLikedPoems/${userId}`,
         method: 'GET',
         success: function(data) {
-            console.log(data)
-            console.log(poemId_)
-
             if (data.indexOf(poemId_) == -1) {
                 likeBtn.text("Like")
             } else {
@@ -19,42 +20,26 @@
             }
         },
         error: function(e) {
-            console.error(e.responseJSON);
+            console.error(e.responseJSON.error);
         },
     });
     
     TagForm.on('submit', function(event) {
         event.preventDefault();
-        console.log("Submitted");
+        error.text('')
+        let uid = validation.checkString(tagString.val(), "tag")
 
-        //Get data
-        let pathName = $(location).attr('pathname');
-        pathName = pathName.substring(7);
-        let data = {
-            tagString: $('#TagString').val(),
-            taggedPoemId: pathName,
-            //Change this to User ID
-            taggingUserId: pathName
-        }
-
-        //AJAX call to update tag data
         $.ajax({
-            url: '/addTagToPoem',
+            url: `/user/addTagToPoem/${userId}/${uid}/${poemId_}`,
             method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
             success: function(data) {
+                console.log(data)
             },
             error: function(e) {
-                console.error(e.responseJSON);
-                error.text(e.responseJSON);
+                console.error(e.responseJSON.error);
+                error.text(e.responseJSON.error)
             },
         });
-
-        //Update Users taggedPoems
-        
-        //Update Poems submittedTags
-        
     });
 
 

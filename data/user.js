@@ -664,7 +664,9 @@ const exportedMethods = {
 
             taggedPoemObject.tagIds.push(addedTag._id)
         }
-
+        if (taggedPoemObject.tagIds.length > 3) {
+            throw new Error("You can only tag a poem 3 times!")
+        }
         // Add the tagged poem to the user
         if (alreadyExisted) {
             // Delete the old tagged poem because of poor planning

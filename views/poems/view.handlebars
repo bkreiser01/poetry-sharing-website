@@ -18,6 +18,7 @@
       <form id='addTagForm'>
          <input type='text' id='TagString' name='TagString'>
          <input type='submit' value='Tag it!'>
+         <label id="error-tag" class="error"></label>
       </form>
       <p id="poemId_" hidden="">{{poemId_}}</p>
       <button type="button" id="likeBtn">Like it!</button>
@@ -48,7 +49,7 @@
          {{/each}}
       </ol>
    </div>
-
+   
    <ol class="poem-tags">
       {{#each poem.submittedTags as |tag|}}
       {{!-- TODO AJAX for tag strings? --}}
