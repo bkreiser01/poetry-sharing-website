@@ -223,3 +223,45 @@ footer {
     width: 25%;
 
 }
+
+.user-container {
+    padding: 10px;
+}
+
+.user-picture {
+    width: 256px;
+    height: 256px;
+}
+
+.user-header,
+.user-profile,
+.user-numbers,
+.user-social-info,
+.user-tag-info {
+    display: flex;
+    flex-direction: row;
+}
+
+.user-info,
+.user-actions,
+.user-follows,
+.tag-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info {
+    padding-right: 20px;
+}
+
+.user-numbers {
+    justify-content: space-between;
+}
+
+.date-string {
+    font-style: italic;
+}
+
+.user-numbers * {
+    padding: 0 10px;
+}
