@@ -11,7 +11,6 @@
         url: `/user/followers/${userId}`,
         type: 'GET',
         success: function (followers) {
-            console.log(followers)
             follower_count.innerText = followers.length
         },
         error: function (e) {
@@ -55,7 +54,7 @@
                         globalTagsList.append(`<li><a>${tag.tagString}</a></li>`)
                     },
                     error: function (e) {
-                        console.log(e);
+                        console.error(e);
                     }
                 });
                 
