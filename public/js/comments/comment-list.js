@@ -25,8 +25,7 @@
                 poem_comments.append(`
                 <li class="poem-comment-container">
                     <div class="poem-comment-author-info">
-                        <p>${user.username}</p>
-                        <p>${tag.tagString}</p>
+                        <a href="/user/${user._id}">${user.username}</a>(<a href="/tags/${tag._id}">${tag.tagString}</a>):
                     </div>
                     <p class="comment-string">
                         ${comment.commentString}
@@ -39,7 +38,7 @@
                 poem_comments.append(`
                 <li class="poem-comment-container">
                     <div class="poem-comment-author-info">
-                        <p>${user.username}</p>
+                        <a href="/users/${user.userId}>${user.username}</a>
                         <p>[deleted]</p>
                     </div>
                     <p class="comment-string">
