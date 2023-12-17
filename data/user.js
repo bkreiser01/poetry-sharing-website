@@ -615,7 +615,7 @@ const exportedMethods = {
 
         await exportedMethods.deleteTaggedPoemForAllUsers(poemId);
         await exportedMethods.deleteFavoriteForAllUsers(poemId);
-        await exportedMethods.eleteRecentlyViewedPoemForAllUsers(poemId);
+        await exportedMethods.deleteRecentlyViewedPoemForAllUsers(poemId);
     },
 
     /**

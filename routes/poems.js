@@ -8,6 +8,11 @@ import { ObjectId } from "mongodb";
 import markdown, { getCodeString } from "@wcj/markdown-to-html";
 import xss from "xss";
 
+const checkIsAuthor = async (userId, poemId) => {
+   const poem = await poemData.getPoemById(poemId);
+   return poem.userId.toString() === userId;
+};
+
 router.route("/").get(async (req, res) => {
    // Can change to redirect somewhere else
    res.redirect("/poems/new");
@@ -147,7 +152,13 @@ router
          username = "User Not Found";
       }
 
-      //TODO add to user history
+      // TODO button for editing
+      let isAuthor = false;
+      try {
+         isAuthor = await checkIsAuthor(xss(req?.session?.user?._id), safeId);
+      } catch (error) {
+         isAuthor = false;
+      }
       try {
          return res.render("poems/view", {
             title: poem.title,
@@ -155,14 +166,24 @@ router
             poemId_: poem._id,
             poem: poem,
             username: username,
-         });  
+            isAuthor: isAuthor,
+         });
       } catch (e) {
          return res.status(500).render("error", { error: e });
       }
    })
    .delete(async (req, res) => {
+      // TODO check they're logged in and the author
+      const userId = xss(req?.session?.user?._id);
       const safeId = validation.checkId(xss(req.params.id), "id");
-      s;
+
+      if (!checkIsAuthor(userId, safeId)) {
+         return res
+            .status(403)
+            .render("error", {
+               error: `You must be the author of a poem to delete it`,
+            });
+      }
 
       try {
          const poemInfo = await poemData.removePoem(safeId);
@@ -172,7 +193,8 @@ router
          const status = 400;
          return res.status(status).render("error", { error: e.message });
       }
-      // TODO return something to indicate the deletion was succesfull
+
+      return res.redirect(200, "/user");
    });
 
 router
@@ -236,7 +258,9 @@ router
             inputData.body = validation.checkBody(xss(req?.body?.body)); // TODO validate body
          }
          if (!!xss(req?.body?.linkInput)) {
-            inputData.linkInput = validation.checkUrl(xss(req?.body?.linkInput)); // TODO validate link
+            inputData.linkInput = validation.checkUrl(
+               xss(req?.body?.linkInput)
+            ); // TODO validate link
          }
          if (!!xss(req.body?.priv)) {
             inputData.priv = validation.checkString(xss(req?.body?.priv)); // TODO validate private
