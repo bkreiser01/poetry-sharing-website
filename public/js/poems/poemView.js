@@ -37,7 +37,8 @@ import validation from '/public/js/validation.js';
             url: `/user/addTagToPoem/${userId}/${uid}/${poemId_}`,
             method: 'POST',
             success: function(data) {
-                console.log(data)
+                //console.log(data);
+                location.reload();
             },
             error: function(e) {
                 console.error(e.responseJSON.error);
@@ -113,7 +114,7 @@ import validation from '/public/js/validation.js';
                     if (!poemTagged) {
                         userTags.append(`<li>No tags yet. Add one!</li>`)
                     } else {
-                        console.log(poemTagged)
+                        //console.log(poemTagged)
                         for (let i = 0; i < poemTagged.tagIds.length; i++) {
                             $.ajax({
                                 url: `/tags/info/${poemTagged.tagIds[i]}`,
