@@ -148,12 +148,17 @@ router
       }
 
       //TODO add to user history
-
-      return res.render("poems/view", {
-         title: poem.title,
-         poem: poem,
-         username: username,
-      });
+      try {
+         return res.render("poems/view", {
+            title: poem.title,
+            userId: req.session.user._id,
+            poemId_: poem._id,
+            poem: poem,
+            username: username,
+         });  
+      } catch (e) {
+         return res.status(500).render("error", { error: e });
+      }
    })
    .delete(async (req, res) => {
       const safeId = validation.checkId(xss(req.params.id), "id");
