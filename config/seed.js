@@ -58,6 +58,48 @@ let jsmith_id = await users.addUser(
    "private"
 );
 
+let phill_id = await users.addUser(
+   "pHill",
+   "pHill@gmail.com",
+   "Password@01",
+   "public"
+);
+
+let pshelly_id = await users.addUser(
+   "pShelly",
+   "pShelly@gmail.com",
+   "#Bysshe1792",
+   "public"
+);
+
+let epoe_id = await users.addUser(
+   "ePoe",
+   "ePoe@gmail.com",
+   "#Allan1809",
+   "private"
+);
+
+let owilde_id = await users.addUser(
+   "oWilde",
+   "oWilde@gmail.com",
+   "#Fingal-Wills1882",
+   "public"
+);
+
+let edickinson_id = await users.addUser(
+   "eDickinson",
+   "eDickinson@gmail.com",
+   "#Elizabeth1830",
+   "public"
+);
+
+let mangelou_id = await users.addUser(
+   "mAngelou",
+   "mAngelou@gmail.com",
+   "#Marguerite1928",
+   "public"
+);
+
 console.log("Creating Poems");
 let p1 = await poems.addPoem(
    new Date(),
