@@ -24,17 +24,16 @@
           },
         });
 
-        // FIXME Fetch the tagname
         $.ajax({
-            url: `/`,
-            type: "GET",
-            success: function (tag) {
-                tagname = tag.tagString;
-            },
-            error: function (err) {
-                console.error(err);
-            }
-        })
+          url: `/tags/searchById/${comment.tagId}`,
+          type: "GET",
+          success: function (tag) {
+            tagname = tag.tagString;
+          },
+          error: function (err) {
+            console.error(err);
+          },
+        });
         poem_comments.append(`
             <li class="poem-comment-container">
                 <div class="poem-comment-author-info">
@@ -49,7 +48,7 @@
       }
     },
     error: function (err) {
-        console.error(err);
-    }
+      console.error(err);
+    },
   });
-});
+})(window.jQuery);

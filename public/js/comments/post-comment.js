@@ -35,7 +35,7 @@ let validate = (data, func, err) => {
         let tagId = tag.tagId;
         let tagString = "[deleted]";
         $.ajax({
-          url: `/`, // here
+          url: `/tags/searchById/${tagId}`, // here
           type: "GET",
           success: function (tag) {
             tagString = tag.tagString;
@@ -118,4 +118,4 @@ let validate = (data, func, err) => {
       },
     });
   });
-});
+})(window.jQuery);
