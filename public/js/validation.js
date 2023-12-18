@@ -15,6 +15,12 @@ const validationMethods = {
          );
       return strVal;
    },
+
+   checkTag(tagId) {
+      tagId = validationMethods.checkString(tagId, "Tag");
+      return tagId;
+   },
+
    /**
     * Validate keys in an object
     *
