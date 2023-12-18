@@ -6,7 +6,7 @@ import validation from "/public/js/validation.js";
       body_error = $("#body_error"),
       link_error = $("#link_error"),
       success = $("#success");
-      // private_error = $("#private_error");
+   // private_error = $("#private_error");
    let deleteButton = $("#delete-poem");
 
    const deletionSuccess = (data, status) => {
@@ -38,7 +38,7 @@ import validation from "/public/js/validation.js";
          title = $("#title_input").val().trim(),
          body = $("#poem-body-area").val().trim(),
          linkInput = $("#reading-link").val().trim();
-         // priv = $("#private-checkbox").val();
+      // priv = $("#private-checkbox").val();
 
       let errors_exist = false;
       title_error.text("");
@@ -99,9 +99,7 @@ import validation from "/public/js/validation.js";
    });
 })(window.jQuery);
 
-
 $(window).on("load", function () {
-
    let removeInvalidHTML = () => {
       $("div").removeAttr("cm-not-content");
       $("span").removeAttr("cm-text");
