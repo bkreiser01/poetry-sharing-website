@@ -57,7 +57,7 @@ let validate = (data, func, err) => {
   let commentBodyError = $("#comment-body-error");
 
   let tagSelectError = $("#tag-select-error");
-  let error = $("#error");
+  let error = $("#comment-submit-error");
   errored = false;
 
   commentForm[0].reset();
