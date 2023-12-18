@@ -276,6 +276,8 @@ router
             inputData.linkInput = validation.checkUrl(
                xss(req?.body?.linkInput)
             );
+         } else {
+            inputData.linkInput = "";
          }
          // if (!!xss(req.body?.priv)) {
          //    inputData.priv = validation.checkString(xss(req?.body?.priv));
