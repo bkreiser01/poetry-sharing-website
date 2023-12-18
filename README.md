@@ -80,4 +80,6 @@ A website for sharing poetry by Adrien Huet, Brandon Kreiser, Joseph Vasallo, Ro
 * Ensure you have mongodb running
 * run `npm run seed`
 
-
+### Logging in
+To log in feel free to use any of these users
+**bkreiser**, **rshagawat**, **jvasallo**, **ahuet** who's password is **Password@01**, or make your own!
