@@ -280,6 +280,8 @@ const exportedMethods = {
             updatedPoem.linkInput,
             "Link"
          );
+      } else if (updatedPoem.linkInput === "") {
+         updatedPoemData.link = "";
       }
 
       if (updatedPoem.totalTagCount) {

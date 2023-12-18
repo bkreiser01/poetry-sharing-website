@@ -188,10 +188,10 @@ router
       }
 
       try {
-         const poemInfo = await poemData.removePoem(safeId);
          await userData.deletePoem(userId, safeId);
          await userData.deletePoemFromAllUsers(safeId);
          const tagInfo = await tagData.deletePoemFromAllTags(safeId);
+         const poemInfo = await poemData.removePoem(safeId);
       } catch (e) {
          const status = 400;
          return res
@@ -276,6 +276,8 @@ router
             inputData.linkInput = validation.checkUrl(
                xss(req?.body?.linkInput)
             );
+         } else {
+            inputData.linkInput = "";
          }
          // if (!!xss(req.body?.priv)) {
          //    inputData.priv = validation.checkString(xss(req?.body?.priv));
