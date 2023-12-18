@@ -11,9 +11,9 @@
         }
 
     
-
+    
     $.ajax({
-        url: `/user/followers/${userId}`,
+        url: `/user/followers/${ViewedUserId}`,
         type: 'GET',
         success: function (followers) {
             follower_count.innerText = followers.length
@@ -24,7 +24,7 @@
     });
 
     $.ajax({
-        url: `/user/following/${userId}`,
+        url: `/user/following/${ViewedUserId}`,
         type: 'GET',
         success: function (following) {
             following_count.innerText = following.length
