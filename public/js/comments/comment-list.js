@@ -1,7 +1,7 @@
 (function ($) {
   let poem_comments = $("#poem-comments");
   let poemId = $("#poemViewId")[0].innerText;
-
+  
   $.ajax({
     url: `/poems/${poemId}/comments`,
     type: "GET",

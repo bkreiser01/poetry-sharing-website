@@ -2,7 +2,7 @@
     let authours = $('.author-picture')
 
     for (let i = 0; i < authours.length; i++) {
-        let authorName = authours[i].id;
+        let authorName = authours[i].className.split(' ')[1];
         $.ajax({
             url: `/user/getProfilePic/${authorName}`,
             type: 'GET',

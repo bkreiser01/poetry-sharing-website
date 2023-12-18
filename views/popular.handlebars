@@ -9,7 +9,7 @@
       {{#each poemList as |poem|}}
       <li class="homepage-poems-item">
          <div class="poem-header">
-            <img id="{{this.username}}" class="author-picture"src="/public/assets/profile-pic.jpg" alt="Author profile picture">
+            <img class="author-picture {{this.username}}"src="/public/assets/profile-pic.jpg" alt="Author profile picture">
             <div class="poem-header-metadata">
                <a href="/poems/{{this._id}}"><h2>{{this.title}}</h2></a>
                <p>By: <a href="/user/{{this.userId}}">{{this.username}}</a></p>
