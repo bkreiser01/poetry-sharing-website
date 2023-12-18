@@ -13,6 +13,7 @@ tags_db.deleteMany({});
 import users from "../data/user.js";
 import poems from "../data/poems.js";
 import tags from "../data/tags.js";
+import comments from "../data/comments.js";
 
 console.log("Creating Users");
 
@@ -416,7 +417,7 @@ await users.addTagToPoem(rshag_id, t2, p9._id.toString())
 await users.addTagToPoem(ahuet_id, t3, p10._id.toString())
 await users.addTagToPoem(ahuet_id, t3, p11._id.toString())
 await users.addTagToPoem(ahuet_id, t3, p12._id.toString())
-await users.addTagToPoem(jvasa_id, t4, p13._id.toString())
+await users.addTagToPoem(jvasa_id, t7, p13._id.toString())
 await users.addTagToPoem(jvasa_id, t4, p14._id.toString())
 
 console.log("Populate user favorites")
@@ -452,4 +453,42 @@ await users.addFollowing(jdoe_id, jsmith_id)
 await users.addFollowing(jsmith_id, ahuet_id)
 await users.addFollowing(jsmith_id, jvasa_id)
 
-console.log("Done!")
+console.log("Populate user comments");
+//Get tag info
+t1 = (await tags.getTagByName(t1))._id.toString();
+t2 = (await tags.getTagByName(t2))._id.toString();
+t3 = (await tags.getTagByName(t3))._id.toString();
+t4 = (await tags.getTagByName(t4))._id.toString();
+t5 = (await tags.getTagByName(t5))._id.toString();
+t6 = (await tags.getTagByName(t6))._id.toString();
+t7 = (await tags.getTagByName(t7))._id.toString();
+t8 = (await tags.getTagByName(t8))._id.toString();
+t9 = (await tags.getTagByName(t9))._id.toString();
+t10 = (await tags.getTagByName(t10))._id.toString();
+//Get poem info
+p1 = p1._id.toString();
+p2 = p2._id.toString();
+p3 = p3._id.toString();
+p4 = p4._id.toString();
+p5 = p5._id.toString();
+p6 = p6._id.toString();
+p7 = p7._id.toString();
+p8 = p8._id.toString();
+p9 = p9._id.toString();
+p10 = p10._id.toString();
+p11 = p11._id.toString();
+p12 = p12._id.toString();
+p13 = p13._id.toString();
+p14 = p14._id.toString();
+p15 = p15._id.toString();
+//Add comments
+await comments.addCommentToPoem(jvasa_id.toString(), t7, Date(Date.now()).toString(), "This is a thought provoking piece", p13);
+await comments.addCommentToPoem(jvasa_id.toString(), t2, Date(Date.now()).toString(), "A lovely story", p6);
+await comments.addCommentToPoem(bkrei_id.toString(), t2, Date(Date.now()).toString(), "This poem made me very happy", p6);
+await comments.addCommentToPoem(bkrei_id.toString(), t2, Date(Date.now()).toString(), "What a moving story", p7);
+await comments.addCommentToPoem(ahuet_id.toString(), t3, Date(Date.now()).toString(), "Such a sad story", p10);
+await comments.addCommentToPoem(ahuet_id.toString(), t1, Date(Date.now()).toString(), "I like this poem", p1);
+await comments.addCommentToPoem(rshag_id.toString(), t3, Date(Date.now()).toString(), "This poem is so evocative", p11);
+await comments.addCommentToPoem(rshag_id.toString(), t4, Date(Date.now()).toString(), "I feel uneasy reading this", p14);
+
+console.log("Done!");
