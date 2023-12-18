@@ -1,7 +1,7 @@
 <main class="poem-container">
    <p id="poemViewId" hidden>{{poem._id}}</p>
    <div class="poem-header">
-      <img class="author-picture"src="/public/assets/profile-pic.jpg" alt="Author profile picture"id="{{this.username}}">
+      <img class="author-picture {{this.username}}"src="/public/assets/profile-pic.jpg" alt="Author profile picture">
       <div class="poem-header-metadata">
          <h1>{{poem.title}}</h1>
          <p>
