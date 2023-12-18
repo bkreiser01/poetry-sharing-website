@@ -492,3 +492,5 @@ await comments.addCommentToPoem(rshag_id.toString(), t3, Date(Date.now()).toStri
 await comments.addCommentToPoem(rshag_id.toString(), t4, Date(Date.now()).toString(), "I feel uneasy reading this", p14);
 
 console.log("Done!");
+
+process.exit()
